@@ -15,5 +15,18 @@ import lombok.ToString;
 @TableName("sys_user")
 public class SysUser extends BaseEntity{
 
+    private String username;
+
+    private String nickname;
+
+    private String password;
+
+    private String phone;
+
+    private String openId;
+
+    private String unionId;
+
+    private String email;
 
 }
