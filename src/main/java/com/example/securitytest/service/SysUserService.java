@@ -1,7 +1,7 @@
 package com.example.securitytest.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.securitytest.entity.SysUser;
+import com.example.securitytest.pojo.entity.SysUser;
 
 /**
  * @author :whz

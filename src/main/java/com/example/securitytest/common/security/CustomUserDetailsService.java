@@ -1,23 +1,23 @@
 package com.example.securitytest.common.security;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.example.securitytest.entity.SysUser;
-import com.example.securitytest.mapper.SysUserMapper;
+import com.example.securitytest.pojo.entity.SysUser;
 import com.example.securitytest.service.SysUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Objects;
 
 /**
  * @author : whz
  * @date : 2023/5/16 19:27
  */
+@Component
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Resource
@@ -33,7 +33,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         // TODO: 2023/5/16 查询用户权限
-        User user = new User(sysUser.getUsername(), sysUser.getPassword(), new ArrayList<>());
+        User user = new User(sysUser.getUsername(), sysUser.getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
         return user;
     }
 }

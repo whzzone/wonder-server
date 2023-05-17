@@ -1,4 +1,4 @@
-package com.example.securitytest.entity;
+package com.example.securitytest.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
@@ -28,5 +28,7 @@ public class SysUser extends BaseEntity{
     private String unionId;
 
     private String email;
+
+    private Boolean enabled;
 
 }

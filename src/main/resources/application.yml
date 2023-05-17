@@ -1,11 +1,39 @@
+server:
+  servlet:
+    context-path: /security-admin
+  port: 8080
 
 spring:
+  application:
+    name: security-admin
+
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://weihuazhou.top:3306/security-test?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: 5278eedc6119a326
+
+  redis:
+    host: weihuazhou.top
+    port: 6379
+    database: 0
+    password: 123456
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
+system-config:
+  security:
+    ignore-path: /auth/**,/test/**
+    static-resources-path: /swagger/**,/webjars/**,/v2/**,/swagger-resources/**,/doc.html,/favicon.ico
+  cache:
+    token:
+      prefix: "TOKEN:"
+      live-time: 1
+      live-unit: HOURS
+      refresh-time: 10
+      refresh-unit: MINUTES
 
 mybatis-plus:
   global-config:

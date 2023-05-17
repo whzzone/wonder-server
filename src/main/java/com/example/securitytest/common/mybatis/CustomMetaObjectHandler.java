@@ -16,6 +16,7 @@ public class CustomMetaObjectHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         strictInsertFill(metaObject,"updateTime", Date.class, new Date());
         strictInsertFill(metaObject,"createTime", Date.class, new Date());
+        strictInsertFill(metaObject,"deleted", Boolean.class, false);
     }
 
     @Override

@@ -1,10 +1,12 @@
 package com.example.securitytest.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import com.example.securitytest.common.Result;
+import com.example.securitytest.service.SysUserService;
+import com.example.securitytest.util.SecurityUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Date;
 
 /**
  * @author : whz
@@ -14,8 +16,12 @@ import java.util.Date;
 @RequestMapping("user")
 public class SysUserController {
 
-    @GetMapping({"hello"})
-    public String hello(){
-        return new Date().toString();
+    @Autowired
+    private SysUserService sysUserService;
+
+    @PostMapping("test")
+    public Result test(){
+        return Result.ok(SecurityUtil.getLoginUser().toString());
     }
+
 }

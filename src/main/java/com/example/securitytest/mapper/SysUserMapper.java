@@ -1,7 +1,7 @@
 package com.example.securitytest.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.securitytest.entity.SysUser;
+import com.example.securitytest.pojo.entity.SysUser;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

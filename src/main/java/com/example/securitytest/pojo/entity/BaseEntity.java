@@ -1,4 +1,4 @@
-package com.example.securitytest.entity;
+package com.example.securitytest.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
