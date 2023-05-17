@@ -1,5 +1,6 @@
 package com.example.securitytest;
 
+import cn.hutool.extra.mail.MailUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +14,7 @@ class SecurityTestApplicationTests {
 
     @Test
     void contextLoads() {
-        System.out.println(passwordEncoder.encode("123456"));
+        MailUtil.send("499424437@qq.com", "测试", "邮件来自Hutool测试", false);
 
     }
 

@@ -1,13 +1,16 @@
 package com.example.securitytest.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.mail.MailUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.securitytest.common.Result;
+import com.example.securitytest.pojo.dto.EmailLoginDto;
 import com.example.securitytest.pojo.dto.LoginDto;
 import com.example.securitytest.pojo.entity.SysUser;
 import com.example.securitytest.service.AuthService;
 import com.example.securitytest.service.SysUserService;
+import com.example.securitytest.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -19,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Email;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -77,5 +81,43 @@ public class AuthServiceImpl implements AuthService {
         } catch (Exception e) {
             throw new RuntimeException("未知错误");
         }
+    }
+
+    @Override
+    public Result login(EmailLoginDto dto) {
+
+        return null;
+    }
+
+    @Override
+    public Result sendEmail(@Email String email) {
+        String code = RandomUtil.getCode(6);
+        while (Boolean.TRUE.equals(redisTemplate.hasKey(code))) {
+            code = RandomUtil.getCode(6);
+        }
+        redisTemplate.opsForValue().set("EMAIL:"+code, email, 5, TimeUnit.MINUTES);
+        MailUtil.send(email, "登录验证码", "此次登录的验证码是：" + code, false);
+        return Result.ok("已发送");
+    }
+
+    private String generatorToken(){
+//        try {
+//            String token = UUID.randomUUID().toString();
+//            String key = cacheTokenPrefix + token;
+//
+//            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
+//            Authentication authentication = authenticationManager.authenticate(authenticationToken);
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+//            redisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(sysUser), cacheTime, cacheTimeUnit);
+//            Map<String, Object> res = new HashMap<>();
+//            res.put("token", token);
+//            return Result.ok("登录成功", res);
+//
+//        } catch (BadCredentialsException e) {
+//            throw new BadCredentialsException("密码错误");
+//        } catch (Exception e) {
+//            throw new RuntimeException("未知错误");
+//        }
+        return null;
     }
 }

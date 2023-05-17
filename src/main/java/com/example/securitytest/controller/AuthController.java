@@ -1,6 +1,7 @@
 package com.example.securitytest.controller;
 
 import com.example.securitytest.common.Result;
+import com.example.securitytest.pojo.dto.EmailLoginDto;
 import com.example.securitytest.pojo.dto.LoginDto;
 import com.example.securitytest.pojo.entity.SysUser;
 import com.example.securitytest.service.AuthService;
@@ -36,6 +37,16 @@ public class AuthController {
         SysUser sysUser = new SysUser();
         sysUser.setUsername(new Date().toString());
         return sysUser.toString();
+    }
+
+    @PostMapping("/login/email")
+    public Result login(@Validated @RequestBody EmailLoginDto dto){
+        return authService.login(dto);
+    }
+
+    @PostMapping("/send/{email}")
+    public Result sendEmail(@PathVariable String email){
+        return authService.sendEmail(email);
     }
 
 }
