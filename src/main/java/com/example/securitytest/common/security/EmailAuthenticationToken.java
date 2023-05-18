@@ -11,8 +11,9 @@ import java.util.Collection;
  */
 public class EmailAuthenticationToken extends AbstractAuthenticationToken {
 
-    private final Object principal;
-    private Object credentials;
+    private final Object principal; // email
+
+    private Object credentials; // code
 
     public EmailAuthenticationToken(Object principal, Object credentials) {
         super(null);

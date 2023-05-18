@@ -9,10 +9,24 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 public class SecurityUtil {
 
+    private static final ThreadLocal<SysUser> threadLocal = new ThreadLocal<>();
+
     private SecurityUtil() {}
 
     public static SysUser getLoginUser(){
         return (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
+    public static void setLoginUser(SysUser sysUser){
+        SecurityUtil.threadLocal.set(sysUser);
+    }
+
+
+    public static SysUser getLoginUser2(){
+        return SecurityUtil.threadLocal.get();
+    }
+
+    public static void remove(){
+        threadLocal.remove();
+    }
 }

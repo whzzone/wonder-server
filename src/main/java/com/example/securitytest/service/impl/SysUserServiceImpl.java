@@ -37,4 +37,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new RuntimeException("该账号已被禁用");
         }
     }
+
+    @Override
+    public SysUser getByUsername(String username) {
+        LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SysUser::getUsername, username);
+        return getOne(queryWrapper);
+    }
 }

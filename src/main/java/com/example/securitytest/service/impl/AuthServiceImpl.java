@@ -8,10 +8,12 @@ import com.example.securitytest.common.Result;
 import com.example.securitytest.common.security.EmailAuthenticationToken;
 import com.example.securitytest.pojo.dto.EmailLoginDto;
 import com.example.securitytest.pojo.dto.LoginDto;
+import com.example.securitytest.pojo.dto.auth.LoginSuccessDto;
 import com.example.securitytest.pojo.entity.SysUser;
 import com.example.securitytest.service.AuthService;
 import com.example.securitytest.service.SysUserService;
 import com.example.securitytest.util.RandomUtil;
+import com.example.securitytest.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -24,8 +26,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.Email;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -66,37 +66,36 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Result loginByUsername(LoginDto dto) {
-        if (!usernameTypeEnable){
-            throw new RuntimeException("未开启账号密码登录");
-        }
-        LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(SysUser::getUsername, dto.getUsername());
-        SysUser sysUser = sysUserService.getOne(queryWrapper);
-        if (Objects.isNull(sysUser)) {
-            throw new UsernameNotFoundException(StrUtil.format("用户{}不存在", dto.getUsername()));
-        }
-
         try {
-            String token = UUID.randomUUID().toString();
+            if (!usernameTypeEnable){
+                throw new RuntimeException("未开启账号密码登录");
+            }
 
-            String tokenKey = cacheTokenPrefix + token;
-            String userKey = cacheUserPrefix + sysUser.getId();
+            LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(SysUser::getUsername, dto.getUsername());
+            SysUser sysUser = sysUserService.getOne(queryWrapper);
+            if (Objects.isNull(sysUser)) {
+                throw new UsernameNotFoundException(StrUtil.format("用户{}不存在", dto.getUsername()));
+            }
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
+            String token = UUID.randomUUID().toString();
+
+            String tokenKey = cacheTokenPrefix + token;
+            String userKey = cacheUserPrefix + sysUser.getId();
+
             redisTemplate.opsForValue().set(tokenKey, sysUser.getId(), cacheTime, cacheTimeUnit);
             redisTemplate.opsForValue().set(userKey, JSONUtil.toJsonStr(sysUser));
 
-            Map<String, Object> res = new HashMap<>();
-            res.put("token", token);
-            return Result.ok("登录成功", res);
+            return Result.ok("登录成功", new LoginSuccessDto(token, cacheTimeUnit.toSeconds(cacheTime)));
 
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException("密码错误");
         } catch (Exception e) {
-            throw new RuntimeException("未知错误");
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -114,7 +113,7 @@ public class AuthServiceImpl implements AuthService {
 
         redisTemplate.delete("EMAIL:" + dto.getEmail());
 
-        SysUser sysUser = sysUserService.getByEmail(dto.getEmail());
+        SysUser sysUser = SecurityUtil.getLoginUser2();
 
         String token = UUID.randomUUID().toString();
 
@@ -124,9 +123,7 @@ public class AuthServiceImpl implements AuthService {
         redisTemplate.opsForValue().set(tokenKey, sysUser.getId(), cacheTime, cacheTimeUnit);
         redisTemplate.opsForValue().set(userKey, JSONUtil.toJsonStr(sysUser));
 
-        Map<String, Object> res = new HashMap<>();
-        res.put("token", token);
-        return Result.ok("登录成功", res);
+        return Result.ok("登录成功", new LoginSuccessDto(token, cacheTimeUnit.toSeconds(cacheTime)));
     }
 
     @Override

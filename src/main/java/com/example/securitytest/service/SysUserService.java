@@ -11,4 +11,6 @@ public interface SysUserService extends IService<SysUser> {
     SysUser getByEmail(String email);
 
     void verifyUser(SysUser sysUser);
+
+    SysUser getByUsername(String username);
 }
