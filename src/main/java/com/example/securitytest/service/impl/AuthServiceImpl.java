@@ -49,6 +49,9 @@ public class AuthServiceImpl implements AuthService {
     @Value("${system-config.security.login-type.email}")
     private Boolean emailTypeEnable;
 
+    @Value("${system-config.security.login-type.username}")
+    private Boolean usernameTypeEnable;
+
     @Value("${system-config.cache.user.prefix}")
     private String cacheUserPrefix;
 
@@ -63,7 +66,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Result loginByUsername(LoginDto dto) {
-
+        if (!usernameTypeEnable){
+            throw new RuntimeException("未开启账号密码登录");
+        }
         LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SysUser::getUsername, dto.getUsername());
         SysUser sysUser = sysUserService.getOne(queryWrapper);
