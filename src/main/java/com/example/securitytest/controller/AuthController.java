@@ -3,15 +3,12 @@ package com.example.securitytest.controller;
 import com.example.securitytest.common.Result;
 import com.example.securitytest.pojo.dto.EmailLoginDto;
 import com.example.securitytest.pojo.dto.LoginDto;
-import com.example.securitytest.pojo.entity.SysUser;
 import com.example.securitytest.service.AuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 
 /**
  * @author : whz
@@ -38,10 +35,9 @@ public class AuthController {
     }
 
     @GetMapping({"logout"})
-    public String logout(){
-        SysUser sysUser = new SysUser();
-        sysUser.setUsername(new Date().toString());
-        return sysUser.toString();
+    public Result logout(){
+        authService.logout();
+        return Result.ok();
     }
 
     @ApiOperation("邮箱登录")

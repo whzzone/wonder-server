@@ -15,4 +15,6 @@ public interface AuthService {
     Result loginByEmail(EmailLoginDto dto);
 
     Result sendEmail(String email);
+
+    void logout();
 }

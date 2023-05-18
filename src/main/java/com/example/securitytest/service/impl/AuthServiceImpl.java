@@ -14,6 +14,7 @@ import com.example.securitytest.service.SysUserService;
 import com.example.securitytest.util.CacheKey;
 import com.example.securitytest.util.RandomUtil;
 import com.example.securitytest.util.RedisCache;
+import com.example.securitytest.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -156,4 +157,17 @@ public class AuthServiceImpl implements AuthService {
         return Result.ok("验证码已发送");
     }
 
+    @Override
+    public void logout() {
+        Long id = SecurityUtil.getLoginUser().getId();
+        String userKey = StrUtil.format(CacheKey.USER_ID_INFO, id);
+        String userIdTokenKey = StrUtil.format(CacheKey.USER_ID_TOKEN, id);
+        if (redisCache.hasKey(userIdTokenKey)) {
+            String token = (String) redisCache.get(userIdTokenKey);
+            String tokenKey = StrUtil.format(CacheKey.TOKEN_TOKEN_USERID, token);
+            redisCache.delete(tokenKey);
+        }
+        redisCache.delete(userIdTokenKey);
+        redisCache.delete(userKey);
+    }
 }
