@@ -19,6 +19,12 @@ spring:
     port: 6379
     database: 0
     password: 123456
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1
 
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
@@ -31,17 +37,12 @@ system-config:
       email: true
       username: true
 
-
   cache:
     token:
-      prefix: "TOKEN:"
       live-time: 1
       live-unit: HOURS
       refresh-time: 10
       refresh-unit: MINUTES
-
-    user:
-      prefix: "USER:"
 
 mybatis-plus:
   global-config:
@@ -49,6 +50,7 @@ mybatis-plus:
       logic-delete-field: deleted
       logic-not-delete-value: 0
       logic-delete-value: 1
+
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     #log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl

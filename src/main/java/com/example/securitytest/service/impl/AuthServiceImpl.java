@@ -2,7 +2,6 @@ package com.example.securitytest.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.mail.MailUtil;
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.securitytest.common.Result;
 import com.example.securitytest.common.security.EmailAuthenticationToken;
@@ -12,11 +11,11 @@ import com.example.securitytest.pojo.dto.auth.LoginSuccessDto;
 import com.example.securitytest.pojo.entity.SysUser;
 import com.example.securitytest.service.AuthService;
 import com.example.securitytest.service.SysUserService;
+import com.example.securitytest.util.CacheKeyUtil;
 import com.example.securitytest.util.RandomUtil;
-import com.example.securitytest.util.SecurityUtil;
+import com.example.securitytest.util.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,17 +42,11 @@ public class AuthServiceImpl implements AuthService {
     @Value("${system-config.cache.token.live-unit}")
     private TimeUnit cacheTimeUnit;
 
-    @Value("${system-config.cache.token.prefix}")
-    private String cacheTokenPrefix;
-
     @Value("${system-config.security.login-type.email}")
     private Boolean emailTypeEnable;
 
     @Value("${system-config.security.login-type.username}")
     private Boolean usernameTypeEnable;
-
-    @Value("${system-config.cache.user.prefix}")
-    private String cacheUserPrefix;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -62,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
     private SysUserService sysUserService;
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisCache redisCache;
 
     @Override
     public Result loginByUsername(LoginDto dto) {
@@ -84,11 +77,11 @@ public class AuthServiceImpl implements AuthService {
 
             String token = UUID.randomUUID().toString();
 
-            String tokenKey = cacheTokenPrefix + token;
-            String userKey = cacheUserPrefix + sysUser.getId();
+            String tokenKey = StrUtil.format(CacheKeyUtil.TOKEN_TOKEN_USERID, token);
+            String userKey = StrUtil.format(CacheKeyUtil.USER_ID_INFO, sysUser.getId());
 
-            redisTemplate.opsForValue().set(tokenKey, sysUser.getId(), cacheTime, cacheTimeUnit);
-            redisTemplate.opsForValue().set(userKey, JSONUtil.toJsonStr(sysUser));
+            redisCache.set(tokenKey, sysUser.getId(), cacheTime, cacheTimeUnit);
+            redisCache.set(userKey, sysUser);
 
             return Result.ok("登录成功", new LoginSuccessDto(token, cacheTimeUnit.toSeconds(cacheTime)));
 
@@ -111,17 +104,19 @@ public class AuthServiceImpl implements AuthService {
         // 认证成功，将用户信息存入SecurityContext
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        redisTemplate.delete("EMAIL:" + dto.getEmail());
+        String key = StrUtil.format(CacheKeyUtil.EMAIL_EMAIL_CODE, dto.getEmail());
 
-        SysUser sysUser = SecurityUtil.getLoginUser2();
+        redisCache.delete(key);
+
+        SysUser sysUser = sysUserService.getByEmail(dto.getEmail());
 
         String token = UUID.randomUUID().toString();
 
-        String tokenKey = cacheTokenPrefix + token;
-        String userKey = cacheUserPrefix + sysUser.getId();
+        String tokenKey = StrUtil.format(CacheKeyUtil.TOKEN_TOKEN_USERID, token);
+        String userKey = StrUtil.format(CacheKeyUtil.USER_ID_INFO, sysUser.getId());
 
-        redisTemplate.opsForValue().set(tokenKey, sysUser.getId(), cacheTime, cacheTimeUnit);
-        redisTemplate.opsForValue().set(userKey, JSONUtil.toJsonStr(sysUser));
+        redisCache.set(tokenKey, sysUser.getId(), cacheTime, cacheTimeUnit);
+        redisCache.set(userKey, sysUser);
 
         return Result.ok("登录成功", new LoginSuccessDto(token, cacheTimeUnit.toSeconds(cacheTime)));
     }
@@ -129,32 +124,18 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Result sendEmail(@Email String email) {
         String code = RandomUtil.getCode(6);
-        while (Boolean.TRUE.equals(redisTemplate.hasKey(code))) {
+
+        while (Boolean.TRUE.equals(redisCache.hasKey(code))) {
             code = RandomUtil.getCode(6);
         }
-        redisTemplate.opsForValue().set("EMAIL:" + email, code, 5, TimeUnit.MINUTES);
+
+        String key = StrUtil.format(CacheKeyUtil.EMAIL_EMAIL_CODE, email);
+
+        redisCache.set(key, code, 5, TimeUnit.MINUTES);
+
         MailUtil.send(email, "登录验证码", "此次登录的验证码是：" + code, false);
-        return Result.ok("已发送");
+
+        return Result.ok("验证码已发送");
     }
 
-    private String generatorToken(){
-//        try {
-//            String token = UUID.randomUUID().toString();
-//            String key = cacheTokenPrefix + token;
-//
-//            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
-//            Authentication authentication = authenticationManager.authenticate(authenticationToken);
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//            redisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(sysUser), cacheTime, cacheTimeUnit);
-//            Map<String, Object> res = new HashMap<>();
-//            res.put("token", token);
-//            return Result.ok("登录成功", res);
-//
-//        } catch (BadCredentialsException e) {
-//            throw new BadCredentialsException("密码错误");
-//        } catch (Exception e) {
-//            throw new RuntimeException("未知错误");
-//        }
-        return null;
-    }
 }

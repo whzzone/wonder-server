@@ -5,7 +5,7 @@ host = smtp.qq.com
 port = 465
 
 # 发件人（必须正确，否则发送失败）
-from = 2625219048<2625219048@qq.com>
+from = 管理系统<2625219048@qq.com>
 
 # 用户名（注意：如果使用foxmail邮箱，此处user为qq号）
 user = 2625219048@qq.com
