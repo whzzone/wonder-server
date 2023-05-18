@@ -7,10 +7,7 @@ import com.example.securitytest.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author : whz
@@ -42,6 +39,11 @@ public class SysUserController {
     public Result edit(@Validated @RequestBody SysUser entity){
         sysUserService.updateById(entity);
         return Result.ok("操作成功", entity);
+    }
+
+    @GetMapping("list")
+    public Result list(){
+        return Result.ok(sysUserService.list());
     }
 
 }

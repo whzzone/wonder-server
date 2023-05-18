@@ -8,4 +8,7 @@ import com.example.securitytest.pojo.entity.SysUser;
  * @date : 2023/5/16 23:03
  */
 public interface SysUserService extends IService<SysUser> {
+    SysUser getByEmail(String email);
+
+    void verifyUser(SysUser sysUser);
 }

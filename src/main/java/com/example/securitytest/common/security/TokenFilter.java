@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.example.securitytest.common.Result;
 import com.example.securitytest.pojo.entity.SysUser;
+import com.example.securitytest.service.SysUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,6 +49,9 @@ public class TokenFilter extends OncePerRequestFilter {
     @Value("${system-config.cache.token.refresh-unit}")
     private TimeUnit refreshUnit;
 
+    @Autowired
+    private SysUserService sysUserService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader("token");
@@ -71,10 +75,12 @@ public class TokenFilter extends OncePerRequestFilter {
 
         SysUser sysUser = JSONUtil.toBean(jsonStr, SysUser.class);
 
-        if (!sysUser.getEnabled()) {
+        try {
+            sysUserService.verifyUser(sysUser);
+        } catch (Exception e){
             response.setHeader("content-type", "application/json");
-            IoUtil.write(response.getOutputStream(), true, JSONUtil.toJsonStr(Result.error("该用户已被禁用")).getBytes());
-            log.error("该用户已被禁用");
+            IoUtil.write(response.getOutputStream(), true, JSONUtil.toJsonStr(Result.error(e.getMessage())).getBytes());
+            log.error(e.getMessage());
             return;
         }
 

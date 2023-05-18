@@ -5,6 +5,8 @@ import com.example.securitytest.pojo.dto.EmailLoginDto;
 import com.example.securitytest.pojo.dto.LoginDto;
 import com.example.securitytest.pojo.entity.SysUser;
 import com.example.securitytest.service.AuthService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,19 +19,22 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping("auth")
+@Api(tags = "认证服务")
 public class AuthController {
 
     @Autowired
     private AuthService authService;
 
-    @PostMapping("login")
-    public Result login(@Validated @RequestBody LoginDto dto){
-        return authService.login(dto);
+    @ApiOperation("账号密码登录")
+    @PostMapping("/login/username")
+    public Result loginByUsername(@Validated @RequestBody LoginDto dto){
+        return authService.loginByUsername(dto);
     }
 
+    @ApiOperation("测试")
     @PostMapping("test")
     public Result test(){
-        return Result.ok();
+        return Result.ok("111111");
     }
 
     @GetMapping({"logout"})
@@ -39,9 +44,10 @@ public class AuthController {
         return sysUser.toString();
     }
 
+    @ApiOperation("邮箱登录")
     @PostMapping("/login/email")
-    public Result login(@Validated @RequestBody EmailLoginDto dto){
-        return authService.login(dto);
+    public Result loginByEmail(@Validated @RequestBody EmailLoginDto dto){
+        return authService.loginByEmail(dto);
     }
 
     @PostMapping("/send/{email}")

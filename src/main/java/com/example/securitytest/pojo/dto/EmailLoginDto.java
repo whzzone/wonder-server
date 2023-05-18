@@ -2,6 +2,7 @@ package com.example.securitytest.pojo.dto;
 
 import lombok.Data;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 public class EmailLoginDto {
 
     @NotBlank
+    @Email
     private String email;
 
     @NotBlank

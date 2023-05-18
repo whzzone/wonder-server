@@ -40,6 +40,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private TokenFilter tokenFilter;
 
+    @Autowired
+    private EmailAuthenticationProvider emailAuthenticationProvider;
+
     // 配置密码加密器
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -66,6 +69,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth
                 .userDetailsService(customUserDetailsService)
                 .passwordEncoder(passwordEncoder())
+                .and()
+                .authenticationProvider(emailAuthenticationProvider)
         ;
     }
     

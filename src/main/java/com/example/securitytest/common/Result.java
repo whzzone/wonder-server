@@ -40,6 +40,11 @@ public class Result<T> {
         return new Result<>(code, msg, data);
     }
 
+    public static <T> Result<T> ok(T data) {
+        Integer code = HttpCode.SUCCESS;
+        return new Result<>(code, "操作成功", data);
+    }
+
     public static <T> Result<T> error(String msg) {
         Integer code = HttpCode.ERROR;
 

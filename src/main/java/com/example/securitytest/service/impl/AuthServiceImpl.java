@@ -5,6 +5,7 @@ import cn.hutool.extra.mail.MailUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.securitytest.common.Result;
+import com.example.securitytest.common.security.EmailAuthenticationToken;
 import com.example.securitytest.pojo.dto.EmailLoginDto;
 import com.example.securitytest.pojo.dto.LoginDto;
 import com.example.securitytest.pojo.entity.SysUser;
@@ -45,6 +46,9 @@ public class AuthServiceImpl implements AuthService {
     @Value("${system-config.cache.token.prefix}")
     private String cacheTokenPrefix;
 
+    @Value("${system-config.security.login-type.email}")
+    private Boolean emailTypeEnable;
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -55,7 +59,7 @@ public class AuthServiceImpl implements AuthService {
     private RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public Result login(LoginDto dto) {
+    public Result loginByUsername(LoginDto dto) {
 
         LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SysUser::getUsername, dto.getUsername());
@@ -84,9 +88,28 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Result login(EmailLoginDto dto) {
+    public Result loginByEmail(EmailLoginDto dto) {
+        if (!emailTypeEnable){
+            throw new RuntimeException("未开启邮箱登录");
+        }
 
-        return null;
+        EmailAuthenticationToken authenticationToken = new EmailAuthenticationToken(dto.getEmail(), dto.getCode());
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
+
+        // 认证成功，将用户信息存入SecurityContext
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        redisTemplate.delete("EMAIL:" + dto.getEmail());
+
+        SysUser sysUser = sysUserService.getByEmail(dto.getEmail());
+
+        String token = UUID.randomUUID().toString();
+        String key = cacheTokenPrefix + token;
+        redisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(sysUser), cacheTime, cacheTimeUnit);
+
+        Map<String, Object> res = new HashMap<>();
+        res.put("token", token);
+        return Result.ok("登录成功", res);
     }
 
     @Override
@@ -95,7 +118,7 @@ public class AuthServiceImpl implements AuthService {
         while (Boolean.TRUE.equals(redisTemplate.hasKey(code))) {
             code = RandomUtil.getCode(6);
         }
-        redisTemplate.opsForValue().set("EMAIL:"+code, email, 5, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set("EMAIL:" + email, code, 5, TimeUnit.MINUTES);
         MailUtil.send(email, "登录验证码", "此次登录的验证码是：" + code, false);
         return Result.ok("已发送");
     }

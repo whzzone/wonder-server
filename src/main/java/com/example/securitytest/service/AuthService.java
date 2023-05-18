@@ -10,9 +10,9 @@ import com.example.securitytest.pojo.dto.LoginDto;
  */
 public interface AuthService {
     
-    Result login(LoginDto dto);
+    Result loginByUsername(LoginDto dto);
     
-    Result login(EmailLoginDto dto);
+    Result loginByEmail(EmailLoginDto dto);
 
     Result sendEmail(String email);
 }

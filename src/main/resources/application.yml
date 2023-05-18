@@ -27,6 +27,11 @@ system-config:
   security:
     ignore-path: /auth/**,/test/**
     static-resources-path: /swagger/**,/webjars/**,/v2/**,/swagger-resources/**,/doc.html,/favicon.ico
+    login-type:
+      email: false
+      username: true
+
+
   cache:
     token:
       prefix: "TOKEN:"
