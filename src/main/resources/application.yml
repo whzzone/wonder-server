@@ -28,7 +28,7 @@ system-config:
     ignore-path: /auth/**,/test/**
     static-resources-path: /swagger/**,/webjars/**,/v2/**,/swagger-resources/**,/doc.html,/favicon.ico
     login-type:
-      email: false
+      email: true
       username: true
 
 
@@ -39,6 +39,9 @@ system-config:
       live-unit: HOURS
       refresh-time: 10
       refresh-unit: MINUTES
+
+    user:
+      prefix: "USER:"
 
 mybatis-plus:
   global-config:

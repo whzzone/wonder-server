@@ -49,6 +49,9 @@ public class AuthServiceImpl implements AuthService {
     @Value("${system-config.security.login-type.email}")
     private Boolean emailTypeEnable;
 
+    @Value("${system-config.cache.user.prefix}")
+    private String cacheUserPrefix;
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -70,12 +73,17 @@ public class AuthServiceImpl implements AuthService {
 
         try {
             String token = UUID.randomUUID().toString();
-            String key = cacheTokenPrefix + token;
+
+            String tokenKey = cacheTokenPrefix + token;
+            String userKey = cacheUserPrefix + sysUser.getId();
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            redisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(sysUser), cacheTime, cacheTimeUnit);
+
+            redisTemplate.opsForValue().set(tokenKey, sysUser.getId(), cacheTime, cacheTimeUnit);
+            redisTemplate.opsForValue().set(userKey, JSONUtil.toJsonStr(sysUser));
+
             Map<String, Object> res = new HashMap<>();
             res.put("token", token);
             return Result.ok("登录成功", res);
@@ -104,8 +112,12 @@ public class AuthServiceImpl implements AuthService {
         SysUser sysUser = sysUserService.getByEmail(dto.getEmail());
 
         String token = UUID.randomUUID().toString();
-        String key = cacheTokenPrefix + token;
-        redisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(sysUser), cacheTime, cacheTimeUnit);
+
+        String tokenKey = cacheTokenPrefix + token;
+        String userKey = cacheUserPrefix + sysUser.getId();
+
+        redisTemplate.opsForValue().set(tokenKey, sysUser.getId(), cacheTime, cacheTimeUnit);
+        redisTemplate.opsForValue().set(userKey, JSONUtil.toJsonStr(sysUser));
 
         Map<String, Object> res = new HashMap<>();
         res.put("token", token);

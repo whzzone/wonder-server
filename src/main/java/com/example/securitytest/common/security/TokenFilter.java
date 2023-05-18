@@ -21,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -33,6 +34,9 @@ public class TokenFilter extends OncePerRequestFilter {
 
     @Value("${system-config.cache.token.prefix}")
     private String cacheTokenPrefix;
+
+    @Value("${system-config.cache.user.prefix}")
+    private String cacheUserPrefix;
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
@@ -61,9 +65,9 @@ public class TokenFilter extends OncePerRequestFilter {
             return;
         }
 
-        String key = cacheTokenPrefix + token;
+        String tokenKey = cacheTokenPrefix + token;
 
-        Boolean hasKey = redisTemplate.hasKey(key);
+        Boolean hasKey = redisTemplate.hasKey(tokenKey);
         if (Boolean.FALSE.equals(hasKey)) {
             response.setHeader("content-type", "application/json");
             IoUtil.write(response.getOutputStream(), true, JSONUtil.toJsonStr(Result.error("错误的token")).getBytes());
@@ -71,9 +75,26 @@ public class TokenFilter extends OncePerRequestFilter {
             return;
         }
 
-        String jsonStr = (String) redisTemplate.opsForValue().get(key);
+        Long userId = (Long) redisTemplate.opsForValue().get(tokenKey);
 
-        SysUser sysUser = JSONUtil.toBean(jsonStr, SysUser.class);
+        String userKey = cacheUserPrefix + userId;
+
+        SysUser sysUser;
+
+        String jsonStr = (String) redisTemplate.opsForValue().get(userKey);
+
+        sysUser = JSONUtil.toBean(jsonStr, SysUser.class);
+
+        if (Objects.isNull(sysUser)){
+            sysUser = sysUserService.getById(userId);
+        }
+
+        if (Objects.isNull(sysUser)){
+            response.setHeader("content-type", "application/json");
+            IoUtil.write(response.getOutputStream(), true, JSONUtil.toJsonStr(Result.error("用户不存在")).getBytes());
+            log.error("用户不存在");
+            return;
+        }
 
         try {
             sysUserService.verifyUser(sysUser);
@@ -84,8 +105,8 @@ public class TokenFilter extends OncePerRequestFilter {
             return;
         }
 
-        if(redisTemplate.boundValueOps(key).getExpire() < refreshUnit.toSeconds(refreshTime)){
-            redisTemplate.boundValueOps(key).expire(cacheTime, cacheTimeUnit);
+        if(redisTemplate.boundValueOps(tokenKey).getExpire() < refreshUnit.toSeconds(refreshTime)){
+            redisTemplate.boundValueOps(tokenKey).expire(cacheTime, cacheTimeUnit);
         }
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(sysUser, null, null);
