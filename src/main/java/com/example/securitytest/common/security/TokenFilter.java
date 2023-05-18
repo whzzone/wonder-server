@@ -6,7 +6,7 @@ import cn.hutool.json.JSONUtil;
 import com.example.securitytest.common.Result;
 import com.example.securitytest.pojo.entity.SysUser;
 import com.example.securitytest.service.SysUserService;
-import com.example.securitytest.util.CacheKeyUtil;
+import com.example.securitytest.util.CacheKey;
 import com.example.securitytest.util.RedisCache;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class TokenFilter extends OncePerRequestFilter {
                 return;
             }
 
-            String tokenKey = StrUtil.format(CacheKeyUtil.TOKEN_TOKEN_USERID, token);
+            String tokenKey = StrUtil.format(CacheKey.TOKEN_TOKEN_USERID, token);
 
             Boolean hasKey = redisCache.hasKey(tokenKey);
             if (Boolean.FALSE.equals(hasKey)) {
@@ -74,7 +74,8 @@ public class TokenFilter extends OncePerRequestFilter {
 
             Long userId = (Long) redisCache.get(tokenKey);
 
-            String userKey = StrUtil.format(CacheKeyUtil.USER_ID_INFO, userId);
+            String userKey = StrUtil.format(CacheKey.USER_ID_INFO, userId);
+            String userIdTokenKey = StrUtil.format(CacheKey.USER_ID_TOKEN, userId);
 
             SysUser sysUser = (SysUser) redisCache.get(userKey);
 
@@ -93,6 +94,7 @@ public class TokenFilter extends OncePerRequestFilter {
 
             if (redisCache.getExpire(tokenKey) < refreshUnit.toSeconds(refreshTime)) {
                 redisCache.expire(tokenKey, cacheTime, cacheTimeUnit);
+                redisCache.expire(userIdTokenKey, cacheTime, cacheTimeUnit);
             }
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(sysUser, null, null);

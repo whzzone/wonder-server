@@ -4,7 +4,7 @@ package com.example.securitytest.util;
  * @author : whz
  * @date : 2023/5/18 16:55
  */
-public class CacheKeyUtil {
+public class CacheKey {
 
     // id为xxx的用户的信息
     public static final String USER_ID_INFO = "USER:{}:INFO";

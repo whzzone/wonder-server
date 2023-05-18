@@ -11,7 +11,7 @@ import com.example.securitytest.pojo.dto.auth.LoginSuccessDto;
 import com.example.securitytest.pojo.entity.SysUser;
 import com.example.securitytest.service.AuthService;
 import com.example.securitytest.service.SysUserService;
-import com.example.securitytest.util.CacheKeyUtil;
+import com.example.securitytest.util.CacheKey;
 import com.example.securitytest.util.RandomUtil;
 import com.example.securitytest.util.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +57,12 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private RedisCache redisCache;
 
+    @Value("${system-config.cache.token.refresh-time}")
+    private long refreshTime;
+
+    @Value("${system-config.cache.token.refresh-unit}")
+    private TimeUnit refreshUnit;
+
     @Override
     public Result loginByUsername(LoginDto dto) {
         try {
@@ -71,17 +77,29 @@ public class AuthServiceImpl implements AuthService {
                 throw new UsernameNotFoundException(StrUtil.format("用户{}不存在", dto.getUsername()));
             }
 
+            String userIdTokenKey = StrUtil.format(CacheKey.USER_ID_TOKEN, sysUser.getId());
+
+            if (redisCache.hasKey(userIdTokenKey)) {
+//                Long expire = redisCache.getExpire(userIdTokenKey);
+//                if (expire < refreshUnit.toSeconds(refreshTime)){
+//                    redisCache.expire(userIdTokenKey, cacheTime, cacheTimeUnit);
+//                }
+//                return Result.ok("登录成功", new LoginSuccessDto((String) redisCache.get(userIdTokenKey), expire + cacheTimeUnit.toSeconds(cacheTime)));
+                return Result.ok("登录成功", new LoginSuccessDto((String) redisCache.get(userIdTokenKey), redisCache.getExpire(userIdTokenKey)));
+            }
+
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             String token = UUID.randomUUID().toString();
 
-            String tokenKey = StrUtil.format(CacheKeyUtil.TOKEN_TOKEN_USERID, token);
-            String userKey = StrUtil.format(CacheKeyUtil.USER_ID_INFO, sysUser.getId());
+            String tokenKey = StrUtil.format(CacheKey.TOKEN_TOKEN_USERID, token);
+            String userKey = StrUtil.format(CacheKey.USER_ID_INFO, sysUser.getId());
 
             redisCache.set(tokenKey, sysUser.getId(), cacheTime, cacheTimeUnit);
             redisCache.set(userKey, sysUser);
+            redisCache.set(userIdTokenKey, token, cacheTime, cacheTimeUnit);
 
             return Result.ok("登录成功", new LoginSuccessDto(token, cacheTimeUnit.toSeconds(cacheTime)));
 
@@ -104,7 +122,7 @@ public class AuthServiceImpl implements AuthService {
         // 认证成功，将用户信息存入SecurityContext
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String key = StrUtil.format(CacheKeyUtil.EMAIL_EMAIL_CODE, dto.getEmail());
+        String key = StrUtil.format(CacheKey.EMAIL_EMAIL_CODE, dto.getEmail());
 
         redisCache.delete(key);
 
@@ -112,8 +130,8 @@ public class AuthServiceImpl implements AuthService {
 
         String token = UUID.randomUUID().toString();
 
-        String tokenKey = StrUtil.format(CacheKeyUtil.TOKEN_TOKEN_USERID, token);
-        String userKey = StrUtil.format(CacheKeyUtil.USER_ID_INFO, sysUser.getId());
+        String tokenKey = StrUtil.format(CacheKey.TOKEN_TOKEN_USERID, token);
+        String userKey = StrUtil.format(CacheKey.USER_ID_INFO, sysUser.getId());
 
         redisCache.set(tokenKey, sysUser.getId(), cacheTime, cacheTimeUnit);
         redisCache.set(userKey, sysUser);
@@ -129,7 +147,7 @@ public class AuthServiceImpl implements AuthService {
             code = RandomUtil.getCode(6);
         }
 
-        String key = StrUtil.format(CacheKeyUtil.EMAIL_EMAIL_CODE, email);
+        String key = StrUtil.format(CacheKey.EMAIL_EMAIL_CODE, email);
 
         redisCache.set(key, code, 5, TimeUnit.MINUTES);
 

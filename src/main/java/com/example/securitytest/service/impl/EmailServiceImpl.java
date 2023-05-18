@@ -2,7 +2,7 @@ package com.example.securitytest.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.example.securitytest.service.EmailService;
-import com.example.securitytest.util.CacheKeyUtil;
+import com.example.securitytest.util.CacheKey;
 import com.example.securitytest.util.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class EmailServiceImpl implements EmailService {
             throw new RuntimeException("验证码为空");
         }
 
-        String key = StrUtil.format(CacheKeyUtil.EMAIL_EMAIL_CODE, email);
+        String key = StrUtil.format(CacheKey.EMAIL_EMAIL_CODE, email);
 
         Boolean hasKey = redisCache.hasKey(key);
 
