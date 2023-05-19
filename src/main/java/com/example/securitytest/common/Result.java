@@ -4,10 +4,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.io.Serializable;
+
 
 @ApiModel("响应对象")
 @Data
-public class Result<T> {
+public class Result<T> implements Serializable {
     @ApiModelProperty("响应状态码")
     private Integer code;
 

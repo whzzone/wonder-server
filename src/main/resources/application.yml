@@ -13,7 +13,6 @@ spring:
     url: jdbc:mysql://weihuazhou.top:3306/security-test?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: 5278eedc6119a326
-
   redis:
     host: weihuazhou.top
     port: 6379
@@ -28,6 +27,10 @@ spring:
 
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+
+  cache:
+    type: redis
+    cache-names: admin
 
 system-config:
   security:

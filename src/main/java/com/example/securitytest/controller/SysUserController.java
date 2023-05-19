@@ -4,7 +4,10 @@ import com.example.securitytest.common.Result;
 import com.example.securitytest.pojo.entity.SysUser;
 import com.example.securitytest.service.SysUserService;
 import com.example.securitytest.util.SecurityUtil;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("user")
+@CacheConfig(cacheNames = "SysUserController", keyGenerator = "customKeyGenerator")
 public class SysUserController {
 
     @Autowired
@@ -46,4 +50,10 @@ public class SysUserController {
         return Result.ok(sysUserService.list());
     }
 
+    @ApiOperation("获取")
+    @GetMapping("get/{id}")
+    @Cacheable
+    public Result get(@PathVariable Long id){
+        return Result.ok(sysUserService.getById(id));
+    }
 }
