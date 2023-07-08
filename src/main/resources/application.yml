@@ -27,6 +27,7 @@ spring:
 
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
 
   cache:
     type: redis
@@ -34,15 +35,15 @@ spring:
 
 system-config:
   security:
-    ignore-path: /auth/**,/test/**
-    static-resources-path: /swagger/**,/webjars/**,/v2/**,/swagger-resources/**,/doc.html,/favicon.ico
+    ignore-path: /swagger/**,/webjars/**,/v2/**,/swagger-resources/**,/doc.html,/favicon.ico,/auth/**,/test/**
     login-type:
       email: true
       username: true
+      phone: true
 
   cache:
     token:
-      live-time: 1
+      live-time: 24
       live-unit: HOURS
       refresh-time: 10
       refresh-unit: MINUTES
@@ -57,3 +58,12 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     #log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+
+wx:
+  miniapp:
+    configs:
+      - appid: wx487b66c8cba4bbd1
+        secret: 249260b2d65387ff386c08d3a7021624
+
+#      - appid: wxaa6742c27afc8584
+#        secret: b8d8836a158c02cc9a6f155a51f4666f

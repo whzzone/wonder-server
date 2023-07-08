@@ -1,12 +1,9 @@
 package com.example.securitytest.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * @author : whz
@@ -16,15 +13,12 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @ToString
 @TableName("sys_user")
-public class SysUser extends BaseEntity{
+public class User extends BaseEntity<User> {
 
-    @NotBlank(message = "账号不能为空")
     private String username;
 
-    @NotBlank(message = "昵称不能为空")
     private String nickname;
 
-    @NotBlank(message = "密码不能为空")
     private String password;
 
     private String phone;

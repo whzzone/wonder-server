@@ -1,7 +1,7 @@
 package com.example.securitytest.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.securitytest.pojo.entity.SysUser;
+import com.example.securitytest.pojo.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @date : 2023/5/16 19:33
  */
 @Mapper
-public interface SysUserMapper extends BaseMapper<SysUser> {
+public interface UserMapper extends BaseMapper<User> {
 }

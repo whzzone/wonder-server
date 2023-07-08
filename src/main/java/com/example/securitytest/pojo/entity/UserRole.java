@@ -12,11 +12,11 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@TableName("sys_role_menu")
-public class SysRoleMenu extends BaseEntity<SysRoleMenu> {
+@TableName("sys_user_role")
+public class UserRole extends BaseEntity<UserRole> {
+
+    private Long userId;
 
     private Long roleId;
-
-    private Long menuId;
 
 }

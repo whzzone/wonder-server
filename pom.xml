@@ -8,11 +8,12 @@
         <version>2.5.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example</groupId>
+    <groupId>top.weihuazhou</groupId>
     <artifactId>security-test</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>security-test</name>
     <description>security-test</description>
+
     <properties>
         <java.version>8</java.version>
     </properties>
@@ -110,6 +111,18 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-miniapp</artifactId>
+            <version>4.5.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.gitee.whzzone</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -120,5 +133,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>

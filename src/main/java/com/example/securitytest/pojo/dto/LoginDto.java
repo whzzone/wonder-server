@@ -16,4 +16,10 @@ public class LoginDto {
 
     @NotBlank
     private String password;
+
+    @NotBlank
+    private String code;
+
+    @NotBlank
+    private String uuid;
 }

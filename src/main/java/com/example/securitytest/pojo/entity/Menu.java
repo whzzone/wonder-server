@@ -12,17 +12,27 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@TableName("sys_role")
-public class SysRole extends BaseEntity<SysRole> {
+@TableName("sys_menu")
+public class Menu extends BaseEntity<Menu> {
 
     private Long parentId;
 
-    private String code;
-
     private String name;
+
+    private String permission;
 
     private String description;
 
     private Boolean enabled;
+
+    private String path;
+
+    private String component;
+
+    private String icon;
+
+    private Integer sort;
+
+    private Integer menuType;
 
 }

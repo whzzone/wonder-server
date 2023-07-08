@@ -1,5 +1,6 @@
 package com.example.securitytest.common;
 
+import com.gitee.whzzone.web.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -37,7 +38,8 @@ public class GlobalException {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public Result defaultExceptionHandler(Exception e) {
-        log.error(e.getMessage());
+//        log.error(e.getMessage());
+        e.printStackTrace();
         return Result.error(e.getMessage());
     }
 
