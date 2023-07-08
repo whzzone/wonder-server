@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class UserDto extends BaseDto{
+public class UserDto extends BaseDto<UserDto> {
 
     @NotNull(message = "id不能为空",groups = UpdateGroup.class)
     private Long id;

@@ -100,8 +100,4 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return menuDto;
     }
 
-    @Override
-    public Class<MenuDto> getDtoClass() {
-        return MenuDto.class;
-    }
 }

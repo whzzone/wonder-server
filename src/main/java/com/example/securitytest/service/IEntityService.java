@@ -1,6 +1,7 @@
 package com.example.securitytest.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.securitytest.pojo.dto.BaseDto;
 import com.example.securitytest.pojo.entity.BaseEntity;
@@ -12,7 +13,7 @@ import java.util.List;
  * @author : whz
  * @date : 2023/5/22 16:27
  */
-public interface IEntityService<T extends BaseEntity<T>, D extends BaseDto> extends IService<T> {
+public interface IEntityService<T extends BaseEntity<T>, D extends BaseDto<D>> extends IService<T> {
     default boolean save(D d) {
         try {
             Class<T> clazz = getEntityClass();
@@ -46,12 +47,13 @@ public interface IEntityService<T extends BaseEntity<T>, D extends BaseDto> exte
     default D getDtoById(Serializable id) {
         try {
             T t = IService.super.getById(id);
-            Class<D> clazz = getDtoClass();
-            D d = clazz.getDeclaredConstructor().newInstance();
-            BeanUtil.copyProperties(t, d);
+
+            Class<D> dClass = (Class<D>) ReflectionKit.getSuperClassGenericType(this.getClass(), IEntityService.class, 1);
+
+            D d = dClass.newInstance();
+            BeanUtil.copyProperties(t, d);//name username
 
             return afterQueryHandler(d);
-
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
         }
@@ -101,6 +103,5 @@ public interface IEntityService<T extends BaseEntity<T>, D extends BaseDto> exte
     }
 
     Class<T> getEntityClass();
-    Class<D> getDtoClass();
 
 }

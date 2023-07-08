@@ -3,7 +3,6 @@ package com.example.securitytest.service.impl;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.securitytest.mapper.RoleMenuMapper;
-import com.example.securitytest.pojo.dto.RoleMenuDto;
 import com.example.securitytest.pojo.entity.BaseEntity;
 import com.example.securitytest.pojo.entity.RoleMenu;
 import com.example.securitytest.service.RoleMenuService;
@@ -35,8 +34,4 @@ public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu> i
         roleMenuMapper.insertBatch(roleMenuList);
     }
 
-    @Override
-    public Class<RoleMenuDto> getDtoClass() {
-        return RoleMenuDto.class;
-    }
 }

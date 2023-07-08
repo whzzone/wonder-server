@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
  * @date : 2023/5/22 20:18
  */
 @Data
-public class MenuDto extends BaseDto{
+public class MenuDto extends BaseDto<MenuDto> {
 
     @JsonSerialize(using = LongSerializer.class)
     @NotNull(message = "id不能为空", groups = UpdateGroup.class)

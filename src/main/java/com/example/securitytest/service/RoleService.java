@@ -13,15 +13,6 @@ import java.util.List;
  * @date : 2023/5/22 15:38
  */
 public interface RoleService extends IEntityService<Role, RoleDto> {
-//    @Override
-//    default Class<Role> getEntityClass() {
-//        return Role.class;
-//    }
-
-    @Override
-    default Class<RoleDto> getDtoClass() {
-        return RoleDto.class;
-    }
 
     List<IdAndNameVo> getAll();
 

@@ -20,8 +20,4 @@ public interface UserService extends IEntityService<User, UserDto> {
 
     PageData<UserDto> page(UserQuery query);
 
-    @Override
-    default Class<UserDto> getDtoClass() {
-        return UserDto.class;
-    }
 }

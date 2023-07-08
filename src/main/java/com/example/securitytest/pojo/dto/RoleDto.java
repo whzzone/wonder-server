@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
-public class RoleDto extends BaseDto{
+public class RoleDto extends BaseDto<RoleDto> {
 
     @ApiModelProperty("角色id")
     @NotNull(message = "角色id不能为空", groups = UpdateGroup.class)
