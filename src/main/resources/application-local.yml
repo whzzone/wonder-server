@@ -1,0 +1,52 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/security-test?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    password: 123456
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  cache:
+    type: redis
+    cache-names: admin
+
+system-config:
+  security:
+    ignore-path: /swagger/**,/webjars/**,/v2/**,/swagger-resources/**,/doc.html,/favicon.ico,/auth/**,/test/**
+    login-type:
+      email: true
+      username: true
+      phone: true
+
+  cache:
+    token:
+      live-time: 24
+      live-unit: HOURS
+      refresh-time: 10
+      refresh-unit: MINUTES
+
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-not-delete-value: 0
+      logic-delete-value: 1
+
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl

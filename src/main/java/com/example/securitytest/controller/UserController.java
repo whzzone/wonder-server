@@ -1,5 +1,6 @@
 package com.example.securitytest.controller;
 
+import com.example.securitytest.common.validation.group.UpdateGroup;
 import com.example.securitytest.pojo.dto.UserDto;
 import com.example.securitytest.pojo.query.UserQuery;
 import com.example.securitytest.pojo.vo.PageData;
@@ -8,8 +9,6 @@ import com.example.securitytest.util.SecurityUtil;
 import com.gitee.whzzone.web.Result;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +17,13 @@ import org.springframework.web.bind.annotation.*;
  * @author : whz
  * @date : 2023/5/16 19:34
  */
+
 @RestController
 @RequestMapping("user")
-@CacheConfig(cacheNames = "UserController", keyGenerator = "customKeyGenerator")
 public class UserController {
 
     @Autowired
-    private UserService sysUserService;
+    private UserService userService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -38,31 +37,39 @@ public class UserController {
     @PostMapping("save")
     public Result save(@Validated @RequestBody UserDto dto){
         dto.setPassword(passwordEncoder.encode(dto.getPassword()));
-        sysUserService.save(dto);
+        userService.save(dto);
         return Result.ok("操作成功", dto);
     }
 
-    @PostMapping("updateById")
-    public Result updateById(@Validated @RequestBody UserDto dto){
-        sysUserService.updateById(dto);
+    @PostMapping("update")
+    public Result update(@Validated(UpdateGroup.class) @RequestBody UserDto dto){
+        userService.updateById(dto);
         return Result.ok("操作成功", dto);
     }
 
-    @PostMapping("list")
-    public Result<PageData<UserDto>> list(@Validated @RequestBody UserQuery query){
-        return Result.ok(sysUserService.page(query));
+    @ApiOperation("分页")
+    @PostMapping("page")
+    public Result<PageData<UserDto>> page(@Validated @RequestBody UserQuery query){
+        return Result.ok(userService.page(query));
     }
 
     @ApiOperation("获取")
     @GetMapping("get/{id}")
-    @Cacheable
     public Result get(@PathVariable Long id){
-        return Result.ok(sysUserService.getDtoById(id));
+        return Result.ok(userService.getDtoById(id));
     }
 
     @ApiOperation("删除")
     @GetMapping("delete/{id}")
     public Result delete(@PathVariable Long id){
-        return Result.ok(sysUserService.removeById(id));
+        return Result.ok(userService.removeById(id));
     }
+
+    @ApiOperation("改变启用状态")
+    @GetMapping("/enabledSwitch/{id}")
+    public Result enabledSwitch(@PathVariable Long id) {
+        userService.enabledSwitch(id);
+        return Result.ok();
+    }
+
 }

@@ -1,29 +1,34 @@
 package com.example.securitytest.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.securitytest.pojo.dto.BaseDto;
 import com.example.securitytest.pojo.entity.BaseEntity;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.List;
 
 /**
  * @author : whz
  * @date : 2023/5/22 16:27
  */
+
 public interface IEntityService<T extends BaseEntity<T>, D extends BaseDto<D>> extends IService<T> {
-    default boolean save(D d) {
+    default T save(D d) {
         try {
-            Class<T> clazz = getEntityClass();
-            T t = clazz.getDeclaredConstructor().newInstance();
+            Class<T> dClass = getTClass();
+            T t = dClass.getDeclaredConstructor().newInstance();
+
             BeanUtil.copyProperties(d, t);
             boolean save = save(t);
             if (save){
                 afterSaveHandler(t);
+                return t;
             }
-            return save;
+            return null;
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
         }
@@ -31,8 +36,15 @@ public interface IEntityService<T extends BaseEntity<T>, D extends BaseDto<D>> e
 
     default boolean updateById(D d) {
         try {
-            Class<T> clazz = getEntityClass();
-            T t = clazz.getDeclaredConstructor().newInstance();
+            Class<D> dClass = getDClass();
+            Field fieldId = dClass.getDeclaredField("id");
+            fieldId.setAccessible(true);
+            long id = (long) fieldId.get(d);
+            T t = getById(id);
+            if (t == null){
+                throw new RuntimeException(StrUtil.format("【{}】不存在", id));
+            }
+
             BeanUtil.copyProperties(d, t);
             boolean b = IService.super.updateById(t);
             if (b){
@@ -47,11 +59,14 @@ public interface IEntityService<T extends BaseEntity<T>, D extends BaseDto<D>> e
     default D getDtoById(Serializable id) {
         try {
             T t = IService.super.getById(id);
+            if (t == null){
+                throw new RuntimeException(StrUtil.format("【{}】不存在", id));
+            }
 
-            Class<D> dClass = (Class<D>) ReflectionKit.getSuperClassGenericType(this.getClass(), IEntityService.class, 1);
+            Class<D> dClass = getDClass();
 
             D d = dClass.newInstance();
-            BeanUtil.copyProperties(t, d);//name username
+            BeanUtil.copyProperties(t, d);
 
             return afterQueryHandler(d);
         }catch (Exception e){
@@ -102,6 +117,16 @@ public interface IEntityService<T extends BaseEntity<T>, D extends BaseDto<D>> e
 
     }
 
-    Class<T> getEntityClass();
+    default Class<T> getTClass(){
+        return (Class<T>) ReflectionKit.getSuperClassGenericType(this.getClass(), IEntityService.class, 0);
+    }
+
+    default Class<D> getDClass(){
+        return (Class<D>) ReflectionKit.getSuperClassGenericType(this.getClass(), IEntityService.class, 1);
+    }
+
+    default boolean isExist(Long id){
+        return getById(id) != null;
+    }
 
 }

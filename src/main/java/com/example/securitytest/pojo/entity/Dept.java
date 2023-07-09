@@ -16,4 +16,6 @@ public class Dept extends BaseEntity<Dept> {
 
     private Boolean enabled;
 
+    private Integer sort;
+
 }

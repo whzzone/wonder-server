@@ -17,9 +17,9 @@ public class UsernameLoginDto {
     @NotBlank
     private String password;
 
-    @NotBlank
-    private String code;
-
-    @NotBlank
-    private String uuid;
+//    @NotBlank
+//    private String code;
+//
+//    @NotBlank
+//    private String uuid;
 }

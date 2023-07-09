@@ -54,7 +54,7 @@ public class TokenFilter extends OncePerRequestFilter {
     private TimeUnit refreshUnit;
 
     @Autowired
-    private UserService sysUserService;
+    private UserService userService;
 
     @Autowired
     private RedisCache redisCache;
@@ -99,16 +99,16 @@ public class TokenFilter extends OncePerRequestFilter {
 
             Long userId = (Long) redisCache.get(tokenKey);
 
-            User sysUser = sysUserService.getById(userId);
+            User user = userService.getById(userId);
 
-            if (Objects.isNull(sysUser)) {
+            if (Objects.isNull(user)) {
                 response.setHeader("content-type", "application/json");
                 IoUtil.write(response.getOutputStream(), true, JSONUtil.toJsonStr(Result.error("用户不存在")).getBytes());
                 log.error("用户不存在");
                 return;
             }
 
-            sysUserService.verifyUser(sysUser);
+            userService.beforeLoginCheck(user);
 
             if (redisCache.getExpire(tokenKey) < refreshUnit.toSeconds(refreshTime)) {
                 redisCache.expire(tokenKey, cacheTime, cacheTimeUnit);
@@ -126,7 +126,7 @@ public class TokenFilter extends OncePerRequestFilter {
             }
 
             LoginUser loginUser = new LoginUser();
-            BeanUtil.copyProperties(sysUser, loginUser);
+            BeanUtil.copyProperties(user, loginUser);
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, list);
             authenticationToken.setDetails(new WebAuthenticationDetails(request));

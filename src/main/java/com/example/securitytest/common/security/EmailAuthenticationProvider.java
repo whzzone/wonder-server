@@ -32,7 +32,7 @@ public class EmailAuthenticationProvider implements AuthenticationProvider {
 
         User sysUser = sysUserService.getByEmail(email);
 
-        sysUserService.verifyUser(sysUser);
+        sysUserService.beforeLoginCheck(sysUser);
 
         if (!emailService.verifyEmailCode(email, code)) {
             throw new BadCredentialsException("验证码错误");

@@ -1,6 +1,8 @@
 package com.example.securitytest.service;
 
 import com.example.securitytest.pojo.dto.UserDto;
+import com.example.securitytest.pojo.entity.Dept;
+import com.example.securitytest.pojo.entity.Role;
 import com.example.securitytest.pojo.entity.User;
 import com.example.securitytest.pojo.query.UserQuery;
 import com.example.securitytest.pojo.vo.PageData;
@@ -12,12 +14,18 @@ import com.example.securitytest.pojo.vo.PageData;
 public interface UserService extends IEntityService<User, UserDto> {
     User getByEmail(String email);
 
-    void verifyUser(User sysUser);
+    void beforeLoginCheck(User sysUser);
 
     User getByUsername(String username);
 
     User getByOpenid(String openid);
 
+    Dept getUserDeptInfo(Long userId);
+
+    Role getUserRoleInfo(Long userId);
+
     PageData<UserDto> page(UserQuery query);
+
+    void enabledSwitch(Long id);
 
 }

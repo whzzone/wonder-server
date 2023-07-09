@@ -19,5 +19,7 @@ public class UserQuery extends QueryPage {
     @ApiModelProperty("手机")
     private String phone;
 
+    @ApiModelProperty("部门id")
+    private Long deptId;
 
 }
