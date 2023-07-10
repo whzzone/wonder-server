@@ -28,4 +28,9 @@ public interface UserService extends IEntityService<User, UserDto> {
 
     void enabledSwitch(Long id);
 
+    boolean existSameUsername(Long userId, String username);
+
+    boolean existSamePhone(Long userId, String phone);
+
+    boolean existSameEmail(Long userId, String email);
 }

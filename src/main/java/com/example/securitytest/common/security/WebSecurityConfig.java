@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${system-config.security.ignore-path}")
+    @Value("${security.ignore-path}")
     private String[] ignorePath;
 
     @Autowired

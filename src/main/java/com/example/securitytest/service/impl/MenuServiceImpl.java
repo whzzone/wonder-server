@@ -33,7 +33,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public List<MenuTreeDto> treeList(MenuQuery query) {
-        List<Menu> menuList = findAll();
+        List<Menu> menuList = getEnabledList();
 
         List<MenuTreeDto> menuTreeVos = BeanUtil.copyToList(menuList, MenuTreeDto.class);
 
@@ -77,7 +77,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
-    public List<Menu> findAll() {
+    public List<Menu> getEnabledList() {
         LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Menu::getEnabled, true);
         queryWrapper.orderByAsc(Menu::getSort);

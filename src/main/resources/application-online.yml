@@ -25,21 +25,6 @@ spring:
     type: redis
     cache-names: admin
 
-system-config:
-  security:
-    ignore-path: /swagger/**,/webjars/**,/v2/**,/swagger-resources/**,/doc.html,/favicon.ico,/auth/**,/test/**
-    login-type:
-      email: true
-      username: true
-      phone: true
-
-  cache:
-    token:
-      live-time: 24
-      live-unit: HOURS
-      refresh-time: 10
-      refresh-unit: MINUTES
-
 mybatis-plus:
   global-config:
     db-config:

@@ -41,16 +41,16 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class TokenFilter extends OncePerRequestFilter {
 
-    @Value("${system-config.cache.token.live-time}")
+    @Value("${security.cache.token.live-time}")
     private long cacheTime;
 
-    @Value("${system-config.cache.token.live-unit}")
+    @Value("${security.cache.token.live-unit}")
     private TimeUnit cacheTimeUnit;
 
-    @Value("${system-config.cache.token.refresh-time}")
+    @Value("${security.cache.token.refresh-time}")
     private long refreshTime;
 
-    @Value("${system-config.cache.token.refresh-unit}")
+    @Value("${security.cache.token.refresh-unit}")
     private TimeUnit refreshUnit;
 
     @Autowired
@@ -62,7 +62,7 @@ public class TokenFilter extends OncePerRequestFilter {
     @Autowired
     private MenuService menuService;
 
-    @Value("${system-config.security.ignore-path}")
+    @Value("${security.ignore-path}")
     private String[] ignorePath = new String[]{"/auth/**", "/test"};
 
     @Override

@@ -3,7 +3,6 @@ package com.example.securitytest.service;
 import com.example.securitytest.pojo.dto.RoleDto;
 import com.example.securitytest.pojo.entity.Role;
 import com.example.securitytest.pojo.query.RoleQuery;
-import com.example.securitytest.pojo.vo.IdAndNameVo;
 import com.example.securitytest.pojo.vo.PageData;
 
 import java.util.List;
@@ -14,9 +13,19 @@ import java.util.List;
  */
 public interface RoleService extends IEntityService<Role, RoleDto> {
 
-    List<IdAndNameVo> getAll();
+    PageData<RoleDto> page(RoleQuery query);
 
-    PageData<RoleDto> findPage(RoleQuery query);
+    boolean isAllExist(List<Long> roleIds);
 
-    void updateRoleMenu(RoleDto dto);
+    List<RoleDto> list(RoleQuery query);
+
+    boolean existSameCode(Long roleId, String code);
+
+    boolean existSameName(Long roleId, String name);
+
+    void addRelation(Long userId, List<Long> roleIds);
+
+    void removeRelation(Long userId);
+
+    List<Long> getRoleIdsByUserId(Long userId);
 }

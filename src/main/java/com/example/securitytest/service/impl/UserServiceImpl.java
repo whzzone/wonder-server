@@ -15,9 +15,11 @@ import com.example.securitytest.pojo.vo.PageData;
 import com.example.securitytest.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Value("${security.default-password}")
+    private String defaultPassword;
 
     @Override
     public User getByEmail(String email) {
@@ -102,6 +107,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             dto.setDeptId(dept.getId());
             dto.setDeptName(dept.getName());
         }
+
+        dto.setRoleIdList(roleService.getRoleIdsByUserId(dto.getId()));
 
         return dto;
     }
@@ -169,7 +176,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public void afterDeleteHandler(User sysUser) {
-        log.error("删除了{}", sysUser);
+        log.error("删除了{}", sysUser.toString());
     }
 
     @Override
@@ -182,12 +189,81 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         updateById(entity);
     }
 
+    @Transactional
     @Override
     public boolean updateById(UserDto dto) {
-        Dept dept = deptService.getById(dto.getDeptId());
-        Assert.notNull(dept,  "部门不存在");
         User user = getById(dto.getId());
+
+        if (user == null)
+            throw new RuntimeException(StrUtil.format("{} 不存在", dto.getId()));
+
+        // 添加用户与角色的关联
+        roleService.addRelation(dto.getId(), dto.getRoleIdList());
+
+        // 添加用户与部门的关联
+        userDeptService.addRelation(dto.getId(), dto.getDeptId());
+
         BeanUtil.copyProperties(dto, user, "password");
+
         return updateById(user);
     }
+
+    @Transactional
+    @Override
+    public User save(UserDto dto) {
+        if (StrUtil.isBlank(dto.getPassword())){
+            dto.setPassword(passwordEncoder.encode(defaultPassword));
+        }else {
+            dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+
+        User save = UserService.super.save(dto);
+
+        // 添加用户与角色的关联
+        roleService.addRelation(save.getId(), dto.getRoleIdList());
+
+        // 添加用户与部门的关联
+        userDeptService.addRelation(save.getId(), dto.getDeptId());
+
+        return save;
+    }
+
+    @Override
+    public UserDto beforeSaveHandler(UserDto dto) {
+        Assert.isFalse(existSameUsername(dto.getId(), dto.getUsername()), "{} 已存在", dto.getUsername());
+        Assert.isFalse(existSamePhone(dto.getId(), dto.getPhone()), "{} 已存在", dto.getPhone());
+        Assert.isFalse(existSameEmail(dto.getId(), dto.getEmail()), "{} 已存在", dto.getEmail());
+
+        return dto;
+    }
+
+    @Override
+    public boolean existSameUsername(Long userId, String username) {
+        Assert.notEmpty(username);
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getUsername, username);
+        queryWrapper.ne(userId != null, User::getId, userId);
+        return count(queryWrapper) > 0;
+    }
+
+    @Override
+    public boolean existSamePhone(Long userId, String phone) {
+        Assert.notEmpty(phone);
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getPhone, phone);
+        queryWrapper.ne(userId != null, User::getId, userId);
+        return count(queryWrapper) > 0;
+    }
+
+    @Override
+    public boolean existSameEmail(Long userId, String email) {
+        if (StrUtil.isBlank(email))
+            return false;
+
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getEmail, email);
+        queryWrapper.ne(userId != null, User::getId, userId);
+        return count(queryWrapper) > 0;
+    }
+
 }

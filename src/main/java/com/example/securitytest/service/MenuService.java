@@ -18,7 +18,7 @@ public interface MenuService  extends IEntityService<Menu, MenuDto>{
 
     List<MenuTreeDto> list(MenuQuery query);
 
-    List<Menu> findAll();
+    List<Menu> getEnabledList();
 
     List<MenuDto> findByUserId(Long userId);
 }

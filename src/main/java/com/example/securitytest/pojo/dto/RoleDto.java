@@ -1,5 +1,6 @@
 package com.example.securitytest.pojo.dto;
 
+import com.example.securitytest.common.ListLongSerializer;
 import com.example.securitytest.common.LongSerializer;
 import com.example.securitytest.common.validation.group.CreateGroup;
 import com.example.securitytest.common.validation.group.UpdateGroup;
@@ -19,18 +20,19 @@ public class RoleDto extends BaseDto<RoleDto> {
     @JsonSerialize(using = LongSerializer.class)
     private Long id;
 
-    @ApiModelProperty("角色名称")
-    @NotBlank(message = "角色名称不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @ApiModelProperty("名称")
+    @NotBlank(message = "名称不能为空", groups = {CreateGroup.class, UpdateGroup.class})
     private String name;
 
-    @ApiModelProperty("角色描述")
+    @ApiModelProperty("描述")
     private String description;
 
-    @ApiModelProperty("角色编码")
-    @NotBlank(message = "角色编码不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @ApiModelProperty("编码")
+    @NotBlank(message = "编码不能为空", groups = {CreateGroup.class, UpdateGroup.class})
     private String code;
 
     @ApiModelProperty("菜单ids")
+    @JsonSerialize(using = ListLongSerializer.class)
     private List<Long> menuIds;
 
 }

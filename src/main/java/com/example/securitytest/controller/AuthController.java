@@ -58,10 +58,10 @@ public class AuthController {
     @Autowired
     private UserService sysUserService;
 
-    @Value("${system-config.cache.token.live-time}")
+    @Value("${security.cache.token.live-time}")
     private long cacheTime;
 
-    @Value("${system-config.cache.token.live-unit}")
+    @Value("${security.cache.token.live-unit}")
     private TimeUnit cacheTimeUnit;
 
     @ApiOperation("账号密码登录-获取验证码")
