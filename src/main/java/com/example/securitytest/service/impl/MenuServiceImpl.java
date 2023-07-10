@@ -1,17 +1,21 @@
 package com.example.securitytest.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.securitytest.mapper.MenuMapper;
-import com.example.securitytest.pojo.dto.MenuTreeDto;
 import com.example.securitytest.pojo.dto.MenuDto;
+import com.example.securitytest.pojo.dto.MenuTreeDto;
 import com.example.securitytest.pojo.entity.Menu;
+import com.example.securitytest.pojo.entity.RoleMenu;
 import com.example.securitytest.pojo.query.MenuQuery;
 import com.example.securitytest.service.MenuService;
+import com.example.securitytest.service.RoleMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -25,6 +29,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Autowired
     private MenuMapper menuMapper;
+
+    @Autowired
+    private RoleMenuService roleMenuService;
 
     @Override
     public List<String> findPermitByUserId(Long userId) {
@@ -100,4 +107,18 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return menuDto;
     }
 
+    @Override
+    public List<Long> getIdListByRoleId(Long roleId) {
+        if (roleId == null)
+            return new ArrayList<>();
+
+        LambdaQueryWrapper<RoleMenu> rmLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        rmLambdaQueryWrapper.eq(RoleMenu::getRoleId, roleId);
+        rmLambdaQueryWrapper.select(RoleMenu::getMenuId);
+        List<RoleMenu> list = roleMenuService.list(rmLambdaQueryWrapper);
+        if (CollectionUtil.isEmpty(list))
+            return new ArrayList<>();
+
+        return list.stream().map(RoleMenu::getMenuId).collect(Collectors.toList());
+    }
 }

@@ -13,6 +13,7 @@ import com.example.securitytest.pojo.entity.Role;
 import com.example.securitytest.pojo.entity.UserRole;
 import com.example.securitytest.pojo.query.RoleQuery;
 import com.example.securitytest.pojo.vo.PageData;
+import com.example.securitytest.service.MenuService;
 import com.example.securitytest.service.RoleMenuService;
 import com.example.securitytest.service.RoleService;
 import com.example.securitytest.service.UserRoleService;
@@ -41,6 +42,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Autowired
     private UserRoleService userRoleService;
+
+    @Autowired
+    private MenuService menuService;
 
     @Override
     public PageData<RoleDto> page(RoleQuery query) {
@@ -172,5 +176,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         List<UserRole> list = userRoleService.list(queryWrapper);
 
         return list.stream().map(UserRole::getRoleId).collect(Collectors.toList());
+    }
+
+    @Override
+    public RoleDto afterQueryHandler(RoleDto dto) {
+        List<Long> menuIdList = menuService.getIdListByRoleId(dto.getId());
+        dto.setMenuIds(menuIdList);
+        return dto;
     }
 }
