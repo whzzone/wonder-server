@@ -1,6 +1,5 @@
 package com.example.securitytest.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -24,12 +23,6 @@ public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu> i
     private RoleMenuMapper roleMenuMapper;
 
     @Override
-    public void insertBatch(List<RoleMenu> roleMenuList) {
-        if (CollectionUtil.isNotEmpty(roleMenuList))
-            roleMenuMapper.insertBatch(roleMenuList);
-    }
-
-    @Override
     public void addRelation(Long roleId, List<Long> menuIds) {
         // 移除关联
         removeRelation(roleId);
@@ -44,7 +37,7 @@ public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu> i
             entityList.add(entity);
         }
 
-        insertBatch(entityList);
+        super.saveBatch(entityList);
     }
 
     @Override

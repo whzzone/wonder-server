@@ -184,4 +184,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         dto.setMenuIds(menuIdList);
         return dto;
     }
+
+    @Override
+    public Role save(RoleDto dto) {
+        Role save = RoleService.super.save(dto);
+        // 添加角色与权限的关联
+        roleMenuService.addRelation(save.getId(), dto.getMenuIds());
+        return save;
+    }
+
 }

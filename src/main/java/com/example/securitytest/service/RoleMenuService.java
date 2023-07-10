@@ -11,8 +11,6 @@ import java.util.List;
  */
 public interface RoleMenuService extends IEntityService<RoleMenu, RoleMenuDto> {
 
-    void insertBatch(List<RoleMenu> roleMenuList);
-
     void addRelation(Long roleId, List<Long> menuIds);
 
     void removeRelation(Long roleId);
