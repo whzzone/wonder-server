@@ -80,33 +80,21 @@ public class TokenFilter extends OncePerRequestFilter {
 
             String token = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-            if (StrUtil.isBlank(token)) {
-                response.setHeader("content-type", "application/json");
-                IoUtil.write(response.getOutputStream(), true, JSONUtil.toJsonStr(Result.error("未携带token访问")).getBytes());
-                log.error("未携带token访问");
-                return;
-            }
+            if (StrUtil.isBlank(token))
+                throw new  RuntimeException("未携带token访问");
 
             String tokenKey = StrUtil.format(CacheKey.TOKEN_USERID, token);
 
             Boolean hasKey = redisCache.hasKey(tokenKey);
-            if (Boolean.FALSE.equals(hasKey)) {
-                response.setHeader("content-type", "application/json");
-                IoUtil.write(response.getOutputStream(), true, JSONUtil.toJsonStr(Result.error("失效的token")).getBytes());
-                log.error("失效的token");
-                return;
-            }
+            if (Boolean.FALSE.equals(hasKey))
+                throw new RuntimeException("失效的token");
 
             Long userId = (Long) redisCache.get(tokenKey);
 
             User user = userService.getById(userId);
 
-            if (Objects.isNull(user)) {
-                response.setHeader("content-type", "application/json");
-                IoUtil.write(response.getOutputStream(), true, JSONUtil.toJsonStr(Result.error("用户不存在")).getBytes());
-                log.error("用户不存在");
-                return;
-            }
+            if (Objects.isNull(user))
+                throw new RuntimeException("用户不存在");
 
             userService.beforeLoginCheck(user);
 
@@ -134,8 +122,8 @@ public class TokenFilter extends OncePerRequestFilter {
 
         } catch (Exception e) {
             response.setHeader("content-type", "application/json");
-            IoUtil.write(response.getOutputStream(), true, JSONUtil.toJsonStr(Result.error(e.getMessage())).getBytes());
-            log.error(e.getMessage());
+            IoUtil.write(response.getOutputStream(), true, JSONUtil.toJsonStr(Result.error(Result.UNAUTHORIZED, e.getMessage())).getBytes());
+            e.printStackTrace();
             return;
         }
 
