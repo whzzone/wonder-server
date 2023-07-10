@@ -15,12 +15,11 @@ security:
     username: true
     phone: true
 
-  cache:
-    token:
-      live-time: 24
-      live-unit: HOURS
-      refresh-time: 10
-      refresh-unit: MINUTES
+  token:
+    live-time: 24
+    live-unit: HOURS
+    refresh-time: 10
+    refresh-unit: MINUTES
 
 wx:
   miniapp:

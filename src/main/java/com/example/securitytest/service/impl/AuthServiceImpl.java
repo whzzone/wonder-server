@@ -45,10 +45,10 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    @Value("${security.cache.token.live-time}")
+    @Value("${security.token.live-time}")
     private long cacheTime;
 
-    @Value("${security.cache.token.live-unit}")
+    @Value("${security.token.live-unit}")
     private TimeUnit cacheTimeUnit;
 
     @Value("${security.login-type.email}")
@@ -66,10 +66,10 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private RedisCache redisCache;
 
-    @Value("${security.cache.token.refresh-time}")
+    @Value("${security.token.refresh-time}")
     private long refreshTime;
 
-    @Value("${security.cache.token.refresh-unit}")
+    @Value("${security.token.refresh-unit}")
     private TimeUnit refreshUnit;
 
     @Autowired

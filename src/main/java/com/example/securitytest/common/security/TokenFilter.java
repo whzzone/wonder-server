@@ -41,16 +41,16 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class TokenFilter extends OncePerRequestFilter {
 
-    @Value("${security.cache.token.live-time}")
+    @Value("${security.token.live-time}")
     private long cacheTime;
 
-    @Value("${security.cache.token.live-unit}")
+    @Value("${security.token.live-unit}")
     private TimeUnit cacheTimeUnit;
 
-    @Value("${security.cache.token.refresh-time}")
+    @Value("${security.token.refresh-time}")
     private long refreshTime;
 
-    @Value("${security.cache.token.refresh-unit}")
+    @Value("${security.token.refresh-unit}")
     private TimeUnit refreshUnit;
 
     @Autowired
