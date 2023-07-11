@@ -28,4 +28,6 @@ public interface RoleService extends IEntityService<Role, RoleDto> {
     void removeRelation(Long userId);
 
     List<Long> getRoleIdsByUserId(Long userId);
+
+    void enabledSwitch(Long id);
 }

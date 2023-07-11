@@ -35,4 +35,7 @@ public class RoleDto extends BaseDto<RoleDto> {
     @JsonSerialize(using = ListLongSerializer.class)
     private List<Long> menuIds;
 
+    @ApiModelProperty("是否启用")
+    private Boolean enabled;
+
 }

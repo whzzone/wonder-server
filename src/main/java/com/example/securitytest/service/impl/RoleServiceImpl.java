@@ -193,4 +193,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         return save;
     }
 
+    @Override
+    public void enabledSwitch(Long id) {
+        Role entity = getById(id);
+        if (entity == null){
+            throw new RuntimeException("角色不存在");
+        }
+        entity.setEnabled(!entity.getEnabled());
+        updateById(entity);
+    }
 }

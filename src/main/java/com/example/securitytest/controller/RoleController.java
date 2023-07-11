@@ -10,10 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,5 +36,12 @@ public class RoleController extends EntityController<Role, RoleService, RoleDto>
     @PostMapping("page")
     public Result<PageData<RoleDto>> page(@Validated @RequestBody RoleQuery query){
         return Result.ok(roleService.page(query));
+    }
+
+    @ApiOperation("改变启用状态")
+    @GetMapping("/enabledSwitch/{id}")
+    public Result enabledSwitch(@PathVariable Long id) {
+        roleService.enabledSwitch(id);
+        return Result.ok();
     }
 }
