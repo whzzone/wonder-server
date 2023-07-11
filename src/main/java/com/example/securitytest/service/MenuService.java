@@ -23,4 +23,6 @@ public interface MenuService  extends IEntityService<Menu, MenuDto>{
     List<MenuDto> findByUserId(Long userId);
 
     List<Long> getIdListByRoleId(Long id);
+
+    boolean existSamePermission(Long id, String Permission);
 }
