@@ -8,7 +8,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,5 +55,12 @@ public class GlobalException {
     @ResponseBody
     public Result<String> badCredentialsException(BadCredentialsException e) {
         return Result.error("认证失败：" + e.getMessage());
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    @ResponseBody
+    public Result handleNotFoundException(HttpServletRequest request, NoHandlerFoundException ex) {
+        String path = request.getRequestURI().substring(request.getContextPath().length()).replaceAll("[/]+$", "");
+        return Result.error("访问不存在的接口：" + path);
     }
 }

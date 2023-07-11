@@ -2,6 +2,7 @@ package com.example.securitytest.controller;
 
 import com.example.securitytest.pojo.dto.MenuDto;
 import com.example.securitytest.pojo.dto.MenuTreeDto;
+import com.example.securitytest.pojo.entity.Menu;
 import com.example.securitytest.pojo.query.MenuQuery;
 import com.example.securitytest.service.MenuService;
 import com.example.securitytest.util.SecurityUtil;
@@ -22,49 +23,19 @@ import java.util.List;
 @RestController
 @RequestMapping("/menu")
 @Validated
-public class MenuController {
+public class MenuController extends EntityController<Menu, MenuService, MenuDto> {
 
     @Autowired
     private MenuService menuService;
 
-    @ApiOperation("添加菜单")
-//    @PreAuthorize("hasAuthority('sys:role:add')")
-    @PostMapping("/save")
-    public Result save(@Validated @RequestBody MenuDto dto){
-        menuService.save(dto);
-        return Result.ok("操作成功");
-    }
-//
-    @ApiOperation("编辑菜单")
-//    @PreAuthorize("hasAuthority('sys:role:edit')")
-    @PostMapping("/updateById")
-    public Result updateById(@Validated @RequestBody MenuDto dto){
-        menuService.updateById(dto);
-        return Result.ok("操作成功");
-    }
-
-    @ApiOperation("删除菜单")
-//    @PreAuthorize("hasAuthority('sys:role:del')")
-    @GetMapping("/delete/{id}")
-    public Result del(@PathVariable Long id){
-        menuService.removeById(id);
-        return Result.ok("操作成功");
-    }
-
-    @ApiOperation("根据id查找")
-    @GetMapping("/get/{id}")
-    public Result<MenuDto> findById(@PathVariable Long id){
-        return Result.ok("操作成功", menuService.getDtoById(id));
-    }
-
-    @ApiOperation("查询树形菜单列表")
+    @ApiOperation("查询菜单树")
 //    @PreAuthorize("hasAuthority('sys:menu:view')")
     @PostMapping("/treeList")
     public Result<List<MenuTreeDto>> treeList(@RequestBody MenuQuery query){
         return Result.ok("操作成功", menuService.treeList(query));
     }
 
-    @ApiOperation("查询菜单列表")
+    @ApiOperation("列表")
     //    @PreAuthorize("hasAuthority('sys:menu:view')")
     @PostMapping("/list")
     public Result<List<MenuTreeDto>> list(@RequestBody MenuQuery query){

@@ -6,6 +6,11 @@ server:
 spring:
   profiles:
     active: online
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
 
 security:
   default-password: 123456
@@ -20,7 +25,6 @@ security:
     live-unit: HOURS
     refresh-time: 10
     refresh-unit: MINUTES
-
 wx:
   miniapp:
     configs:
