@@ -65,11 +65,11 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     }
 
     @Override
-    public boolean updateById(DeptDto deptDto) {
-        if (deptDto.getParentId() != null && !deptDto.getParentId().equals(0L) && !isExist(deptDto.getParentId())) {
+    public boolean updateById(DeptDto dto) {
+        if (dto.getParentId() != null && !dto.getParentId().equals(0L) && !isExist(dto.getParentId())) {
             throw new RuntimeException("父级不存在");
         }
-        return DeptService.super.updateById(deptDto);
+        return DeptService.super.updateById(dto);
     }
 
     @Override
@@ -78,16 +78,16 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     }
 
     @Override
-    public DeptDto afterQueryHandler(DeptDto deptDto) {
-        deptDto.setHasChildren(hasChildren(deptDto.getParentId()));
-        if (!deptDto.getParentId().equals(0L)) {
-            Dept parent = getById(deptDto.getParentId());
+    public DeptDto afterQueryHandler(DeptDto dto) {
+        dto.setHasChildren(hasChildren(dto.getParentId()));
+        if (!dto.getParentId().equals(0L)) {
+            Dept parent = getById(dto.getParentId());
             if (parent != null) {
-                deptDto.setParentName(parent.getName());
+                dto.setParentName(parent.getName());
             }
         }
 
-        return deptDto;
+        return dto;
     }
 
     @Override
