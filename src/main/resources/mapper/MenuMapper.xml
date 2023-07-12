@@ -68,14 +68,15 @@
             AND sm.menu_type = #{code}
     </select>
     <select id="findByUserId" resultType="com.gitee.whzzone.pojo.entity.Menu">
-        SELECT sm.id,
+        SELECT DISTINCT (sm.id) as id,
                sm.parent_id,
                sm.path,
                sm.permission,
                sm.component,
                sm.name,
                sm.icon,
-               sm.menu_type
+               sm.menu_type,
+               sm.sort
         FROM sys_menu sm
                  LEFT JOIN sys_role_menu srp ON sm.id = srp.menu_id
                  LEFT JOIN sys_user_role sur ON sur.role_id = srp.role_id
