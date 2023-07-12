@@ -10,16 +10,12 @@ import lombok.Getter;
 @Getter
 public enum MenuTypeEnums {
 
-
-
     M("目录", 1),
     C("菜单", 2),
-    B("按钮", 3)
+    B("按钮", 3);
 
-    ;
-
-    private String name;
-    private Integer code;
+    private final String name;
+    private final Integer code;
 
     MenuTypeEnums(String name, Integer code){
         this.name = name;

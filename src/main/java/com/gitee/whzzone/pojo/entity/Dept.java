@@ -1,6 +1,7 @@
 package com.gitee.whzzone.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
 import lombok.Data;
 
 /**

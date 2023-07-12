@@ -1,6 +1,7 @@
 package com.gitee.whzzone.pojo.dto;
 
-import com.gitee.whzzone.common.LongSerializer;
+import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
+import com.gitee.whzzone.common.serializer.LongSerializer;
 import com.gitee.whzzone.common.validation.group.CreateGroup;
 import com.gitee.whzzone.common.validation.group.UpdateGroup;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -15,7 +16,7 @@ import javax.validation.constraints.NotNull;
  * @date : 2023/5/22 20:18
  */
 @Data
-public class MenuDto extends BaseDto<MenuDto> {
+public class MenuDto extends EntityDto<MenuDto> {
 
     @JsonSerialize(using = LongSerializer.class)
     @NotNull(message = "id不能为空", groups = UpdateGroup.class)

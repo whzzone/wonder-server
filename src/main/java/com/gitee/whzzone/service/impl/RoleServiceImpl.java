@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitee.whzzone.mapper.RoleMapper;
-import com.gitee.whzzone.pojo.dto.PageData;
+import com.gitee.whzzone.pojo.PageData;
 import com.gitee.whzzone.pojo.dto.RoleDto;
 import com.gitee.whzzone.pojo.entity.Role;
 import com.gitee.whzzone.pojo.entity.UserRole;
@@ -75,7 +75,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public List<RoleDto> list(RoleQuery query) {
         LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.ne(Role::getCode, SecurityUtil.SUPER_ADMIN);
+        queryWrapper.ne(Role::getCode, SecurityUtil.ADMIN);
 
         if (StrUtil.isNotBlank(query.getName()))
             queryWrapper.like(Role::getName, query.getName());

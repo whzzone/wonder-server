@@ -1,4 +1,4 @@
-package com.gitee.whzzone.pojo.entity;
+package com.gitee.whzzone.common.base.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;

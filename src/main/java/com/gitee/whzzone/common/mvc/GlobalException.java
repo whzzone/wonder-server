@@ -1,4 +1,4 @@
-package com.gitee.whzzone.common;
+package com.gitee.whzzone.common.mvc;
 
 import com.gitee.whzzone.web.Result;
 import lombok.extern.slf4j.Slf4j;

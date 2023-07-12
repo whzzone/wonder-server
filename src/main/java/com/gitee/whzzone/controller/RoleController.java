@@ -1,6 +1,7 @@
 package com.gitee.whzzone.controller;
 
-import com.gitee.whzzone.pojo.dto.PageData;
+import com.gitee.whzzone.common.base.controller.EntityController;
+import com.gitee.whzzone.pojo.PageData;
 import com.gitee.whzzone.pojo.dto.RoleDto;
 import com.gitee.whzzone.pojo.entity.Role;
 import com.gitee.whzzone.pojo.query.RoleQuery;

@@ -1,8 +1,7 @@
-package com.gitee.whzzone.pojo.dto;
+package com.gitee.whzzone.pojo.dto.auth;
 
 import lombok.Data;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -10,12 +9,17 @@ import javax.validation.constraints.NotBlank;
  * @date : 2023/5/17 16:23
  */
 @Data
-public class EmailLoginDto {
+public class LoginDto {
 
     @NotBlank
-    @Email
-    private String email;
+    private String username;
+
+    @NotBlank
+    private String password;
 
     @NotBlank
     private String code;
+
+    @NotBlank
+    private String uuid;
 }

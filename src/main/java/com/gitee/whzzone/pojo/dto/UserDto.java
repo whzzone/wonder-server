@@ -1,7 +1,8 @@
 package com.gitee.whzzone.pojo.dto;
 
-import com.gitee.whzzone.common.ListLongSerializer;
-import com.gitee.whzzone.common.LongSerializer;
+import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
+import com.gitee.whzzone.common.serializer.ListLongSerializer;
+import com.gitee.whzzone.common.serializer.LongSerializer;
 import com.gitee.whzzone.common.validation.group.CreateGroup;
 import com.gitee.whzzone.common.validation.group.UpdateGroup;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,7 +14,7 @@ import javax.validation.constraints.*;
 import java.util.List;
 
 @Data
-public class UserDto extends BaseDto<UserDto> {
+public class UserDto extends EntityDto<UserDto> {
 
     @NotNull(message = "id不能为空",groups = UpdateGroup.class)
     @JsonSerialize(using = LongSerializer.class)

@@ -1,5 +1,6 @@
 package com.gitee.whzzone.service;
 
+import com.gitee.whzzone.common.base.service.EntityService;
 import com.gitee.whzzone.pojo.dto.MenuTreeDto;
 import com.gitee.whzzone.pojo.dto.MenuDto;
 import com.gitee.whzzone.pojo.entity.Menu;
@@ -11,7 +12,7 @@ import java.util.List;
  * @author : whz
  * @date : 2023/5/22 20:17
  */
-public interface MenuService  extends IEntityService<Menu, MenuDto>{
+public interface MenuService  extends EntityService<Menu, MenuDto> {
     List<String> findPermitByUserId(Long userId);
 
     List<MenuTreeDto> treeList(MenuQuery query);

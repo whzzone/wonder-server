@@ -1,5 +1,6 @@
 package com.gitee.whzzone.controller;
 
+import com.gitee.whzzone.common.base.controller.EntityController;
 import com.gitee.whzzone.pojo.dto.MenuDto;
 import com.gitee.whzzone.pojo.dto.MenuTreeDto;
 import com.gitee.whzzone.pojo.entity.Menu;

@@ -1,12 +1,12 @@
-package com.gitee.whzzone.service;
+package com.gitee.whzzone.common.base.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.gitee.whzzone.pojo.dto.BaseDto;
-import com.gitee.whzzone.pojo.entity.BaseEntity;
+import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
+import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -18,7 +18,7 @@ import java.util.List;
  * @date : 2023/5/22 16:27
  */
 
-public interface IEntityService<T extends BaseEntity<T>, D extends BaseDto<D>> extends IService<T> {
+public interface EntityService<T extends BaseEntity<T>, D extends EntityDto<D>> extends IService<T> {
 
     /**
      * 添加
@@ -140,11 +140,11 @@ public interface IEntityService<T extends BaseEntity<T>, D extends BaseDto<D>> e
     }
 
     default Class<T> getTClass() {
-        return (Class<T>) ReflectionKit.getSuperClassGenericType(this.getClass(), IEntityService.class, 0);
+        return (Class<T>) ReflectionKit.getSuperClassGenericType(this.getClass(), EntityService.class, 0);
     }
 
     default Class<D> getDClass() {
-        return (Class<D>) ReflectionKit.getSuperClassGenericType(this.getClass(), IEntityService.class, 1);
+        return (Class<D>) ReflectionKit.getSuperClassGenericType(this.getClass(), EntityService.class, 1);
     }
 
     default boolean isExist(Long id) {

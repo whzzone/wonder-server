@@ -1,6 +1,7 @@
 package com.gitee.whzzone.service;
 
-import com.gitee.whzzone.pojo.dto.PageData;
+import com.gitee.whzzone.common.base.service.EntityService;
+import com.gitee.whzzone.pojo.PageData;
 import com.gitee.whzzone.pojo.dto.ResetPWDDto;
 import com.gitee.whzzone.pojo.dto.UserDto;
 import com.gitee.whzzone.pojo.entity.Dept;
@@ -12,7 +13,7 @@ import com.gitee.whzzone.pojo.query.UserQuery;
  * @author :whz
  * @date : 2023/5/16 23:03
  */
-public interface UserService extends IEntityService<User, UserDto> {
+public interface UserService extends EntityService<User, UserDto> {
     User getByEmail(String email);
 
     void beforeLoginCheck(User sysUser);

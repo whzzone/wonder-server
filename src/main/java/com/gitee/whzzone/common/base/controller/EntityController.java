@@ -1,10 +1,10 @@
-package com.gitee.whzzone.controller;
+package com.gitee.whzzone.common.base.controller;
 
 import com.gitee.whzzone.common.validation.group.CreateGroup;
 import com.gitee.whzzone.common.validation.group.UpdateGroup;
-import com.gitee.whzzone.pojo.dto.BaseDto;
-import com.gitee.whzzone.pojo.entity.BaseEntity;
-import com.gitee.whzzone.service.IEntityService;
+import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
+import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.common.base.service.EntityService;
 import com.gitee.whzzone.web.Result;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author Create by whz at 2023/7/8
  */
 
-public abstract class EntityController<T extends BaseEntity<T>, S extends IEntityService<T, D>, D extends BaseDto<D>> {
+public abstract class EntityController<T extends BaseEntity<T>, S extends EntityService<T, D>, D extends EntityDto<D>> {
 
     @Autowired
     private S service;

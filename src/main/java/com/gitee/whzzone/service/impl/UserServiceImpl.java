@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitee.whzzone.mapper.UserMapper;
-import com.gitee.whzzone.pojo.dto.PageData;
+import com.gitee.whzzone.pojo.PageData;
 import com.gitee.whzzone.pojo.dto.ResetPWDDto;
 import com.gitee.whzzone.pojo.dto.UserDto;
 import com.gitee.whzzone.pojo.query.UserQuery;

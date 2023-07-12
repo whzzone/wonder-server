@@ -1,4 +1,4 @@
-package com.gitee.whzzone.common.weixin;
+package com.gitee.whzzone.pojo.dto.auth;
 
 import lombok.Data;
 

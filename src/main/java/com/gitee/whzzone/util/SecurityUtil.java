@@ -12,9 +12,9 @@ public class SecurityUtil {
     private SecurityUtil() {}
 
     /**
-     * 超级管理员角色编码
+     * 超级管理员角色编码 和 账号
      */
-    public static final String SUPER_ADMIN = "super_admin";
+    public static final String ADMIN = "admin";
 
     public static LoginUser getLoginUser(){
         return (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

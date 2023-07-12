@@ -1,6 +1,7 @@
 package com.gitee.whzzone.pojo.dto;
 
-import com.gitee.whzzone.common.LongSerializer;
+import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
+import com.gitee.whzzone.common.serializer.LongSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * @date : 2023/2/7 16:29
  */
 @Data
-public class MenuTreeDto extends BaseDto {
+public class MenuTreeDto extends EntityDto {
     @JsonSerialize(using = LongSerializer.class)
     private Long id;
     @JsonSerialize(using = LongSerializer.class)

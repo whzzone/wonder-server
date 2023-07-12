@@ -1,4 +1,4 @@
-package com.gitee.whzzone.pojo.dto;
+package com.gitee.whzzone.pojo;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.AllArgsConstructor;

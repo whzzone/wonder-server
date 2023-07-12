@@ -1,5 +1,6 @@
 package com.gitee.whzzone.pojo.dto;
 
+import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
 import lombok.Data;
 
 /**
@@ -7,6 +8,6 @@ import lombok.Data;
  */
 
 @Data
-public class UserRoleDto extends BaseDto<UserRoleDto> {
+public class UserRoleDto extends EntityDto<UserRoleDto> {
 
 }

@@ -1,7 +1,7 @@
 package com.gitee.whzzone.service;
 
-import com.gitee.whzzone.common.weixin.WxLoginDto;
-import com.gitee.whzzone.pojo.dto.EmailLoginDto;
+import com.gitee.whzzone.pojo.dto.auth.WxLoginDto;
+import com.gitee.whzzone.pojo.dto.auth.EmailLoginDto;
 import com.gitee.whzzone.pojo.dto.auth.UsernameLoginDto;
 import com.gitee.whzzone.web.Result;
 
