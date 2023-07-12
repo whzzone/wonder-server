@@ -1,5 +1,6 @@
 package com.example.securitytest.service;
 
+import com.example.securitytest.pojo.dto.ResetPWDDto;
 import com.example.securitytest.pojo.dto.UserDto;
 import com.example.securitytest.pojo.entity.Dept;
 import com.example.securitytest.pojo.entity.Role;
@@ -33,4 +34,6 @@ public interface UserService extends IEntityService<User, UserDto> {
     boolean existSamePhone(Long userId, String phone);
 
     boolean existSameEmail(Long userId, String email);
+
+    void resetPWD(ResetPWDDto dto);
 }

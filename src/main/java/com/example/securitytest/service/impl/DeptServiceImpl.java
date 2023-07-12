@@ -41,7 +41,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         List<DeptDto> dtoList = BeanUtil.copyToList(list, DeptDto.class);
 
         for (DeptDto dto : dtoList) {
-            Long count = count(new LambdaQueryWrapper<Dept>().eq(Dept::getParentId, dto.getId()));
+            long count = count(new LambdaQueryWrapper<Dept>().eq(Dept::getParentId, dto.getId()));
             dto.setHasChildren(count > 0);
         }
 

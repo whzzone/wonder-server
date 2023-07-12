@@ -5,9 +5,11 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.securitytest.mapper.UserMapper;
+import com.example.securitytest.pojo.dto.ResetPWDDto;
 import com.example.securitytest.pojo.dto.UserDto;
 import com.example.securitytest.pojo.entity.*;
 import com.example.securitytest.pojo.query.UserQuery;
@@ -266,4 +268,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return count(queryWrapper) > 0;
     }
 
+    @Override
+    public void resetPWD(ResetPWDDto dto) {
+        if (StrUtil.isBlank(dto.getPassword()))
+            throw new RuntimeException("新密码不能为空");
+
+        if (!isExist(dto.getId()))
+            throw new RuntimeException("用户不存在：" + dto.getId());
+
+        String encode = passwordEncoder.encode(dto.getPassword());
+
+        LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.set(User::getPassword, encode);
+        updateWrapper.eq(User::getId, dto.getId());
+        update(updateWrapper);
+    }
 }

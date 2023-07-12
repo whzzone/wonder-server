@@ -1,5 +1,6 @@
 package com.example.securitytest.controller;
 
+import com.example.securitytest.pojo.dto.ResetPWDDto;
 import com.example.securitytest.pojo.dto.UserDto;
 import com.example.securitytest.pojo.entity.User;
 import com.example.securitytest.pojo.query.UserQuery;
@@ -9,6 +10,7 @@ import com.gitee.whzzone.web.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +37,14 @@ public class UserController extends EntityController<User, UserService, UserDto>
     @GetMapping("/enabledSwitch/{id}")
     public Result enabledSwitch(@PathVariable Long id) {
         userService.enabledSwitch(id);
+        return Result.ok();
+    }
+
+    @ApiOperation("重置密码")
+    @PreAuthorize("hasAuthority('sys:user:resetPWD')")
+    @PostMapping("resetPWD")
+    public Result resetPWD(@Validated @RequestBody ResetPWDDto dto){
+        userService.resetPWD(dto);
         return Result.ok();
     }
 

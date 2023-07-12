@@ -47,8 +47,9 @@ public class GlobalException {
 
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseBody
-    public Result accessDeniedException(AccessDeniedException e) {
-        return Result.error("未拥有访问权限：" + e.getMessage());
+    public Result accessDeniedException(HttpServletRequest request, AccessDeniedException e) {
+        String path = request.getRequestURI().substring(request.getContextPath().length()).replaceAll("[/]+$", "");
+        return Result.error("无权限访问接口：" + path);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
