@@ -1,6 +1,6 @@
 server:
   servlet:
-    context-path: /security-admin
+    context-path: /wonder-server
   port: 8080
 
 spring:
