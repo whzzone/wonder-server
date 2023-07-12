@@ -4,6 +4,7 @@ import com.example.securitytest.common.ListLongSerializer;
 import com.example.securitytest.common.LongSerializer;
 import com.example.securitytest.common.validation.group.CreateGroup;
 import com.example.securitytest.common.validation.group.UpdateGroup;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -33,10 +34,13 @@ public class UserDto extends BaseDto<UserDto> {
     @Email
     private String email;
 
+    @JsonIgnore
     private String password;
 
+    @JsonIgnore
     private String openId;
 
+    @JsonIgnore
     private String unionId;
 
     private Boolean enabled;

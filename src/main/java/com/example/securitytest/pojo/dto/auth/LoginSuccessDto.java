@@ -1,5 +1,6 @@
 package com.example.securitytest.pojo.dto.auth;
 
+import com.example.securitytest.pojo.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,5 +17,7 @@ public class LoginSuccessDto {
     private String token;
 
     private Long expire;
+
+    private UserDto userinfo;
 
 }

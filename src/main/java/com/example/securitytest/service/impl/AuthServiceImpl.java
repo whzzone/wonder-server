@@ -133,6 +133,7 @@ public class AuthServiceImpl implements AuthService {
             res.setExpire(cacheTimeUnit.toSeconds(cacheTime));
             UserDto sysUserDto = new UserDto();
             BeanUtil.copyProperties(user, sysUserDto);
+            res.setUserinfo(sysUserDto);
 
             return Result.ok("登录成功", res);
 
