@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>top.weihuazhou</groupId>
-    <artifactId>security-test</artifactId>
+    <artifactId>wonder-server</artifactId>
     <version>1.0</version>
-    <name>security-test</name>
-    <description>security-test</description>
+    <name>wonder-server</name>
+    <description>wonder-server</description>
 
     <properties>
         <java.version>8</java.version>
