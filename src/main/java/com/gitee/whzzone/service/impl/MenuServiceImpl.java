@@ -99,12 +99,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
-    public MenuDto afterQueryHandler(MenuDto menuDto) {
-        Menu parent = getById(menuDto.getParentId());
+    public MenuDto afterQueryHandler(MenuDto dto) {
+        Menu parent = getById(dto.getParentId());
         if (parent != null){
-            menuDto.setParentName(parent.getName());
+            dto.setParentName(parent.getName());
         }
-        return menuDto;
+        return dto;
     }
 
     @Override
