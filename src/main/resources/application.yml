@@ -10,7 +10,7 @@ spring:
     throw-exception-if-no-handler-found: true
   web:
     resources:
-      add-mappings: false
+      add-mappings: true
 
 security:
   default-password: 123456
