@@ -131,15 +131,15 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     public boolean existSamePermission(Long id, String permission){
         LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Menu::getPermission, permission);
-        queryWrapper.ne(id != null, Menu::getPermission, permission);
+        queryWrapper.ne(id != null, Menu::getId, id);
         return count(queryWrapper) > 0;
     }
 
     @Override
     public MenuDto beforeUpdateHandler(MenuDto dto) {
-        if (!existSamePermission(dto.getId(), dto.getPermission())){
+        if (existSamePermission(dto.getId(), dto.getPermission()))
             throw new RuntimeException("存在相同的权限标识：" + dto.getPermission());
-        }
+
         return dto;
     }
 }
