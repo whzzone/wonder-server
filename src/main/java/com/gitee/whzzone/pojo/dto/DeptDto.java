@@ -25,7 +25,6 @@ public class DeptDto extends EntityDto<DeptDto> {
     @ApiModelProperty("id")
     private Long id;
 
-    @NotNull(message = "父级id不能为空", groups = {CreateGroup.class, UpdateGroup.class})
     @JsonSerialize(using = LongSerializer.class)
     @ApiModelProperty("父级id")
     private Long parentId;
@@ -37,7 +36,6 @@ public class DeptDto extends EntityDto<DeptDto> {
     @ApiModelProperty("名称")
     private String name;
 
-    @NotNull(message = "是否启用不能为空", groups = {CreateGroup.class, UpdateGroup.class})
     @ApiModelProperty("是否启用")
     private Boolean enabled;
 

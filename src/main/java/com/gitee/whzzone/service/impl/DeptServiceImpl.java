@@ -49,17 +49,19 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     }
 
     @Override
-    public Dept save(DeptDto deptDto) {
-        if (deptDto.getParentId() != null && deptDto.getParentId().equals(0L) && !isExist(deptDto.getParentId())) {
+    public Dept save(DeptDto dto) {
+        if (dto.getParentId() == null) {
+            dto.setParentId(0L);
+        } else if (!isExist(dto.getParentId()))
             throw new RuntimeException("父级不存在");
+
+        if (dto.getEnabled() == null) {
+            dto.setEnabled(true);
         }
-        if (deptDto.getEnabled() == null) {
-            deptDto.setEnabled(true);
+        if (dto.getSort() == null) {
+            dto.setSort(99);
         }
-        if (deptDto.getSort() == null) {
-            deptDto.setSort(99);
-        }
-        return DeptService.super.save(deptDto);
+        return DeptService.super.save(dto);
     }
 
     @Override
@@ -78,9 +80,9 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     @Override
     public DeptDto afterQueryHandler(DeptDto deptDto) {
         deptDto.setHasChildren(hasChildren(deptDto.getParentId()));
-        if (!deptDto.getParentId().equals(0L)){
+        if (!deptDto.getParentId().equals(0L)) {
             Dept parent = getById(deptDto.getParentId());
-            if (parent != null){
+            if (parent != null) {
                 deptDto.setParentName(parent.getName());
             }
         }
@@ -99,7 +101,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
         List<DeptDto> dtoList = BeanUtil.copyToList(deptList, DeptDto.class);
 
-        if (CollectionUtil.isNotEmpty(dtoList) && dtoList.size() == 1){
+        if (CollectionUtil.isNotEmpty(dtoList) && dtoList.size() == 1) {
             DeptDto dto = dtoList.get(0);
             dto.setChildren(new ArrayList<>());
             dto.setHasChildren(false);
@@ -116,7 +118,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         ).collect(Collectors.toList());
     }
 
-    private List<DeptDto> getChildrenList(DeptDto tree, List<DeptDto> list){
+    private List<DeptDto> getChildrenList(DeptDto tree, List<DeptDto> list) {
         List<DeptDto> children = list.stream().filter(item -> Objects.equals(item.getParentId(), tree.getId())).map(
                 (item) -> {
                     item.setChildren(getChildrenList(item, list));
@@ -130,7 +132,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     @Override
     public void enabledSwitch(Long id) {
         Dept entity = getById(id);
-        if (entity == null){
+        if (entity == null) {
             throw new RuntimeException("部门不存在");
         }
         entity.setEnabled(!entity.getEnabled());
