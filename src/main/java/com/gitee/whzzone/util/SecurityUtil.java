@@ -20,4 +20,8 @@ public class SecurityUtil {
         return (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
+    public static boolean isAdmin(){
+        return false;
+    }
+
 }

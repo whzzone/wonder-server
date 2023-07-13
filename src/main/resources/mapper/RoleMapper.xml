@@ -35,4 +35,8 @@
             and user_id = #{userId}
     </select>
 
+    <select id="selectAllTest" resultType="com.gitee.whzzone.pojo.entity.Role">
+        select * from sys_role where deleted = 0
+    </select>
+
 </mapper>
