@@ -1,6 +1,7 @@
 package com.gitee.whzzone.common.aspect;
 
 import com.gitee.whzzone.common.annotation.DataScope;
+import com.gitee.whzzone.common.enums.ProvideTypeEnum;
 import com.gitee.whzzone.pojo.dto.DataScopeInfo;
 import com.gitee.whzzone.service.DataScopeService;
 import com.gitee.whzzone.util.SecurityUtil;
@@ -65,25 +66,15 @@ public class DataScopeAspect {
 
                 DataScopeInfo dataScopeInfo = dataScopeService.execRuleByName(scopeName);
 
-                // 数据范围ids
-//                List<Long> scopeList = dataScopeService.execRule(scopeName);
-//                com.gitee.whzzone.pojo.entity.DataScope dataScopeEntity = dataScopeService.getByName(scopeName);
-//
                 DataScopeParam dataScopeParam = new DataScopeParam();
-//                dataScopeParam.setField(dataScopeEntity.getColumnName());
-//                dataScopeParam.setTableAlias(dataScopeEntity.getTableAlias());
-//
-//                if (CollectionUtil.isEmpty(scopeList))
-//                    throw new RuntimeException("没有查看权限：数据权限为0");
-//
-//                dataScopeParam.setSecretary(scopeList);
+
                 dataScopeParam.setDataScopeInfo(dataScopeInfo);
 
                 threadLocal.set(dataScopeParam);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("数据权限method切面错误：" + e.getMessage());
+            throw new RuntimeException("数据权限 method 切面错误：" + e.getMessage());
         }
 
     }
@@ -92,9 +83,6 @@ public class DataScopeAspect {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class DataScopeParam {
-        private String tableAlias;
-        private String field;
-        private List<Long> secretary;
         private DataScopeInfo dataScopeInfo;
     }
 
@@ -125,13 +113,19 @@ public class DataScopeAspect {
                 if (index >= 0 && parameterType == List.class) {
                     DataScope dataScope = (DataScope) annotations[index];
                     String scopeName = dataScope.value();
-                    args[i] = dataScopeService.execRule(scopeName);
+                    com.gitee.whzzone.pojo.entity.DataScope dataScopeEntity = dataScopeService.getByName(scopeName);
+                    if (!dataScopeEntity.getProvideType().equals(ProvideTypeEnum.METHOD.getCode())){
+                        throw new RuntimeException("@DataScope注解用在参数上只支持：ProvideType = 2 （方法）");
+                    }
+
+                    DataScopeInfo dataScopeInfo = dataScopeService.execRuleByEntity(dataScopeEntity);
+                    args[i] = dataScopeInfo.getIdList();
                 }
             }
             return point.proceed(args);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("数据权限形参切面错误：" + e.getMessage());
+            throw new RuntimeException("数据权限 形参 切面错误：" + e.getMessage());
         } catch (Throwable e) {
             e.printStackTrace();
             throw new RuntimeException(e);
