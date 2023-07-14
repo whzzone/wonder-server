@@ -9,17 +9,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.List;
 
 /**
@@ -27,6 +25,7 @@ import java.util.List;
  */
 @Aspect
 @Slf4j
+//@Order(1)
 @Component
 public class DataScopeAspect {
 
@@ -42,49 +41,30 @@ public class DataScopeAspect {
 
     // 切点
     @Pointcut("@annotation(com.gitee.whzzone.common.annotation.DataScope)")
-    public void dataScopePointCut() {
+    public void methodPointCut() {
     }
 
-    @After("dataScopePointCut()")
+    @After("methodPointCut()")
     public void clearThreadLocal() {
         threadLocal.remove();
         log.debug("threadLocal.remove()");
     }
 
-    @Before("dataScopePointCut()")
+    @Before("methodPointCut()")
     public void doBefore(JoinPoint point) {
-        try {
-            Signature signature = point.getSignature();
-            MethodSignature methodSignature = (MethodSignature) signature;
-            Method method = methodSignature.getMethod();
-            // 获得注解
-            DataScope dataScope = method.getAnnotation(DataScope.class);
 
+        Signature signature = point.getSignature();
+        MethodSignature methodSignature = (MethodSignature) signature;
+        Method method = methodSignature.getMethod();
+        // 获得注解
+        DataScope dataScope = method.getAnnotation(DataScope.class);
+
+        try {
             if (dataScope != null && !SecurityUtil.isAdmin()) {
                 String scopeName = dataScope.value();
-                com.gitee.whzzone.pojo.entity.DataScope dataScopeEntity = dataScopeService.findByName(scopeName);
-                if (dataScopeEntity == null)
-                    throw new RuntimeException("数据规则不存在：" + scopeName);
-
-                // todo 需要判断provideType
-
-                Class<?> clazz = Class.forName(dataScopeEntity.getClassName());
-                Method targetMethod = clazz.getDeclaredMethod(dataScopeEntity.getMethodName());
-
                 // 数据范围ids
-                List<Long> scopeList;
-
-                if (Modifier.isStatic(targetMethod.getModifiers())) {
-                    // 设置静态方法可访问
-                    targetMethod.setAccessible(true);
-                    // 执行静态方法
-                    scopeList = (List<Long>) targetMethod.invoke(null);
-                } else {
-                    // 创建类实例
-                    Object obj = clazz.newInstance();
-                    // 执行方法
-                    scopeList = (List<Long>) targetMethod.invoke(obj);
-                }
+                List<Long> scopeList = dataScopeService.execRule(scopeName);
+                com.gitee.whzzone.pojo.entity.DataScope dataScopeEntity = dataScopeService.getByName(scopeName);
 
                 DataScopeParam dataScopeParam = new DataScopeParam();
                 dataScopeParam.setField(dataScopeEntity.getColumnName());
@@ -99,7 +79,7 @@ public class DataScopeAspect {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("数据权限切面错误：" + e.getMessage());
+            throw new RuntimeException("数据权限method切面错误：" + e.getMessage());
         }
 
     }
@@ -111,6 +91,47 @@ public class DataScopeAspect {
         private String tableAlias;
         private String field;
         private List<Long> secretary;
+    }
+
+    // 形参切点
+    @Pointcut("execution(* *(.., @com.gitee.whzzone.common.annotation.DataScope (*), ..))")
+    public void parameterPointCut() {}
+
+    @Around("parameterPointCut()")
+    public Object doAround(ProceedingJoinPoint point) {
+        try {
+            Object[] args = point.getArgs();
+            MethodSignature methodSignature = (MethodSignature) point.getSignature();
+            Annotation[][] parameterAnnotations = methodSignature.getMethod().getParameterAnnotations();
+            // 遍历方法的参数注解和参数类型
+            for (int i = 0; i < parameterAnnotations.length; i++) {
+                Annotation[] annotations = parameterAnnotations[i];
+                Class<?> parameterType = methodSignature.getParameterTypes()[i];
+
+                int index = -1;
+
+                for (int k = 0; k < annotations.length; k++) {
+                    if (annotations[k] instanceof DataScope) {
+                        index = k;
+                        break;
+                    }
+                }
+
+                if (index >= 0 && parameterType == List.class) {
+                    DataScope dataScope = (DataScope) annotations[index];
+                    String scopeName = dataScope.value();
+                    args[i] = dataScopeService.execRule(scopeName);
+                }
+            }
+            return point.proceed(args);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("数据权限形参切面错误：" + e.getMessage());
+        } catch (Throwable e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
     }
 
 }

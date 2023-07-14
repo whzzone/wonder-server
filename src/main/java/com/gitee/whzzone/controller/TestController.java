@@ -2,6 +2,7 @@ package com.gitee.whzzone.controller;
 
 import com.gitee.whzzone.mapper.RoleMapper;
 import com.gitee.whzzone.pojo.entity.Role;
+import com.gitee.whzzone.service.TestService;
 import com.gitee.whzzone.web.Result;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,22 @@ public class TestController {
     @Autowired
     private RoleMapper roleMapper;
 
-    @ApiOperation("数据权限切面测试")
-    @GetMapping("dataScopeTest")
+    @Autowired
+    private TestService testService;
+
+    @ApiOperation("方法注解")
+    @GetMapping("method")
     public Result dataScopeTest(){
         List<Role> roles = roleMapper.selectAllTest();
         return Result.ok(roles);
     }
+
+    @ApiOperation("参数注解")
+    @GetMapping("paramarter")
+    public Result t(){
+        List<Long> longs = testService.injectTest("787899", null);
+        return Result.ok(longs);
+    }
+
 
 }
