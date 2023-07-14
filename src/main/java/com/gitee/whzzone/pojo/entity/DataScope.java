@@ -21,7 +21,9 @@ public class DataScope extends BaseEntity<DataScope> {
 
     private String columnName;
 
-    private String operation;
+    private String spliceType;
+
+    private String expression;
 
     private Integer provideType;
 

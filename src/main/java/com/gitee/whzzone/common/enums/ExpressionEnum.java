@@ -12,8 +12,7 @@ public enum ExpressionEnum {
     LT,
     LE,
     IN,
-    AND,
-    OR,
+    NOTIN,
     ISNULL,
     NOTNULL
 }

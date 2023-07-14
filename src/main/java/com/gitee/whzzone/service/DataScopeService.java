@@ -2,6 +2,7 @@ package com.gitee.whzzone.service;
 
 import com.gitee.whzzone.common.base.service.EntityService;
 import com.gitee.whzzone.pojo.dto.DataScopeDto;
+import com.gitee.whzzone.pojo.dto.DataScopeInfo;
 import com.gitee.whzzone.pojo.entity.DataScope;
 
 import java.util.List;
@@ -19,4 +20,5 @@ public interface DataScopeService extends EntityService<DataScope, DataScopeDto>
      */
     List<Long> execRule(String name);
 
+    DataScopeInfo execRuleByName(String name);
 }

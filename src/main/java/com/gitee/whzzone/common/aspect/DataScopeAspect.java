@@ -1,7 +1,7 @@
 package com.gitee.whzzone.common.aspect;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.gitee.whzzone.common.annotation.DataScope;
+import com.gitee.whzzone.pojo.dto.DataScopeInfo;
 import com.gitee.whzzone.service.DataScopeService;
 import com.gitee.whzzone.util.SecurityUtil;
 import lombok.AllArgsConstructor;
@@ -62,18 +62,22 @@ public class DataScopeAspect {
         try {
             if (dataScope != null && !SecurityUtil.isAdmin()) {
                 String scopeName = dataScope.value();
+
+                DataScopeInfo dataScopeInfo = dataScopeService.execRuleByName(scopeName);
+
                 // 数据范围ids
-                List<Long> scopeList = dataScopeService.execRule(scopeName);
-                com.gitee.whzzone.pojo.entity.DataScope dataScopeEntity = dataScopeService.getByName(scopeName);
-
+//                List<Long> scopeList = dataScopeService.execRule(scopeName);
+//                com.gitee.whzzone.pojo.entity.DataScope dataScopeEntity = dataScopeService.getByName(scopeName);
+//
                 DataScopeParam dataScopeParam = new DataScopeParam();
-                dataScopeParam.setField(dataScopeEntity.getColumnName());
-                dataScopeParam.setTableAlias(dataScopeEntity.getTableAlias());
-
-                if (CollectionUtil.isEmpty(scopeList))
-                    throw new RuntimeException("没有查看权限：数据权限为0");
-
-                dataScopeParam.setSecretary(scopeList);
+//                dataScopeParam.setField(dataScopeEntity.getColumnName());
+//                dataScopeParam.setTableAlias(dataScopeEntity.getTableAlias());
+//
+//                if (CollectionUtil.isEmpty(scopeList))
+//                    throw new RuntimeException("没有查看权限：数据权限为0");
+//
+//                dataScopeParam.setSecretary(scopeList);
+                dataScopeParam.setDataScopeInfo(dataScopeInfo);
 
                 threadLocal.set(dataScopeParam);
             }
@@ -91,6 +95,7 @@ public class DataScopeAspect {
         private String tableAlias;
         private String field;
         private List<Long> secretary;
+        private DataScopeInfo dataScopeInfo;
     }
 
     // 形参切点

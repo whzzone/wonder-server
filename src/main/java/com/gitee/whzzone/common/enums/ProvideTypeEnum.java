@@ -7,7 +7,7 @@ import lombok.Getter;
  */
 
 @Getter
-public enum ProvideType {
+public enum ProvideTypeEnum {
 
     VALUE(1, "值"),
     METHOD(2, "方法");
@@ -15,7 +15,7 @@ public enum ProvideType {
     private final Integer code;
     private final String name;
 
-    ProvideType(Integer code, String name){
+    ProvideTypeEnum(Integer code, String name){
         this.code = code;
         this.name = name;
     }

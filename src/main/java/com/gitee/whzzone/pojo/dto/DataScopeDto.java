@@ -15,7 +15,9 @@ public class DataScopeDto extends EntityDto<DataScopeDto> {
 
     private String columnName;
 
-    private String operation;
+    private String spliceType;
+
+    private String expression;
 
     private Integer provideType;
 
