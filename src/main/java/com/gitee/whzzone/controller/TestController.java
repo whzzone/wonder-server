@@ -39,5 +39,10 @@ public class TestController {
         return Result.ok(longs);
     }
 
-
+    @ApiOperation("带参测试")
+    @GetMapping("withParam")
+    public Result withParam(){
+        List<Long> longs = testService.injectTest("带参测试", null);
+        return Result.ok(longs);
+    }
 }

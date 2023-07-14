@@ -17,7 +17,7 @@ import java.util.List;
 public interface RoleMapper extends BaseMapper<Role> {
     List<Role> findByUserId(Integer userId);
 
-    @DataScope("sn1")
+    @DataScope("sn2")
     List<Role> selectAllTest();
 
 }

@@ -27,4 +27,7 @@ public class DataScopeDto extends EntityDto<DataScopeDto> {
 
     private String methodName;
 
+    private String formalParam;
+
+    private String actualParam;
 }

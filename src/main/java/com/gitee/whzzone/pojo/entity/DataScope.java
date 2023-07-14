@@ -33,4 +33,8 @@ public class DataScope extends BaseEntity<DataScope> {
 
     private String methodName;
 
+    private String formalParam;
+
+    private String actualParam;
+
 }

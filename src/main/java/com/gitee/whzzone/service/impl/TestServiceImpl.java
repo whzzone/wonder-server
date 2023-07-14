@@ -14,10 +14,10 @@ import java.util.List;
 public class TestServiceImpl implements TestService {
 
     @Override
-    public List<Long> injectTest(String name, @DataScope("sn1") List<Long> scopeList){
+    public List<Long> injectTest(String name, @DataScope("sn5") List<Long> scopeList){
 //    public List<Long> injectTest(String name, List<Long> scopeList){
         System.out.println("scopeList = " + scopeList);
-        System.out.println("name = " + name);
+        System.out.println("injectTest name = " + name);
         return scopeList;
     }
 }
