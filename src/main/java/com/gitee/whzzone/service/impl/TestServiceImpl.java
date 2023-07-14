@@ -1,10 +1,9 @@
 package com.gitee.whzzone.service.impl;
 
 import com.gitee.whzzone.common.annotation.DataScope;
+import com.gitee.whzzone.pojo.dto.DataScopeInfo;
 import com.gitee.whzzone.service.TestService;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author Create by whz at 2023/7/13
@@ -14,10 +13,16 @@ import java.util.List;
 public class TestServiceImpl implements TestService {
 
     @Override
-    public List<Long> injectTest(String name, @DataScope("sn2") List<Long> scopeList){
-//    public List<Long> injectTest(String name, List<Long> scopeList){
-        System.out.println("scopeList = " + scopeList);
-        System.out.println("injectTest name = " + name);
-        return scopeList;
+    public DataScopeInfo injectTest(String name, @DataScope("sn2") DataScopeInfo info) {
+        System.out.println("info = " + info);
+        System.out.println("name = " + name);
+        return info;
+    }
+
+    @Override
+    public String injectTest2(String name, @DataScope("sn2") String info) {
+        System.out.println("info = " + info);
+        System.out.println("name = " + name);
+        return info;
     }
 }

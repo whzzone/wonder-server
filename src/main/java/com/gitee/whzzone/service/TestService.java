@@ -1,10 +1,14 @@
 package com.gitee.whzzone.service;
 
-import java.util.List;
+import com.gitee.whzzone.pojo.dto.DataScopeInfo;
 
 /**
  * @author Create by whz at 2023/7/13
  */
 public interface TestService {
-    List<Long> injectTest(String name, List<Long> scopeList);
+
+    DataScopeInfo injectTest(String name, DataScopeInfo info);
+
+    String injectTest2(String name, String info);
+
 }

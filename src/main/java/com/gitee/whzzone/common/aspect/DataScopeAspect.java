@@ -1,13 +1,10 @@
 package com.gitee.whzzone.common.aspect;
 
 import com.gitee.whzzone.common.annotation.DataScope;
-import com.gitee.whzzone.common.enums.ProvideTypeEnum;
 import com.gitee.whzzone.pojo.dto.DataScopeInfo;
 import com.gitee.whzzone.service.DataScopeService;
 import com.gitee.whzzone.util.SecurityUtil;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.List;
 
 /**
  * Create by whz at 2023/6/10
@@ -40,10 +36,9 @@ public class DataScopeAspect {
         return threadLocal.get();
     }
 
-    // 切点
+    // 方法切点
     @Pointcut("@annotation(com.gitee.whzzone.common.annotation.DataScope)")
-    public void methodPointCut() {
-    }
+    public void methodPointCut() {}
 
     @After("methodPointCut()")
     public void clearThreadLocal() {
@@ -80,8 +75,6 @@ public class DataScopeAspect {
     }
 
     @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
     public static class DataScopeParam {
         private DataScopeInfo dataScopeInfo;
     }
@@ -110,19 +103,21 @@ public class DataScopeAspect {
                     }
                 }
 
-                if (index >= 0 && parameterType == List.class) {
+                if (index >= 0){
+                    if (parameterType != DataScopeInfo.class){
+                        throw new RuntimeException("使用@DataScope的参数类型必须是：DataScopeInfo.class 类型");
+                    }
                     DataScope dataScope = (DataScope) annotations[index];
                     String scopeName = dataScope.value();
-                    com.gitee.whzzone.pojo.entity.DataScope dataScopeEntity = dataScopeService.getByName(scopeName);
-                    if (!dataScopeEntity.getProvideType().equals(ProvideTypeEnum.METHOD.getCode())){
-                        throw new RuntimeException("@DataScope注解用在参数上只支持：ProvideType = 2 （方法）");
-                    }
-
-                    DataScopeInfo dataScopeInfo = dataScopeService.execRuleByEntity(dataScopeEntity);
-                    args[i] = dataScopeInfo.getIdList();
+                    DataScopeInfo dataScopeInfo = dataScopeService.execRuleByName(scopeName);
+                    args[i] = dataScopeInfo;
                 }
+
             }
+
+            // 继续执行目标方法
             return point.proceed(args);
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("数据权限 形参 切面错误：" + e.getMessage());
