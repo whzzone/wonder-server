@@ -5,14 +5,12 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- * @author :whz
- * @date : 2022/12/18 14:32
+ * @author Create by whz at 2023/7/15
  */
 @Data
-public class RoleQuery extends QueryPage {
+public class DataScopeQuery extends QueryPage {
 
     @ApiModelProperty("名称")
     private String name;
-
 
 }

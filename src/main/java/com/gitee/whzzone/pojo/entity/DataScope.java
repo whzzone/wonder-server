@@ -15,6 +15,10 @@ import lombok.ToString;
 @TableName("sys_data_scope")
 public class DataScope extends BaseEntity<DataScope> {
 
+    private Boolean enabled;
+
+    private String remark;
+
     private String scopeName;
 
     private String tableAlias;

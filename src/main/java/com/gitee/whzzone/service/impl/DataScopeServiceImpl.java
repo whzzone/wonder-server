@@ -3,12 +3,15 @@ package com.gitee.whzzone.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitee.whzzone.common.enums.ProvideTypeEnum;
 import com.gitee.whzzone.mapper.DataScopeMapper;
+import com.gitee.whzzone.pojo.PageData;
 import com.gitee.whzzone.pojo.dto.DataScopeDto;
 import com.gitee.whzzone.pojo.dto.DataScopeInfo;
 import com.gitee.whzzone.pojo.entity.DataScope;
+import com.gitee.whzzone.pojo.query.DataScopeQuery;
 import com.gitee.whzzone.service.DataScopeService;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +45,6 @@ public class DataScopeServiceImpl extends ServiceImpl<DataScopeMapper, DataScope
         } else if (type == Long.class || type == long.class) {
             return Long.parseLong(s);
         }
-
-        // Add more type conversions for other types as needed
 
         throw new IllegalArgumentException("Cannot convert argument to type " + type.getName());
     }
@@ -125,4 +126,53 @@ public class DataScopeServiceImpl extends ServiceImpl<DataScopeMapper, DataScope
         return execRuleHandler(entity);
     }
 
+    @Override
+    public DataScopeDto beforeSaveHandler(DataScopeDto dto) {
+        if (existSameName(dto.getId(), dto.getScopeName()))
+            throw new RuntimeException("存在相同的名称：" + dto.getScopeName());
+
+        return DataScopeService.super.beforeSaveHandler(dto);
+    }
+
+    @Override
+    public DataScopeDto beforeUpdateHandler(DataScopeDto dto) {
+        if (existSameName(dto.getId(), dto.getScopeName()))
+            throw new RuntimeException("存在相同的名称：" + dto.getScopeName());
+
+        return DataScopeService.super.beforeUpdateHandler(dto);
+    }
+
+    @Override
+    public boolean existSameName(Long id, String scopeName){
+        LambdaQueryWrapper<DataScope> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(DataScope::getScopeName, scopeName);
+        queryWrapper.ne(id != null, DataScope::getId, id);
+        return count(queryWrapper) > 0;
+    }
+
+    @Override
+    public PageData<DataScopeDto> page(DataScopeQuery query) {
+        Page<DataScope> page = new Page<>(query.getCurPage(), query.getPageSize());
+
+        LambdaQueryWrapper<DataScope> queryWrapper = new LambdaQueryWrapper<>();
+
+        if (StrUtil.isNotBlank(query.getName()))
+            queryWrapper.like(DataScope::getScopeName, query.getName());
+
+        page(page, queryWrapper);
+
+        List<DataScopeDto> list = BeanUtil.copyToList(page.getRecords(), DataScopeDto.class);
+
+        return new PageData<>(list, page.getTotal(), page.getPages());
+    }
+
+    @Override
+    public void enabledSwitch(Long id) {
+        DataScope entity = getById(id);
+        if (entity == null){
+            throw new RuntimeException("不存在");
+        }
+        entity.setEnabled(!entity.getEnabled());
+        updateById(entity);
+    }
 }

@@ -1,5 +1,6 @@
 package com.gitee.whzzone.pojo.query;
 
+import com.gitee.whzzone.web.QueryPage;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -10,7 +11,7 @@ import lombok.Data;
 @Data
 public class MenuQuery extends QueryPage {
 
-    @ApiModelProperty("角色名称")
+    @ApiModelProperty("名称")
     private String name;
 
     @ApiModelProperty("父id")

@@ -1,5 +1,6 @@
 package com.gitee.whzzone.pojo.query;
 
+import com.gitee.whzzone.web.QueryPage;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
