@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 
 @Getter
-public enum MenuTypeEnums {
+public enum MenuTypeEnum {
 
     M("目录", 1),
     C("菜单", 2),
@@ -17,7 +17,7 @@ public enum MenuTypeEnums {
     private final String name;
     private final Integer code;
 
-    MenuTypeEnums(String name, Integer code){
+    MenuTypeEnum(String name, Integer code){
         this.name = name;
         this.code = code;
     }
