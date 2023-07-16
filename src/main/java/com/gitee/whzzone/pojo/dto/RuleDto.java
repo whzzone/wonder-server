@@ -6,11 +6,13 @@ import com.gitee.whzzone.common.serializer.LongSerializer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author Create by whz at 2023/7/13
  */
 @Data
-public class DataScopeDto extends EntityDto<DataScopeDto> {
+public class RuleDto extends EntityDto<RuleDto> {
 
     @ApiModelProperty
     @JsonSerialize(using = LongSerializer.class)
@@ -23,7 +25,7 @@ public class DataScopeDto extends EntityDto<DataScopeDto> {
     private String remark;
 
     @ApiModelProperty("名称")
-    private String scopeName;
+    private String name;
 
     @ApiModelProperty("表别名")
     private String tableAlias;
@@ -57,4 +59,13 @@ public class DataScopeDto extends EntityDto<DataScopeDto> {
 
     @ApiModelProperty("实参注入")
     private String actualParam;
+
+//    @ApiModelProperty("形参列表")
+//    private String[] formalParamList;
+//
+//    @ApiModelProperty("实参列表")
+//    private String[] actualParamList;
+
+    @ApiModelProperty("参数")
+    private List<ParamDto> paramList;
 }

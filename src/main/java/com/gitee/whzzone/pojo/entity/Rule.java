@@ -12,14 +12,14 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@TableName("sys_data_scope")
-public class DataScope extends BaseEntity<DataScope> {
+@TableName("sys_rule")
+public class Rule extends BaseEntity<Rule> {
 
     private Boolean enabled;
 
     private String remark;
 
-    private String scopeName;
+    private String name;
 
     private String tableAlias;
 

@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class DataScopeInfo {
 
-    private DataScopeDto dto;
+    private RuleDto dto;
 
     private List<Long> idList;
 

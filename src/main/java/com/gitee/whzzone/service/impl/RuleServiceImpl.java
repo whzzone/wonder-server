@@ -6,17 +6,19 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitee.whzzone.common.enums.ProvideTypeEnum;
-import com.gitee.whzzone.mapper.DataScopeMapper;
+import com.gitee.whzzone.mapper.RuleMapper;
 import com.gitee.whzzone.pojo.PageData;
-import com.gitee.whzzone.pojo.dto.DataScopeDto;
+import com.gitee.whzzone.pojo.dto.ParamDto;
+import com.gitee.whzzone.pojo.dto.RuleDto;
 import com.gitee.whzzone.pojo.dto.DataScopeInfo;
-import com.gitee.whzzone.pojo.entity.DataScope;
-import com.gitee.whzzone.pojo.query.DataScopeQuery;
-import com.gitee.whzzone.service.DataScopeService;
+import com.gitee.whzzone.pojo.entity.Rule;
+import com.gitee.whzzone.pojo.query.RuleQuery;
+import com.gitee.whzzone.service.RuleService;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,12 +26,12 @@ import java.util.List;
  */
 
 @Service
-public class DataScopeServiceImpl extends ServiceImpl<DataScopeMapper, DataScope> implements DataScopeService {
+public class RuleServiceImpl extends ServiceImpl<RuleMapper, Rule> implements RuleService {
 
     @Override
-    public DataScope getByName(String name) {
-        LambdaQueryWrapper<DataScope> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(DataScope::getScopeName, name);
+    public Rule getByName(String name) {
+        LambdaQueryWrapper<Rule> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Rule::getName, name);
         return getOne(queryWrapper);
     }
 
@@ -50,14 +52,14 @@ public class DataScopeServiceImpl extends ServiceImpl<DataScopeMapper, DataScope
     }
 
     @Override
-    public DataScopeInfo execRuleByEntity(DataScope entity) {
+    public DataScopeInfo execRuleByEntity(Rule entity) {
         return execRuleHandler(entity);
     }
 
-    private DataScopeInfo execRuleHandler(DataScope entity) {
+    private DataScopeInfo execRuleHandler(Rule entity) {
         if (entity == null)
             throw new RuntimeException("数据规则不存在");
-        DataScopeDto dto = new DataScopeDto();
+        RuleDto dto = new RuleDto();
         BeanUtil.copyProperties(entity, dto);
         DataScopeInfo info = new DataScopeInfo();
         info.setDto(dto);
@@ -122,57 +124,77 @@ public class DataScopeServiceImpl extends ServiceImpl<DataScopeMapper, DataScope
 
     @Override
     public DataScopeInfo execRuleByName(String name) {
-        DataScope entity = getByName(name);
+        Rule entity = getByName(name);
         return execRuleHandler(entity);
     }
 
     @Override
-    public DataScopeDto beforeSaveHandler(DataScopeDto dto) {
-        if (existSameName(dto.getId(), dto.getScopeName()))
-            throw new RuntimeException("存在相同的名称：" + dto.getScopeName());
+    public RuleDto beforeSaveHandler(RuleDto dto) {
+        if (existSameName(dto.getId(), dto.getName()))
+            throw new RuntimeException("存在相同的名称：" + dto.getName());
 
-        return DataScopeService.super.beforeSaveHandler(dto);
+        return RuleService.super.beforeSaveHandler(dto);
     }
 
     @Override
-    public DataScopeDto beforeUpdateHandler(DataScopeDto dto) {
-        if (existSameName(dto.getId(), dto.getScopeName()))
-            throw new RuntimeException("存在相同的名称：" + dto.getScopeName());
+    public RuleDto beforeUpdateHandler(RuleDto dto) {
+        if (existSameName(dto.getId(), dto.getName()))
+            throw new RuntimeException("存在相同的名称：" + dto.getName());
 
-        return DataScopeService.super.beforeUpdateHandler(dto);
+        return RuleService.super.beforeUpdateHandler(dto);
     }
 
     @Override
     public boolean existSameName(Long id, String scopeName){
-        LambdaQueryWrapper<DataScope> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(DataScope::getScopeName, scopeName);
-        queryWrapper.ne(id != null, DataScope::getId, id);
+        LambdaQueryWrapper<Rule> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Rule::getName, scopeName);
+        queryWrapper.ne(id != null, Rule::getId, id);
         return count(queryWrapper) > 0;
     }
 
     @Override
-    public PageData<DataScopeDto> page(DataScopeQuery query) {
-        Page<DataScope> page = new Page<>(query.getCurPage(), query.getPageSize());
+    public PageData<RuleDto> page(RuleQuery query) {
+        Page<Rule> page = new Page<>(query.getCurPage(), query.getPageSize());
 
-        LambdaQueryWrapper<DataScope> queryWrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<Rule> queryWrapper = new LambdaQueryWrapper<>();
 
         if (StrUtil.isNotBlank(query.getName()))
-            queryWrapper.like(DataScope::getScopeName, query.getName());
+            queryWrapper.like(Rule::getName, query.getName());
 
         page(page, queryWrapper);
 
-        List<DataScopeDto> list = BeanUtil.copyToList(page.getRecords(), DataScopeDto.class);
-
+        List<RuleDto> list = BeanUtil.copyToList(page.getRecords(), RuleDto.class);
+        afterQueryHandler(list);
         return new PageData<>(list, page.getTotal(), page.getPages());
     }
 
     @Override
     public void enabledSwitch(Long id) {
-        DataScope entity = getById(id);
+        Rule entity = getById(id);
         if (entity == null){
             throw new RuntimeException("不存在");
         }
         entity.setEnabled(!entity.getEnabled());
         updateById(entity);
+    }
+
+    @Override
+    public RuleDto afterQueryHandler(RuleDto dto) {
+        if (dto.getProvideType().equals(ProvideTypeEnum.METHOD.getCode())){
+            if (StrUtil.isNotBlank(dto.getFormalParam()) && StrUtil.isNotBlank(dto.getActualParam())) {
+                String[] formalParamSplit = dto.getFormalParam().split(";");
+                String[] actualParamSplit = dto.getActualParam().split(";");
+                // dto.setFormalParamList(dto.getFormalParam().split(";"));
+                // dto.setActualParamList(dto.getActualParam().split(";"));
+                List<ParamDto> paramList = new ArrayList<>();
+                for (int i = 0; i < formalParamSplit.length; i++) {
+                    paramList.add(new ParamDto(formalParamSplit[i], actualParamSplit[i]));
+                }
+                dto.setParamList(paramList);
+            }
+
+        }
+
+        return dto;
     }
 }

@@ -8,7 +8,7 @@ import lombok.Data;
  * @author Create by whz at 2023/7/15
  */
 @Data
-public class DataScopeQuery extends QueryPage {
+public class RuleQuery extends QueryPage {
 
     @ApiModelProperty("名称")
     private String name;

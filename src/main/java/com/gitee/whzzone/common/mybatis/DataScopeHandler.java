@@ -6,7 +6,7 @@ import com.gitee.whzzone.common.aspect.DataScopeAspect;
 import com.gitee.whzzone.common.enums.ExpressionEnum;
 import com.gitee.whzzone.common.enums.ProvideTypeEnum;
 import com.gitee.whzzone.common.enums.SpliceTypeEnum;
-import com.gitee.whzzone.pojo.dto.DataScopeDto;
+import com.gitee.whzzone.pojo.dto.RuleDto;
 import com.gitee.whzzone.pojo.dto.DataScopeInfo;
 import com.gitee.whzzone.util.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +38,7 @@ public class DataScopeHandler implements DataPermissionHandler {
         }
 
         DataScopeInfo dataScopeInfo = dataScopeParam.getDataScopeInfo();
-        DataScopeDto dto = dataScopeInfo.getDto();
+        RuleDto dto = dataScopeInfo.getDto();
         List<Long> idList = dataScopeInfo.getIdList();
         String sql = "".equals(dto.getTableAlias()) || dto.getTableAlias() == null ? dto.getColumnName() : dto.getTableAlias() + "." + dto.getColumnName();
 
