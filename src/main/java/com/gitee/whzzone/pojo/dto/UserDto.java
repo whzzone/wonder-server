@@ -14,11 +14,7 @@ import javax.validation.constraints.*;
 import java.util.List;
 
 @Data
-public class UserDto extends EntityDto<UserDto> {
-
-    @NotNull(message = "id不能为空",groups = UpdateGroup.class)
-    @JsonSerialize(using = LongSerializer.class)
-    private Long id;
+public class UserDto extends EntityDto {
 
     @NotBlank(message = "username不能为空", groups = {CreateGroup.class, UpdateGroup.class})
     @Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9]{7,15}$", message = "8-16位字母+数字组合，必须英文开始")

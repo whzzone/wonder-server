@@ -8,7 +8,7 @@ import lombok.Data;
  * @date : 2023/5/23 10:03
  */
 @Data
-public class RoleMenuDto extends EntityDto<RoleMenuDto> {
+public class RoleMenuDto extends EntityDto {
 
     private Long roleId;
 

@@ -2,7 +2,7 @@ package com.gitee.whzzone.common.aspect;
 
 import com.gitee.whzzone.common.annotation.DataScope;
 import com.gitee.whzzone.pojo.dto.DataScopeInfo;
-import com.gitee.whzzone.service.RuleService;
+import com.gitee.whzzone.service.MarkService;
 import com.gitee.whzzone.util.SecurityUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
 public class DataScopeAspect {
 
     @Autowired
-    private RuleService dataScopeService;
+    private MarkService dataScopeService;
 
     // 通过ThreadLocal记录权限相关的属性值
     public static ThreadLocal<DataScopeParam> threadLocal = new ThreadLocal<>();

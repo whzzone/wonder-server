@@ -8,6 +8,6 @@ import lombok.Data;
  */
 
 @Data
-public class UserRoleDto extends EntityDto<UserRoleDto> {
+public class UserRoleDto extends EntityDto {
 
 }

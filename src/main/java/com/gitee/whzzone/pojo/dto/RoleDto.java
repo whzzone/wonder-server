@@ -1,25 +1,18 @@
 package com.gitee.whzzone.pojo.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
 import com.gitee.whzzone.common.serializer.ListLongSerializer;
-import com.gitee.whzzone.common.serializer.LongSerializer;
 import com.gitee.whzzone.common.validation.group.CreateGroup;
 import com.gitee.whzzone.common.validation.group.UpdateGroup;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
-public class RoleDto extends EntityDto<RoleDto> {
-
-    @ApiModelProperty("角色id")
-    @NotNull(message = "角色id不能为空", groups = UpdateGroup.class)
-    @JsonSerialize(using = LongSerializer.class)
-    private Long id;
+public class RoleDto extends EntityDto {
 
     @ApiModelProperty("名称")
     @NotBlank(message = "名称不能为空", groups = {CreateGroup.class, UpdateGroup.class})

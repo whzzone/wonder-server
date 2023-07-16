@@ -16,12 +16,7 @@ import javax.validation.constraints.NotNull;
  * @date : 2023/5/22 20:18
  */
 @Data
-public class MenuDto extends EntityDto<MenuDto> {
-
-    @JsonSerialize(using = LongSerializer.class)
-    @NotNull(message = "id不能为空", groups = UpdateGroup.class)
-    @ApiModelProperty(value = "id不能为空", required = true)
-    private Long id;
+public class MenuDto extends EntityDto {
 
     @JsonSerialize(using = LongSerializer.class)
     @NotNull(message = "parentId不能为空", groups = {UpdateGroup.class, CreateGroup.class})

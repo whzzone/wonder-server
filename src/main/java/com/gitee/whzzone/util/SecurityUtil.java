@@ -34,4 +34,10 @@ public class SecurityUtil {
         return ids;
     }
 
+    /**
+     * 优先级最高的角色id
+     */
+    public static Long getPriorRoleId() {
+        return 1658729760682242048L;
+    }
 }

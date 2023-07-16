@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author Create by whz at 2023/7/8
  */
 
-public abstract class EntityController<T extends BaseEntity<T>, S extends EntityService<T, D>, D extends EntityDto<D>> {
+public abstract class EntityController<T extends BaseEntity<T>, S extends EntityService<T, D>, D extends EntityDto> {
 
     @Autowired
     private S service;

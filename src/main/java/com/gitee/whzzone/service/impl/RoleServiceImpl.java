@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gitee.whzzone.common.annotation.DataScope;
 import com.gitee.whzzone.mapper.RoleMapper;
 import com.gitee.whzzone.pojo.PageData;
 import com.gitee.whzzone.pojo.dto.RoleDto;
@@ -46,6 +47,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Autowired
     private MenuService menuService;
 
+    @DataScope("role_page")
     @Override
     public PageData<RoleDto> page(RoleQuery query) {
         Page<Role> page = new Page<>(query.getCurPage(), query.getPageSize());

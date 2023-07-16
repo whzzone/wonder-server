@@ -15,11 +15,9 @@ import lombok.ToString;
 @TableName("sys_rule")
 public class Rule extends BaseEntity<Rule> {
 
-    private Boolean enabled;
-
     private String remark;
 
-    private String name;
+    private Long markId;
 
     private String tableAlias;
 

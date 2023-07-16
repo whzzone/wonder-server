@@ -18,7 +18,7 @@ import java.util.List;
  * @date : 2023/5/22 16:27
  */
 
-public interface EntityService<T extends BaseEntity<T>, D extends EntityDto<D>> extends IService<T> {
+public interface EntityService<T extends BaseEntity<T>, D extends EntityDto> extends IService<T> {
 
     /**
      * 添加
