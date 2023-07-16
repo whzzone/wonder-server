@@ -39,6 +39,7 @@
     | id | column_name  | column_splice_type | value  | expression | 其他属性不变 |
     |----|--------------|--------------------|--------|------------|--------|
     |    | number;color | AND;OR             | 100;黑色 | GE;EQ      |        |
+    
     这条记录代表着需要拼接SQL语句：xxx AND number >= 100 OR color = '黑色' 
 
 
