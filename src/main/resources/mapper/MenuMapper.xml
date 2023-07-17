@@ -42,15 +42,19 @@
         deleted
     </sql>
     <select id="findPermitByUserId" resultType="java.lang.String">
-        select
-               sp.permission
-        from
-             sys_menu sp
-                 left join sys_role_menu srp on sp.id = srp.menu_id
-                 left join sys_user_role sur on sur.role_id = srp.role_id
-        where
-              sur.user_id = #{userId}
-            and ( permission is not null or permission != '' )
+        SELECT
+            sp.permission
+        FROM
+            sys_menu sp
+                LEFT JOIN sys_role_menu srp ON sp.id = srp.menu_id
+                LEFT JOIN sys_user_role sur ON sur.role_id = srp.role_id
+        WHERE
+            sur.user_id = #{userId}
+
+          AND ( permission IS NOT NULL OR permission != '' )
+          AND srp.deleted = FALSE
+          AND sur.deleted = FALSE
+          AND sp.deleted = FALSE
     </select>
     <select id="getRoutes" resultType="com.gitee.whzzone.pojo.entity.Menu">
         SELECT
