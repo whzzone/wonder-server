@@ -1,8 +1,11 @@
 package com.gitee.whzzone.common.swagger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.util.AntPathMatcher;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -22,6 +25,16 @@ import java.util.List;
 @EnableSwagger2
 @Configuration
 public class SwaggerConfig {
+
+    @Value("${security.ignore-path}")
+    private String[] ignorePaths;
+
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
+
+    @Autowired
+    private AntPathMatcher antPathMatcher;
+
     /**
      * 配置Swagger2相关的bean
      */
@@ -69,8 +82,29 @@ public class SwaggerConfig {
         securityContexts.add(
                 SecurityContext.builder()
                         .securityReferences(defaultAuth())
-                        .operationSelector(o -> o.requestMappingPattern().matches("/.*"))
+                        .operationSelector(o -> {
+                            // 判断请求路径是否匹配ignore-path中的接口
+                            String requestMappingPattern = o.requestMappingPattern();
+                            for (String ignorePath : ignorePaths) {
+                                if (antPathMatcher.match(contextPath + ignorePath, requestMappingPattern)) {
+                                    // 如果匹配，则创建一个没有任何安全要求的SecurityContext
+                                    return false;
+                                }
+                            }
+                            return true;
+                        })
                         .build());
+
+/*        // 添加不需要登录认证的接口路径
+        securityContexts.add(
+                SecurityContext.builder()
+                        .securityReferences(new ArrayList<>()) // 不设置 securityReferences
+                        .operationSelector(o ->
+                                // 例如，对以 "/api/public/" 开头的路径不需要认证
+                                o.requestMappingPattern().startsWith("/api/public/")
+                        )
+                        .build());*/
+
         return securityContexts;
     }
 
