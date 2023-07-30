@@ -1,9 +1,11 @@
 package com.gitee.whzzone.controller;
 
+import com.gitee.whzzone.common.security.LoginUser;
 import com.gitee.whzzone.mapper.RoleMapper;
 import com.gitee.whzzone.pojo.dto.DataScopeInfo;
 import com.gitee.whzzone.pojo.entity.Role;
 import com.gitee.whzzone.service.TestService;
+import com.gitee.whzzone.util.SecurityUtil;
 import com.gitee.whzzone.web.Result;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,5 +47,11 @@ public class TestController {
     public Result errorOfObject(){
         String info = testService.injectTest2("@DataScope 标记了错误类型", "");
         return Result.ok(info);
+    }
+
+    @ApiOperation("获取登录用户的信息")
+    @GetMapping("getLoginUser")
+    public Result<LoginUser> getLoginUser(){
+        return Result.ok(SecurityUtil.getLoginUser());
     }
 }

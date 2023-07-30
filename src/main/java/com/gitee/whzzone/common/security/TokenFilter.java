@@ -1,6 +1,7 @@
 package com.gitee.whzzone.common.security;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
@@ -20,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -79,6 +81,8 @@ public class TokenFilter extends OncePerRequestFilter {
             }
 
             String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+            Long roleId = StringUtils.hasText(request.getHeader("RoleId")) ? Long.valueOf(request.getHeader("RoleId")) : null;
+            Long deptId = StringUtils.hasText(request.getHeader("DeptId")) ? Long.valueOf(request.getHeader("DeptId")) : null;
 
             if (StrUtil.isBlank(token))
                 throw new  RuntimeException("未携带token访问");
@@ -102,12 +106,22 @@ public class TokenFilter extends OncePerRequestFilter {
                 redisCache.expire(tokenKey, cacheTime, cacheTimeUnit);
             }
 
+            List<Long> deptIds = userService.getDeptIds(userId);
+            if (CollectionUtils.isEmpty(deptIds)){
+                throw new RuntimeException("没有关联的部门ids为空");
+            }
+
+            List<Long> roleIds = userService.getRoleIds(userId);
+            if (CollectionUtils.isEmpty(roleIds)){
+                throw new RuntimeException("没有关联的角色ids为空");
+            }
+
             List<String> permitByUserId = menuService.findPermitByUserId(userId);
             log.warn(permitByUserId.toString());
 
             List<SimpleGrantedAuthority> list = new ArrayList<>();
             for (String authority : permitByUserId) {
-                if (!StringUtils.isEmpty(authority)){
+                if (StringUtils.hasText(authority)){
                     SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
                     list.add(simpleGrantedAuthority);
                 }
@@ -115,6 +129,34 @@ public class TokenFilter extends OncePerRequestFilter {
 
             LoginUser loginUser = new LoginUser();
             BeanUtil.copyProperties(user, loginUser);
+            loginUser.setDeptIds(deptIds);
+            loginUser.setRoleIds(roleIds);
+
+            // 处理角色
+            if (CollectionUtil.isNotEmpty(roleIds)){
+                if (roleIds.size() == 1){
+                    loginUser.setCurrentRoleId(roleIds.get(0));
+                }else {
+                    if (roleIds.contains(roleId)){
+                        loginUser.setCurrentRoleId(roleId);
+                    }else {
+                        throw new RuntimeException("无效的roleId");
+                    }
+                }
+            }
+
+            // 处理部门
+            if (CollectionUtil.isNotEmpty(deptIds)){
+                if (deptIds.size() == 1){
+                    loginUser.setCurrentDeptId(deptIds.get(0));
+                }else {
+                    if (deptIds.contains(deptId)){
+                        loginUser.setCurrentDeptId(deptId);
+                    }else {
+                        throw new RuntimeException("无效的deptId");
+                    }
+                }
+            }
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, list);
             authenticationToken.setDetails(new WebAuthenticationDetails(request));

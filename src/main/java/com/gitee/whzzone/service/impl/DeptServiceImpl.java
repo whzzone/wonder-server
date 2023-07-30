@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
 import com.gitee.whzzone.mapper.DeptMapper;
 import com.gitee.whzzone.pojo.dto.DeptDto;
 import com.gitee.whzzone.pojo.entity.Dept;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -144,4 +146,20 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         return deptMapper.getThisAndChildIds(id);
     }
 
+    @Override
+    public List<Dept> findInIds(List<Long> deptIds) {
+        if (CollectionUtil.isEmpty(deptIds))
+            return null;
+
+        LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(BaseEntity::getId, deptIds);
+        return list(queryWrapper);
+    }
+
+    @Override
+    public boolean existAll(HashSet<Long> ids) {
+        LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(BaseEntity::getId, ids);
+        return count(queryWrapper) == ids.size();
+    }
 }

@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
 import com.gitee.whzzone.mapper.UserMapper;
 import com.gitee.whzzone.pojo.PageData;
 import com.gitee.whzzone.pojo.dto.ResetPWDDto;
@@ -78,12 +79,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!roleInfo.getEnabled())
             throw new RuntimeException("该账号所属角色已被禁止登录");
 
-        // 判断部门情况
-        Dept deptInfo = getUserDeptInfo(user.getId());
+        // 判断部门情况 FIXME 登录判断
+        /*Dept deptInfo = getUserDeptInfo(user.getId());
         if (deptInfo.getDeleted())
             throw new RuntimeException("该账号所属部门已被删除");
         if (!deptInfo.getEnabled())
-            throw new RuntimeException("该账号所属部门已被禁止登录");
+            throw new RuntimeException("该账号所属部门已被禁止登录");*/
     }
 
     @Override
@@ -104,10 +105,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public UserDto afterQueryHandler(UserDto dto) {
         dto.setPassword("");
 
-        Dept dept = getUserDeptInfo(dto.getId());
-        if (dept != null) {
-            dto.setDeptId(dept.getId());
-            dto.setDeptName(dept.getName());
+        List<Dept> deptList = getUserDeptInfo(dto.getId());
+        if (CollectionUtil.isNotEmpty(deptList)){
+            dto.setDeptList(deptList);
+            List<Long> ids = deptList.stream().map(BaseEntity::getId).collect(Collectors.toList());
+            dto.setDeptIdList(ids);
         }
 
         dto.setRoleIdList(roleService.getRoleIdsByUserId(dto.getId()));
@@ -116,16 +118,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Dept getUserDeptInfo(Long userId) {
-        // 查询部门
-        LambdaQueryWrapper<UserDept> udQueryWrapper = new LambdaQueryWrapper<>();
-        udQueryWrapper.eq(UserDept::getUserId, userId);
-        udQueryWrapper.select(UserDept::getDeptId);
-        UserDept userDept = userDeptService.getOne(udQueryWrapper);
-        if (userDept != null) {
-            return deptService.getById(userDept.getDeptId());
-        }
-        return null;
+    public List<Dept> getUserDeptInfo(Long userId) {
+        List<UserDept> userDeptList = userDeptService.getByUserId(userId);
+        if (CollectionUtil.isEmpty(userDeptList))
+            return new ArrayList<>();
+
+        List<Long> deptIds = userDeptList.stream().map(UserDept::getDeptId).collect(Collectors.toList());
+
+        return deptService.findInIds(deptIds);
     }
 
     @Override
@@ -203,7 +203,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         roleService.addRelation(dto.getId(), dto.getRoleIdList());
 
         // 添加用户与部门的关联
-        userDeptService.addRelation(dto.getId(), dto.getDeptId());
+        userDeptService.addRelation(dto.getId(), dto.getDeptIdList());
 
         BeanUtil.copyProperties(dto, user, "password");
 
@@ -225,7 +225,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         roleService.addRelation(save.getId(), dto.getRoleIdList());
 
         // 添加用户与部门的关联
-        userDeptService.addRelation(save.getId(), dto.getDeptId());
+        userDeptService.addRelation(save.getId(), dto.getDeptIdList());
 
         return save;
     }
@@ -282,5 +282,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         updateWrapper.set(User::getPassword, encode);
         updateWrapper.eq(User::getId, dto.getId());
         update(updateWrapper);
+    }
+
+    @Override
+    public List<Long> getDeptIds(Long userId) {
+        if (userId == null)
+            return null;
+
+        List<UserDept> userDeptList = userDeptService.getByUserId(userId);
+        if (CollectionUtil.isEmpty(userDeptList))
+            return null;
+
+        return userDeptList.stream().map(UserDept::getDeptId).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Long> getRoleIds(Long userId) {
+        if (userId == null)
+            return null;
+
+        List<UserRole> userRoleList = userRoleService.getByUserId(userId);
+        if (CollectionUtil.isEmpty(userRoleList))
+            return null;
+
+        return userRoleList.stream().map(UserRole::getRoleId).collect(Collectors.toList());
     }
 }

@@ -1,6 +1,7 @@
 package com.gitee.whzzone.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class User extends BaseEntity<User> {
 
     private String nickname;
 
+    @JsonIgnore
     private String password;
 
     private String phone;

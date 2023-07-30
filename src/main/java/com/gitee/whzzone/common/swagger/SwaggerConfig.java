@@ -6,10 +6,9 @@ import org.springframework.http.HttpHeaders;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.SecurityScheme;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -35,6 +34,7 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("com.gitee.whzzone"))
                 .paths(PathSelectors.any())
                 .build()
+                .securityContexts(securityContexts())
                 .securitySchemes(securitySchemes())
                 ;
     }
@@ -55,6 +55,37 @@ public class SwaggerConfig {
     private List<SecurityScheme> securitySchemes() {
         List<SecurityScheme> result = new ArrayList<>();
         result.add(new ApiKey(HttpHeaders.AUTHORIZATION, HttpHeaders.AUTHORIZATION, "header"));
+        result.add(new ApiKey("RoleId", "RoleId", "header"));
+        result.add(new ApiKey("DeptId", "DeptId", "header"));
         return result;
     }
+
+    /**
+     * 安全上下文
+     */
+    private List<SecurityContext> securityContexts() {
+        // 设置需要登录的认证路径
+        List<SecurityContext> securityContexts = new ArrayList<>();
+        securityContexts.add(
+                SecurityContext.builder()
+                        .securityReferences(defaultAuth())
+                        .operationSelector(o -> o.requestMappingPattern().matches("/.*"))
+                        .build());
+        return securityContexts;
+    }
+
+    /**
+     * 默认的安全上引用
+     */
+    private List<SecurityReference> defaultAuth() {
+        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        authorizationScopes[0] = authorizationScope;
+        List<SecurityReference> securityReferences = new ArrayList<>();
+        securityReferences.add(new SecurityReference("Authorization", authorizationScopes));
+        securityReferences.add(new SecurityReference("RoleId", authorizationScopes));
+        securityReferences.add(new SecurityReference("DeptId", authorizationScopes));
+        return securityReferences;
+    }
+
 }

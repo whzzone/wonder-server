@@ -1,10 +1,10 @@
 package com.gitee.whzzone.common.base.controller;
 
-import com.gitee.whzzone.common.validation.group.CreateGroup;
-import com.gitee.whzzone.common.validation.group.UpdateGroup;
 import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
 import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
 import com.gitee.whzzone.common.base.service.EntityService;
+import com.gitee.whzzone.common.validation.group.CreateGroup;
+import com.gitee.whzzone.common.validation.group.UpdateGroup;
 import com.gitee.whzzone.web.Result;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

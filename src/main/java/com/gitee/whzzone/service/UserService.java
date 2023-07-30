@@ -9,6 +9,8 @@ import com.gitee.whzzone.pojo.entity.Role;
 import com.gitee.whzzone.pojo.entity.User;
 import com.gitee.whzzone.pojo.query.UserQuery;
 
+import java.util.List;
+
 /**
  * @author :whz
  * @date : 2023/5/16 23:03
@@ -22,7 +24,7 @@ public interface UserService extends EntityService<User, UserDto> {
 
     User getByOpenid(String openid);
 
-    Dept getUserDeptInfo(Long userId);
+    List<Dept> getUserDeptInfo(Long userId);
 
     Role getUserRoleInfo(Long userId);
 
@@ -37,4 +39,8 @@ public interface UserService extends EntityService<User, UserDto> {
     boolean existSameEmail(Long userId, String email);
 
     void resetPWD(ResetPWDDto dto);
+
+    List<Long> getDeptIds(Long userId);
+
+    List<Long> getRoleIds(Long userId);
 }

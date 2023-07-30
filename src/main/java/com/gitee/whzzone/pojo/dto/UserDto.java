@@ -1,12 +1,12 @@
 package com.gitee.whzzone.pojo.dto;
 
-import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
-import com.gitee.whzzone.common.serializer.ListLongSerializer;
-import com.gitee.whzzone.common.serializer.LongSerializer;
-import com.gitee.whzzone.common.validation.group.CreateGroup;
-import com.gitee.whzzone.common.validation.group.UpdateGroup;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
+import com.gitee.whzzone.common.serializer.ListLongSerializer;
+import com.gitee.whzzone.common.validation.group.CreateGroup;
+import com.gitee.whzzone.common.validation.group.UpdateGroup;
+import com.gitee.whzzone.pojo.entity.Dept;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -42,13 +42,13 @@ public class UserDto extends EntityDto {
 
     private Boolean enabled;
 
-    @ApiModelProperty("部门名称")
-    private String deptName;
-
-    @NotNull(message = "部门id不能为空", groups = {CreateGroup.class, UpdateGroup.class})
-    @JsonSerialize(using = LongSerializer.class)
+    @NotNull(message = "部门ids不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @JsonSerialize(using = ListLongSerializer.class)
     @ApiModelProperty("部门id")
-    private Long deptId;
+    private List<Long> deptIdList;
+
+    @ApiModelProperty("部门List")
+    private List<Dept> deptList;
 
     @NotEmpty(message = "角色ids不能为空", groups = {CreateGroup.class, UpdateGroup.class})
     @JsonSerialize(using = ListLongSerializer.class)
