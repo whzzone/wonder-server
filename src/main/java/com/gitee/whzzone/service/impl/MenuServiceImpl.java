@@ -2,6 +2,7 @@ package com.gitee.whzzone.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitee.whzzone.mapper.MenuMapper;
@@ -129,6 +130,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
      */
     @Override
     public boolean existSamePermission(Long id, String permission){
+        if (StrUtil.isBlank(permission))
+            return false;
+
         LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Menu::getPermission, permission);
         queryWrapper.ne(id != null, Menu::getId, id);

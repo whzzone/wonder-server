@@ -46,4 +46,5 @@
     这条记录代表着需要拼接SQL语句：xxx AND number >= 100 OR color = '黑色' 
 
 
-   
+#### Bug
+1. 仅当update菜单时报错：java.lang.NoSuchFieldException: id，其他接口为出现此情况
