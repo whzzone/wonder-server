@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -42,8 +41,7 @@ public class UserDeptServiceImpl extends ServiceImpl<UserDeptMapper, UserDept> i
 
     @Override
     public void addRelation(Long userId, List<Long> deptIds) {
-        HashSet<Long> ids = new HashSet<>(deptIds);
-        if (!deptService.existAll(ids)){
+        if (!deptService.existAll(deptIds)){
             throw new RuntimeException("所选部门有不存在的部门id");
         }
 

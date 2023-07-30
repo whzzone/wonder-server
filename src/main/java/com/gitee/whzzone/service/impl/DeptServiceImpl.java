@@ -75,7 +75,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     }
 
     @Override
-    public boolean hasChildren(long id) {
+    public boolean hasChildren(Long id) {
         return count(new LambdaQueryWrapper<Dept>().eq(Dept::getParentId, id)) > 0;
     }
 
@@ -157,7 +157,8 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     }
 
     @Override
-    public boolean existAll(HashSet<Long> ids) {
+    public boolean existAll(List<Long> deptIds) {
+        HashSet<Long> ids = new HashSet<>(deptIds);
         LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.in(BaseEntity::getId, ids);
         return count(queryWrapper) == ids.size();

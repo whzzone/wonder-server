@@ -5,7 +5,6 @@ import com.gitee.whzzone.pojo.dto.DeptDto;
 import com.gitee.whzzone.pojo.entity.Dept;
 import com.gitee.whzzone.pojo.query.DeptQuery;
 
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -16,7 +15,7 @@ public interface DeptService extends EntityService<Dept, DeptDto> {
 
     List<DeptDto> list(DeptQuery query);
 
-    boolean hasChildren(long id);
+    boolean hasChildren(Long id);
 
     List<DeptDto> tree(DeptQuery query);
 
@@ -26,5 +25,5 @@ public interface DeptService extends EntityService<Dept, DeptDto> {
 
     List<Dept> findInIds(List<Long> deptIds);
 
-    boolean existAll(HashSet<Long> ids);
+    boolean existAll(List<Long> ids);
 }

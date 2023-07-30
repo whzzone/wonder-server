@@ -29,4 +29,7 @@ public class RuleServiceImpl extends ServiceImpl<RuleMapper, Rule> implements Ru
 
         return BeanUtil.copyToList(list, RuleDto.class);
     }
+
+
+
 }
