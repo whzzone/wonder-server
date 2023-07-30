@@ -26,4 +26,6 @@ public interface DeptService extends EntityService<Dept, DeptDto> {
     List<Dept> findInIds(List<Long> deptIds);
 
     boolean existAll(List<Long> ids);
+
+    List<DeptDto> getDtoListIn(List<Long> deptIds);
 }

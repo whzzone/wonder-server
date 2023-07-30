@@ -9,11 +9,12 @@ import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.gitee.whzzone.common.QrCodeStatus;
-import com.gitee.whzzone.pojo.dto.auth.WxLoginDto;
-import com.gitee.whzzone.pojo.dto.auth.EmailLoginDto;
+import com.gitee.whzzone.common.security.LoginUser;
 import com.gitee.whzzone.pojo.dto.UserDto;
+import com.gitee.whzzone.pojo.dto.auth.EmailLoginDto;
 import com.gitee.whzzone.pojo.dto.auth.LoginSuccessDto;
 import com.gitee.whzzone.pojo.dto.auth.UsernameLoginDto;
+import com.gitee.whzzone.pojo.dto.auth.WxLoginDto;
 import com.gitee.whzzone.pojo.entity.User;
 import com.gitee.whzzone.service.AuthService;
 import com.gitee.whzzone.service.UserService;
@@ -79,7 +80,7 @@ public class AuthController {
 
     @ApiOperation("账号密码登录")
     @PostMapping("/login/username")
-    public Result loginByUsername(@Validated @RequestBody UsernameLoginDto dto) {
+    public Result<LoginUser> loginByUsername(@Validated @RequestBody UsernameLoginDto dto) {
         return authService.loginByUsername(dto);
     }
 

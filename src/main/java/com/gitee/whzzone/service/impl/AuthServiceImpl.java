@@ -9,13 +9,16 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.mail.MailUtil;
 import com.gitee.whzzone.common.security.EmailAuthenticationToken;
-import com.gitee.whzzone.pojo.dto.auth.WxLoginDto;
-import com.gitee.whzzone.pojo.dto.auth.EmailLoginDto;
+import com.gitee.whzzone.common.security.LoginUser;
 import com.gitee.whzzone.pojo.dto.UserDto;
+import com.gitee.whzzone.pojo.dto.auth.EmailLoginDto;
 import com.gitee.whzzone.pojo.dto.auth.LoginSuccessDto;
 import com.gitee.whzzone.pojo.dto.auth.UsernameLoginDto;
+import com.gitee.whzzone.pojo.dto.auth.WxLoginDto;
 import com.gitee.whzzone.pojo.entity.User;
 import com.gitee.whzzone.service.AuthService;
+import com.gitee.whzzone.service.DeptService;
+import com.gitee.whzzone.service.RoleService;
 import com.gitee.whzzone.service.UserService;
 import com.gitee.whzzone.util.*;
 import com.gitee.whzzone.web.Result;
@@ -33,6 +36,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.constraints.Email;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -61,7 +65,13 @@ public class AuthServiceImpl implements AuthService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserService sysUserService;
+    private UserService userService;
+
+    @Autowired
+    private DeptService deptService;
+
+    @Autowired
+    private RoleService roleService;
 
     @Autowired
     private RedisCache redisCache;
@@ -101,7 +111,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Result loginByUsername(UsernameLoginDto dto) {
+    public Result<LoginUser> loginByUsername(UsernameLoginDto dto) {
         try {
             if (!usernameTypeEnable){
                 throw new RuntimeException("未开启账号密码登录");
@@ -120,7 +130,7 @@ public class AuthServiceImpl implements AuthService {
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            User user = sysUserService.getByUsername(dto.getUsername());
+            User user = userService.getByUsername(dto.getUsername());
 
             String token = UUID.randomUUID().toString();
 
@@ -128,12 +138,19 @@ public class AuthServiceImpl implements AuthService {
 
             redisCache.set(tokenKey, user.getId(), cacheTime, cacheTimeUnit);
 
-            LoginSuccessDto res = new LoginSuccessDto();
+            LoginUser res = new LoginUser();
+            BeanUtil.copyProperties(user, res);
             res.setToken(token);
             res.setExpire(cacheTimeUnit.toSeconds(cacheTime));
-            UserDto sysUserDto = new UserDto();
-            BeanUtil.copyProperties(user, sysUserDto);
-            res.setUserinfo(sysUserDto);
+
+            List<Long> deptIds = userService.getDeptIds(user.getId());
+            List<Long> roleIds = userService.getRoleIds(user.getId());
+
+            res.setDeptIds(deptIds);
+            res.setRoleIds(roleIds);
+
+            res.setDeptList(deptService.getDtoListIn(deptIds));
+            res.setRoleList(roleService.getDtoListIn(roleIds));
 
             return Result.ok("登录成功", res);
 
@@ -160,7 +177,7 @@ public class AuthServiceImpl implements AuthService {
 
         redisCache.delete(key);
 
-        User sysUser = sysUserService.getByEmail(dto.getEmail());
+        User sysUser = userService.getByEmail(dto.getEmail());
 
         String token = UUID.randomUUID().toString();
 

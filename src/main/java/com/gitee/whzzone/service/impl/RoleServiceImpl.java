@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitee.whzzone.common.annotation.DataScope;
+import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
 import com.gitee.whzzone.mapper.RoleMapper;
 import com.gitee.whzzone.pojo.PageData;
 import com.gitee.whzzone.pojo.dto.RoleDto;
@@ -203,5 +204,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         }
         entity.setEnabled(!entity.getEnabled());
         updateById(entity);
+    }
+
+    @Override
+    public List<RoleDto> getDtoListIn(List<Long> ids) {
+        LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(BaseEntity::getId, ids);
+        List<Role> list = list(queryWrapper);
+        return BeanUtil.copyToList(list, RoleDto.class);
     }
 }

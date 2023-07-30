@@ -7,6 +7,7 @@ import com.gitee.whzzone.pojo.entity.Role;
 import com.gitee.whzzone.service.TestService;
 import com.gitee.whzzone.util.SecurityUtil;
 import com.gitee.whzzone.web.Result;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import java.util.List;
 /**
  * @author Create by whz at 2023/7/13
  */
+@Api(tags = "测试相关")
 @RestController
 @RequestMapping("test")
 public class TestController {

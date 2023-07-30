@@ -3,6 +3,8 @@ package com.gitee.whzzone.common.security;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.gitee.whzzone.common.serializer.ListLongSerializer;
 import com.gitee.whzzone.common.serializer.LongSerializer;
+import com.gitee.whzzone.pojo.dto.DeptDto;
+import com.gitee.whzzone.pojo.dto.RoleDto;
 import com.gitee.whzzone.pojo.entity.User;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -15,8 +17,11 @@ import java.util.List;
 @Data
 public class LoginUser extends User {
 
-    @ApiModelProperty("用户token")
+    @ApiModelProperty("token")
     private String token;
+
+    @ApiModelProperty("token过期时间")
+    private Long expire;
 
     @JsonSerialize(using = LongSerializer.class)
     @ApiModelProperty("当前请求选择的角色ID")
@@ -33,4 +38,10 @@ public class LoginUser extends User {
     @JsonSerialize(using = ListLongSerializer.class)
     @ApiModelProperty("用户的所有部门ID")
     private List<Long> deptIds;
+
+    @ApiModelProperty("部门List")
+    private List<DeptDto> deptList;
+
+    @ApiModelProperty("角色List")
+    private List<RoleDto> roleList;
 }

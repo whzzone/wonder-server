@@ -31,4 +31,6 @@ public interface RoleService extends EntityService<Role, RoleDto> {
     List<Long> getRoleIdsByUserId(Long userId);
 
     void enabledSwitch(Long id);
+
+    List<RoleDto> getDtoListIn(List<Long> roleIds);
 }

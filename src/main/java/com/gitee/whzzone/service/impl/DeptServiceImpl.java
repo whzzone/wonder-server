@@ -163,4 +163,12 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         queryWrapper.in(BaseEntity::getId, ids);
         return count(queryWrapper) == ids.size();
     }
+
+    @Override
+    public List<DeptDto> getDtoListIn(List<Long> ids) {
+        LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(BaseEntity::getId, ids);
+        List<Dept> list = list(queryWrapper);
+        return BeanUtil.copyToList(list, DeptDto.class);
+    }
 }
