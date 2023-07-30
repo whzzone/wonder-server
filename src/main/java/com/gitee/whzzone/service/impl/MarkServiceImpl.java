@@ -51,14 +51,14 @@ public class MarkServiceImpl extends ServiceImpl<MarkMapper, Mark> implements Ma
         if (mark == null)
             throw new RuntimeException("不存在：" + name);
 
-        Long roleId = SecurityUtil.getPriorRoleId();
+        Long roleId = SecurityUtil.getCurrentRoleId();
         if (!roleService.isExist(roleId))
             throw new RuntimeException("角色不存在");
 
         // 角色 与 标记 的关联
         RoleMark roleMark = roleMarkService.getByRoleIdAndMarkId(roleId, mark.getId());
         if (roleMark == null)
-            throw new RuntimeException("角色 与 标记 的关联为空");
+            throw new RuntimeException("角色 与 标记 的关联为空，无访问权限");
 
         Rule rule = ruleService.getById(roleMark.getRuleId());
         if (rule == null)

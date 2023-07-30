@@ -42,7 +42,7 @@ public class UserDto extends EntityDto {
 
     private Boolean enabled;
 
-    @NotNull(message = "部门ids不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @NotEmpty(message = "部门ids不能为空", groups = {CreateGroup.class, UpdateGroup.class})
     @JsonSerialize(using = ListLongSerializer.class)
     @ApiModelProperty("部门id")
     private List<Long> deptIdList;

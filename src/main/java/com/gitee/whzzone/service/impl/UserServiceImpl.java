@@ -73,11 +73,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new RuntimeException("该账号已被禁止登录");
 
         // 判断角色情况
-        Role roleInfo = getUserRoleInfo(user.getId());
+        /*Role roleInfo = getUserRoleInfo(user.getId());
         if (roleInfo.getDeleted())
             throw new RuntimeException("该账号所属角色已被删除");
         if (!roleInfo.getEnabled())
-            throw new RuntimeException("该账号所属角色已被禁止登录");
+            throw new RuntimeException("该账号所属角色已被禁止登录");*/
 
         // 判断部门情况 FIXME 登录判断
         /*Dept deptInfo = getUserDeptInfo(user.getId());

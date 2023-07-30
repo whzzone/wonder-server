@@ -35,9 +35,16 @@ public class SecurityUtil {
     }
 
     /**
-     * 优先级最高的角色id
+     * 获取当前请求的角色id
      */
-    public static Long getPriorRoleId() {
-        return 1658729760682242048L;
+    public static Long getCurrentRoleId() {
+        return getLoginUser().getCurrentRoleId();
+    }
+
+    /**
+     * 获取当前请求的部门id
+     */
+    public static Long getCurrentDeptId() {
+        return getLoginUser().getCurrentDeptId();
     }
 }
