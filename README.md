@@ -47,4 +47,4 @@
 
 
 #### Bug
-1. 仅当update菜单时报错：java.lang.NoSuchFieldException: id，其他接口为出现此情况
+~~1. 仅当update菜单时报错：java.lang.NoSuchFieldException: id，其他接口为出现此情况~~

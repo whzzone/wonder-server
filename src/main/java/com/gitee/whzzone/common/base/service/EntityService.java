@@ -57,7 +57,8 @@ public interface EntityService<T extends BaseEntity<T>, D extends EntityDto> ext
             d = beforeUpdateHandler(d);
 
             Class<D> dClass = getDClass();
-            Field fieldId = dClass.getDeclaredField("id");
+            Class<? super D> superclass = dClass.getSuperclass();
+            Field fieldId = superclass.getDeclaredField("id");
             fieldId.setAccessible(true);
             long id = (long) fieldId.get(d);
             T t = getById(id);
