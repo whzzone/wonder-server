@@ -65,7 +65,7 @@ public class TokenFilter extends OncePerRequestFilter {
     private MenuService menuService;
 
     @Value("${security.ignore-path}")
-    private String[] ignorePath = new String[]{"/auth/**", "/test"};
+    private String[] ignorePath;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
