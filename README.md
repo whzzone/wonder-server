@@ -48,3 +48,4 @@
 
 #### Bug
 ~~1. 仅当update菜单时报错：java.lang.NoSuchFieldException: id，其他接口为出现此情况~~
+2. 在菜单页面编辑后，如何局部刷新，现在是整个页面刷新，影响体验
