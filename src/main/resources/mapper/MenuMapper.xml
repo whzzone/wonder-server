@@ -80,7 +80,11 @@
                sm.name,
                sm.icon,
                sm.menu_type,
-               sm.sort
+               sm.sort,
+               sm.keep_alive,
+               sm.in_frame,
+               sm.is_url,
+               sm.route_name
         FROM sys_menu sm
                  LEFT JOIN sys_role_menu srp ON sm.id = srp.menu_id
                  LEFT JOIN sys_user_role sur ON sur.role_id = srp.role_id

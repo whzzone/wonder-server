@@ -26,4 +26,6 @@ public interface MenuService  extends EntityService<Menu, MenuDto> {
     List<Long> getIdListByRoleId(Long id);
 
     boolean existSamePermission(Long id, String Permission);
+
+    boolean existSameRouteName(Long id, String routeName);
 }

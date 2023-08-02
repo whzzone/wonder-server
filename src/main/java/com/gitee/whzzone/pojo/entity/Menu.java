@@ -36,4 +36,12 @@ public class Menu extends BaseEntity<Menu> {
 
     private Integer menuType;
 
+    private Boolean inFrame;
+
+    private Boolean isUrl;
+
+    private Boolean keepAlive;
+
+    private String routeName;
+
 }

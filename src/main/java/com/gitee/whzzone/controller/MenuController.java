@@ -44,7 +44,6 @@ public class MenuController extends EntityController<Menu, MenuService, MenuDto>
     }
 
     @ApiOperation("获取用户菜单-包含路由、权限")
-    //    @PreAuthorize("hasAuthority('sys:menu:view')")
     @GetMapping("/findByUserId")
     public Result<List<MenuDto>> getRoutes(){
         return Result.ok("操作成功", menuService.findByUserId(SecurityUtil.getLoginUser().getId()));

@@ -46,6 +46,7 @@
     这条记录代表着需要拼接SQL语句：xxx AND number >= 100 OR color = '黑色' 
 
 
-#### Bug
-~~1. 仅当update菜单时报错：java.lang.NoSuchFieldException: id，其他接口为出现此情况~~
+#### Bug && Todo
+1. ~~仅当update菜单时报错：java.lang.NoSuchFieldException: id，其他接口为出现此情况~~
 2. 在菜单页面编辑后，如何局部刷新，现在是整个页面刷新，影响体验
+3. 新增菜单是`按钮`时，后端在处理时设置`inFrame = true`，因为按钮也可以表示打开一个新的tab页，（是不是一定是框架内打开，待考虑）

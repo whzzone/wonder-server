@@ -95,8 +95,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     public List<MenuDto> findByUserId(Long userId) {
         List<Menu> byUserId = menuMapper.findByUserId(userId);
-        List<MenuDto> sysMenuDtos = BeanUtil.copyToList(byUserId, MenuDto.class );
-        return sysMenuDtos;
+        return BeanUtil.copyToList(byUserId, MenuDto.class );
     }
 
     @Override
@@ -140,10 +139,51 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
+    public boolean existSameRouteName(Long id, String routeName){
+        if (StrUtil.isBlank(routeName))
+            return false;
+
+        LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Menu::getRouteName, routeName);
+        queryWrapper.ne(id != null, Menu::getId, id);
+        return count(queryWrapper) > 0;
+    }
+
+    @Override
     public MenuDto beforeUpdateHandler(MenuDto dto) {
         if (existSamePermission(dto.getId(), dto.getPermission()))
             throw new RuntimeException("存在相同的权限标识：" + dto.getPermission());
 
+        if (existSameRouteName(dto.getId(), dto.getRouteName()))
+            throw new RuntimeException("存在相同的路由名称：" + dto.getRouteName());
+
         return dto;
+    }
+
+    @Override
+    public MenuDto beforeSaveHandler(MenuDto dto) {
+        if (existSameRouteName(dto.getId(), dto.getRouteName()))
+            throw new RuntimeException("存在相同的路由名称：" + dto.getRouteName());
+
+        if (existSameRouteName(dto.getId(), dto.getRouteName()))
+            throw new RuntimeException("存在相同的路由名称：" + dto.getRouteName());
+
+        return dto;
+    }
+
+    @Override
+    public Menu save(MenuDto dto) {
+        if (dto.getParentId() == null){
+            dto.setParentId(0L);
+        }
+        return MenuService.super.save(dto);
+    }
+
+    @Override
+    public boolean updateById(MenuDto dto) {
+        if (dto.getParentId() == null){
+            dto.setParentId(0L);
+        }
+        return MenuService.super.updateById(dto);
     }
 }

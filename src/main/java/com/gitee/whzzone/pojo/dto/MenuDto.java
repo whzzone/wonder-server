@@ -19,8 +19,7 @@ import javax.validation.constraints.NotNull;
 public class MenuDto extends EntityDto {
 
     @JsonSerialize(using = LongSerializer.class)
-    @NotNull(message = "parentId不能为空", groups = {UpdateGroup.class, CreateGroup.class})
-    @ApiModelProperty(value = "parentId", required = true)
+    @ApiModelProperty(value = "parentId")
     private Long parentId;
 
     private String parentName;
@@ -29,28 +28,41 @@ public class MenuDto extends EntityDto {
     @ApiModelProperty(value = "name", required = true)
     private String name;
 
-    @ApiModelProperty(value = "permission", required = false)
+    @ApiModelProperty(value = "权限字符")
     private String permission;
 
-    @ApiModelProperty(value = "description", required = false)
+    @ApiModelProperty(value = "描述")
     private String description;
 
-    @ApiModelProperty(value = "enabled", required = false)
+    @ApiModelProperty(value = "是否启用")
     private Boolean enabled;
 
-    @ApiModelProperty(value = "path", required = false)
+    @ApiModelProperty(value = "路由地址")
     private String path;
 
-    @ApiModelProperty(value = "component", required = false)
+    @ApiModelProperty(value = "组件路径")
     private String component;
 
-    @ApiModelProperty(value = "icon", required = false)
+    @ApiModelProperty(value = "图标")
     private String icon;
 
-    @ApiModelProperty(value = "sort", required = false)
+    @ApiModelProperty(value = "排序")
     private Integer sort;
 
     @NotNull(message = "menuType不能为空", groups = {UpdateGroup.class, CreateGroup.class})
-    @ApiModelProperty(value = "menuType", required = true)
+    @ApiModelProperty(value = "菜单类型", required = true)
     private Integer menuType;
+
+    @ApiModelProperty(value = "是否在框架中打开")
+    private Boolean inFrame;
+
+    @ApiModelProperty(value = "是否url链接")
+    private Boolean isUrl;
+
+    @ApiModelProperty(value = "是否缓存")
+    private Boolean keepAlive;
+
+    @ApiModelProperty(value = "路由名称")
+    private String routeName;
+
 }
