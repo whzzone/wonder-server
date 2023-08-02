@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author Create by whz at 2023/7/15
  */
@@ -32,12 +34,17 @@ public class MarkController extends EntityController<Mark, MarkService, MarkDto>
         return Result.ok(markService.page(query));
     }
 
-
     @ApiOperation("改变启用状态")
     @GetMapping("/enabledSwitch/{id}")
     public Result enabledSwitch(@PathVariable Long id) {
         markService.enabledSwitch(id);
         return Result.ok();
+    }
+
+    @ApiOperation("列表")
+    @PostMapping("list")
+    public Result<List<MarkDto>> list(@Validated @RequestBody MarkQuery query){
+        return Result.ok(markService.list(query));
     }
 
 }

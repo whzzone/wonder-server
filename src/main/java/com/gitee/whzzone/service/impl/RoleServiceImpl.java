@@ -13,12 +13,10 @@ import com.gitee.whzzone.mapper.RoleMapper;
 import com.gitee.whzzone.pojo.PageData;
 import com.gitee.whzzone.pojo.dto.RoleDto;
 import com.gitee.whzzone.pojo.entity.Role;
+import com.gitee.whzzone.pojo.entity.Rule;
 import com.gitee.whzzone.pojo.entity.UserRole;
 import com.gitee.whzzone.pojo.query.RoleQuery;
-import com.gitee.whzzone.service.MenuService;
-import com.gitee.whzzone.service.RoleMenuService;
-import com.gitee.whzzone.service.RoleService;
-import com.gitee.whzzone.service.UserRoleService;
+import com.gitee.whzzone.service.*;
 import com.gitee.whzzone.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +45,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Autowired
     private MenuService menuService;
+
+    @Autowired
+    private RuleService ruleService;
+
+    @Autowired
+    private MarkService markService;
 
     @DataScope("role_page")
     @Override
@@ -212,5 +216,31 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         queryWrapper.in(BaseEntity::getId, ids);
         List<Role> list = list(queryWrapper);
         return BeanUtil.copyToList(list, RoleDto.class);
+    }
+
+    @Transactional
+    @Override
+    public void bindingRule(Long roleId, Long ruleId) {
+        if (roleId == null)
+            throw new RuntimeException("roleId不能为空");
+
+        if (ruleId == null)
+            throw new RuntimeException("ruleId不能为空");
+
+        if (!isExist(roleId))
+            throw new RuntimeException("不存在角色：" + roleId);
+
+
+        Rule rule = ruleService.getById(ruleId);
+        if (rule == null)
+            throw new RuntimeException("不存在规则：" + ruleId);
+
+        Long markId = rule.getMarkId();
+
+        markService.removeAllByRoleId(roleId);
+
+        if (!markService.addRelation(roleId,markId, ruleId)) {
+            throw new RuntimeException("角色关联规则失败");
+        }
     }
 }

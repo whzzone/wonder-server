@@ -45,4 +45,11 @@ public class RoleController extends EntityController<Role, RoleService, RoleDto>
         roleService.enabledSwitch(id);
         return Result.ok();
     }
+
+    @ApiOperation("绑定规则")
+    @GetMapping("/bindingRule")
+    public Result bindingRule(Long roleId, Long ruleId) {
+        roleService.bindingRule(roleId, ruleId);
+        return Result.ok();
+    }
 }

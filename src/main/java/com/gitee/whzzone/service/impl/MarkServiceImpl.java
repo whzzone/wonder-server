@@ -210,7 +210,43 @@ public class MarkServiceImpl extends ServiceImpl<MarkMapper, Mark> implements Ma
         updateById(entity);
     }
 
-//    @Override
+    @Override
+    public List<MarkDto> list(MarkQuery query) {
+        LambdaQueryWrapper<Mark> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StrUtil.isNotBlank(query.getName()), Mark::getName, query.getName());
+        List<Mark> list = list(queryWrapper);
+        return BeanUtil.copyToList(list, MarkDto.class);
+    }
+
+    @Override
+    public void removeAllByRoleId(Long roleId) {
+        if (roleId == null)
+            throw new RuntimeException("roleId不能为空");
+
+        LambdaQueryWrapper<RoleMark> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(RoleMark::getRoleId, roleId);
+        roleMarkService.remove(queryWrapper);
+    }
+
+    @Override
+    public boolean addRelation(Long roleId, Long markId, Long ruleId) {
+        if (roleId == null)
+            throw new RuntimeException("roleId不能为空");
+
+        if (markId == null)
+            throw new RuntimeException("markId不能为空");
+
+        if (ruleId == null)
+            throw new RuntimeException("ruleId不能为空");
+
+        RoleMark entity = new RoleMark();
+        entity.setRoleId(roleId);
+        entity.setMarkId(markId);
+        entity.setRuleId(ruleId);
+        return roleMarkService.save(entity);
+    }
+
+    //    @Override
 //    public MarkDto afterQueryHandler(MarkDto dto) {
 //        if (dto.getProvideType().equals(ProvideTypeEnum.METHOD.getCode())){
 //            if (StrUtil.isNotBlank(dto.getFormalParam()) && StrUtil.isNotBlank(dto.getActualParam())) {
