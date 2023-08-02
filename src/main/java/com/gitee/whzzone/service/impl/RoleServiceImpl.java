@@ -52,7 +52,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Autowired
     private MarkService markService;
 
-    @DataScope("role_page")
+    @DataScope("role-page")
     @Override
     public PageData<RoleDto> page(RoleQuery query) {
         Page<Role> page = new Page<>(query.getCurPage(), query.getPageSize());
