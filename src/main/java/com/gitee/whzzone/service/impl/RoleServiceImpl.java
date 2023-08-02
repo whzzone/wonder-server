@@ -35,9 +35,6 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
 
     @Autowired
-    private RoleMapper roleMapper;
-
-    @Autowired
     private RoleMenuService roleMenuService;
 
     @Autowired
@@ -58,11 +55,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         Page<Role> page = new Page<>(query.getCurPage(), query.getPageSize());
 
         LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StrUtil.isNotBlank(query.getName()), Role::getName, query.getName());
 
-        if (StrUtil.isNotBlank(query.getName()))
-            queryWrapper.like(Role::getName, query.getName());
-
-        roleMapper.selectPage(page, queryWrapper);
+        page(page, queryWrapper);
 
         List<RoleDto> userVos = BeanUtil.copyToList(page.getRecords(), RoleDto.class);
 
@@ -84,10 +79,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.ne(Role::getCode, SecurityUtil.ADMIN);
 
-        if (StrUtil.isNotBlank(query.getName()))
-            queryWrapper.like(Role::getName, query.getName());
+        queryWrapper.like(StrUtil.isNotBlank(query.getName()), Role::getName, query.getName());
 
-        List<Role> roleList = roleMapper.selectList(queryWrapper);
+        List<Role> roleList = list(queryWrapper);
 
         return BeanUtil.copyToList(roleList, RoleDto.class);
     }
