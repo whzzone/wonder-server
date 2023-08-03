@@ -177,7 +177,7 @@ public class MarkServiceImpl extends ServiceImpl<MarkMapper, Mark> implements Ma
     }
 
     @Override
-    public boolean existSameName(Long id, String scopeName){
+    public boolean existSameName(Long id, String scopeName) {
         LambdaQueryWrapper<Mark> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Mark::getName, scopeName);
         queryWrapper.ne(id != null, Mark::getId, id);
@@ -189,9 +189,8 @@ public class MarkServiceImpl extends ServiceImpl<MarkMapper, Mark> implements Ma
         Page<Mark> page = new Page<>(query.getCurPage(), query.getPageSize());
 
         LambdaQueryWrapper<Mark> queryWrapper = new LambdaQueryWrapper<>();
-
-        if (StrUtil.isNotBlank(query.getName()))
-            queryWrapper.like(Mark::getName, query.getName());
+        queryWrapper.orderByAsc(Mark::getSort);
+        queryWrapper.like(StrUtil.isNotBlank(query.getName()), Mark::getName, query.getName());
 
         page(page, queryWrapper);
 
@@ -203,7 +202,7 @@ public class MarkServiceImpl extends ServiceImpl<MarkMapper, Mark> implements Ma
     @Override
     public void enabledSwitch(Long id) {
         Mark entity = getById(id);
-        if (entity == null){
+        if (entity == null) {
             throw new RuntimeException("不存在");
         }
         entity.setEnabled(!entity.getEnabled());
@@ -214,17 +213,21 @@ public class MarkServiceImpl extends ServiceImpl<MarkMapper, Mark> implements Ma
     public List<MarkDto> list(MarkQuery query) {
         LambdaQueryWrapper<Mark> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StrUtil.isNotBlank(query.getName()), Mark::getName, query.getName());
+        queryWrapper.orderByAsc(Mark::getSort);
         List<Mark> list = list(queryWrapper);
         return BeanUtil.copyToList(list, MarkDto.class);
     }
 
     @Override
-    public void removeAllByRoleId(Long roleId) {
+    public void removeAllByRoleIdAndMarkId(Long roleId, Long markId) {
         if (roleId == null)
             throw new RuntimeException("roleId不能为空");
+        if (markId == null)
+            throw new RuntimeException("markId不能为空");
 
         LambdaQueryWrapper<RoleMark> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(RoleMark::getRoleId, roleId);
+        queryWrapper.eq(RoleMark::getMarkId, markId);
         roleMarkService.remove(queryWrapper);
     }
 

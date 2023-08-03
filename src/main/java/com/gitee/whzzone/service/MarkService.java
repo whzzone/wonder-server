@@ -29,7 +29,7 @@ public interface MarkService extends EntityService<Mark, MarkDto> {
 
     List<MarkDto> list(MarkQuery query);
 
-    void removeAllByRoleId(Long roleId);
+    void removeAllByRoleIdAndMarkId(Long roleId, Long markId);
 
     boolean addRelation(Long roleId, Long markId, Long ruleId);
 }

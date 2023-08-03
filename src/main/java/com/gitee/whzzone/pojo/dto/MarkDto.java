@@ -14,18 +14,17 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class MarkDto extends EntityDto {
 
-//    @ApiModelProperty
-//    @JsonSerialize(using = LongSerializer.class)
-//    private Long id;
-
     @NotBlank(message = "名称不能为空", groups = {CreateGroup.class, UpdateGroup.class})
     @ApiModelProperty(value = "名称", required = true)
     private String name;
 
+    @ApiModelProperty("备注")
+    private String remark;
+
     @ApiModelProperty("是否启用")
     private Boolean enabled;
 
-    @ApiModelProperty("备注")
-    private String remark;
+    @ApiModelProperty("排序")
+    private Integer sort;
 
 }

@@ -21,4 +21,6 @@ public class Mark extends BaseEntity<Mark> {
 
     private Boolean enabled;
 
+    private Integer sort;
+
 }

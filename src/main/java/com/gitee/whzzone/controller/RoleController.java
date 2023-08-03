@@ -52,4 +52,11 @@ public class RoleController extends EntityController<Role, RoleService, RoleDto>
         roleService.bindingRule(roleId, ruleId);
         return Result.ok();
     }
+
+    @ApiOperation("取消绑定规则")
+    @GetMapping("/unBindingRule")
+    public Result unBindingRule(Long roleId, Long ruleId) {
+        roleService.unBindingRule(roleId, ruleId);
+        return Result.ok();
+    }
 }

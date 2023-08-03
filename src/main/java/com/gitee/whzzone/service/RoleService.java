@@ -35,4 +35,6 @@ public interface RoleService extends EntityService<Role, RoleDto> {
     List<RoleDto> getDtoListIn(List<Long> roleIds);
 
     void bindingRule(Long roleId, Long ruleId);
+
+    void unBindingRule(Long roleId, Long ruleId);
 }

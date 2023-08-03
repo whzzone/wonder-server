@@ -215,15 +215,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Transactional
     @Override
     public void bindingRule(Long roleId, Long ruleId) {
-        if (roleId == null)
-            throw new RuntimeException("roleId不能为空");
-
-        if (ruleId == null)
-            throw new RuntimeException("ruleId不能为空");
-
         if (!isExist(roleId))
             throw new RuntimeException("不存在角色：" + roleId);
-
 
         Rule rule = ruleService.getById(ruleId);
         if (rule == null)
@@ -231,10 +224,23 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
         Long markId = rule.getMarkId();
 
-        markService.removeAllByRoleId(roleId);
+        markService.removeAllByRoleIdAndMarkId(roleId, markId);
 
-        if (!markService.addRelation(roleId,markId, ruleId)) {
+        if (!markService.addRelation(roleId, markId, ruleId)) {
             throw new RuntimeException("角色关联规则失败");
         }
+    }
+
+    @Override
+    public void unBindingRule(Long roleId, Long ruleId) {
+        if (!isExist(roleId))
+            throw new RuntimeException("不存在角色：" + roleId);
+
+        Rule rule = ruleService.getById(ruleId);
+        if (rule == null)
+            throw new RuntimeException("不存在规则：" + ruleId);
+
+        Long markId = rule.getMarkId();
+        markService.removeAllByRoleIdAndMarkId(roleId, markId);
     }
 }
