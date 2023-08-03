@@ -12,4 +12,6 @@ import java.util.List;
 public interface RuleService extends EntityService<Rule, RuleDto> {
 
     List<RuleDto> getByMarkId(Long markId);
+
+    RuleDto getByRoleIdAndMarkId(Long roleId, Long markId);
 }

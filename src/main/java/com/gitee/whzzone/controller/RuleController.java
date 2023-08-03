@@ -34,4 +34,10 @@ public class RuleController extends EntityController<Rule, RuleService, RuleDto>
         return Result.ok(ruleService.getByMarkId(markId));
     }
 
+    @ApiOperation("根据roleId，markId获取一个rule")
+    @GetMapping("getByRoleIdAndMarkId")
+    public Result<RuleDto> getByRoleIdAndMarkId(Long roleId, Long markId){
+        return Result.ok(ruleService.getByRoleIdAndMarkId(roleId, markId));
+    }
+
 }

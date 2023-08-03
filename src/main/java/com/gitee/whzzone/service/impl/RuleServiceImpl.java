@@ -6,8 +6,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitee.whzzone.mapper.RuleMapper;
 import com.gitee.whzzone.pojo.dto.RuleDto;
+import com.gitee.whzzone.pojo.entity.RoleMark;
 import com.gitee.whzzone.pojo.entity.Rule;
+import com.gitee.whzzone.service.RoleMarkService;
 import com.gitee.whzzone.service.RuleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,6 +21,9 @@ import java.util.List;
  */
 @Service
 public class RuleServiceImpl extends ServiceImpl<RuleMapper, Rule> implements RuleService {
+
+    @Autowired
+    private RoleMarkService roleMarkService;
 
     @Override
     public List<RuleDto> getByMarkId(Long markId) {
@@ -30,6 +36,13 @@ public class RuleServiceImpl extends ServiceImpl<RuleMapper, Rule> implements Ru
         return BeanUtil.copyToList(list, RuleDto.class);
     }
 
-
-
+    @Override
+    public RuleDto getByRoleIdAndMarkId(Long roleId, Long markId) {
+        RoleMark roleMark = roleMarkService.getByRoleIdAndMarkId(roleId, markId);
+        if (roleMark != null){
+            Long ruleId = roleMark.getRuleId();
+            return getDtoById(ruleId);
+        }
+        return null;
+    }
 }
