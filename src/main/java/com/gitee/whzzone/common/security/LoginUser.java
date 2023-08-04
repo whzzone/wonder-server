@@ -3,9 +3,9 @@ package com.gitee.whzzone.common.security;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.gitee.whzzone.common.serializer.ListLongSerializer;
 import com.gitee.whzzone.common.serializer.LongSerializer;
-import com.gitee.whzzone.pojo.dto.DeptDto;
-import com.gitee.whzzone.pojo.dto.RoleDto;
-import com.gitee.whzzone.pojo.entity.User;
+import com.gitee.whzzone.pojo.dto.system.DeptDto;
+import com.gitee.whzzone.pojo.dto.system.RoleDto;
+import com.gitee.whzzone.pojo.entity.system.User;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 

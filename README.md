@@ -50,3 +50,4 @@
 1. ~~仅当update菜单时报错：java.lang.NoSuchFieldException: id，其他接口为出现此情况~~
 2. 在菜单页面编辑后，如何局部刷新，现在是整个页面刷新，影响体验
 3. 新增菜单是`按钮`时，后端在处理时设置`inFrame = true`，因为按钮也可以表示打开一个新的tab页，（是不是一定是框架内打开，待考虑）
+4. 代码生成，包括controller、service、mapper...

@@ -1,6 +1,6 @@
 package com.gitee.whzzone.pojo.dto.auth;
 
-import com.gitee.whzzone.pojo.dto.UserDto;
+import com.gitee.whzzone.pojo.dto.system.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

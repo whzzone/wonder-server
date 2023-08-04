@@ -2,8 +2,8 @@ package com.gitee.whzzone.common.aspect;
 
 import com.gitee.whzzone.common.annotation.DataScope;
 import com.gitee.whzzone.common.exception.NoDataException;
-import com.gitee.whzzone.pojo.dto.DataScopeInfo;
-import com.gitee.whzzone.service.MarkService;
+import com.gitee.whzzone.pojo.dto.system.DataScopeInfo;
+import com.gitee.whzzone.service.system.MarkService;
 import com.gitee.whzzone.util.SecurityUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
  */
 @Aspect
 @Slf4j
-//@Order(1)
+//@OrderDto(1)
 @Component
 public class DataScopeAspect {
 

@@ -1,8 +1,8 @@
 package com.gitee.whzzone.common.security;
 
-import com.gitee.whzzone.pojo.entity.User;
-import com.gitee.whzzone.service.EmailService;
-import com.gitee.whzzone.service.UserService;
+import com.gitee.whzzone.pojo.entity.system.User;
+import com.gitee.whzzone.service.system.EmailService;
+import com.gitee.whzzone.service.system.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
