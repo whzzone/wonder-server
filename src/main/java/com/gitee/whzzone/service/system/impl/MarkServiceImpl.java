@@ -215,8 +215,7 @@ public class MarkServiceImpl extends ServiceImpl<MarkMapper, Mark> implements Ma
 
         page(page, queryWrapper);
 
-        List<MarkDto> list = BeanUtil.copyToList(page.getRecords(), MarkDto.class);
-        afterQueryHandler(list);
+        List<MarkDto> list = afterQueryHandler(page.getRecords());
         return new PageData<>(list, page.getTotal(), page.getPages());
     }
 

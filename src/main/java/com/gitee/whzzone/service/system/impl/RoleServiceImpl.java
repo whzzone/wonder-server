@@ -180,7 +180,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    public RoleDto afterQueryHandler(RoleDto dto) {
+    public RoleDto afterQueryHandler(Role entity) {
+        RoleDto dto = RoleService.super.afterQueryHandler(entity);
         List<Long> menuIdList = menuService.getIdListByRoleId(dto.getId());
         dto.setMenuIds(menuIdList);
         return dto;

@@ -99,7 +99,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
-    public MenuDto afterQueryHandler(MenuDto dto) {
+    public MenuDto afterQueryHandler(Menu entity) {
+        MenuDto dto = MenuService.super.afterQueryHandler(entity);
         Menu parent = getById(dto.getParentId());
         if (parent != null){
             dto.setParentName(parent.getName());

@@ -41,7 +41,7 @@ public class RuleServiceImpl extends ServiceImpl<RuleMapper, Rule> implements Ru
         RoleMark roleMark = roleMarkService.getByRoleIdAndMarkId(roleId, markId);
         if (roleMark != null){
             Long ruleId = roleMark.getRuleId();
-            return getDtoById(ruleId);
+            return afterQueryHandler(getById(ruleId));
         }
         return null;
     }

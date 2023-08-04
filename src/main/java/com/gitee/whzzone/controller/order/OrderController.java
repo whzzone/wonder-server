@@ -30,4 +30,10 @@ public class OrderController extends EntityController<Order, OrderService, Order
     public Result<List<OrderDto>> list(@RequestBody OrderQuery query){
         return Result.ok("操作成功", orderService.list(query));
     }
+
+    @ApiOperation("列表-注解在形参")
+    @PostMapping("list2")
+    public Result<List<OrderDto>> list2(@RequestBody OrderQuery query){
+        return Result.ok("操作成功", orderService.list2(query, null));
+    }
 }

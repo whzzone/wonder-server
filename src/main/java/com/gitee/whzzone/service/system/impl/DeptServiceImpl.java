@@ -80,7 +80,8 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     }
 
     @Override
-    public DeptDto afterQueryHandler(DeptDto dto) {
+    public DeptDto afterQueryHandler(Dept entity) {
+        DeptDto dto = DeptService.super.afterQueryHandler(entity);
         dto.setHasChildren(hasChildren(dto.getParentId()));
         if (!dto.getParentId().equals(0L)) {
             Dept parent = getById(dto.getParentId());

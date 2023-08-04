@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -35,11 +36,11 @@ public interface EntityService<T extends BaseEntity<T>, D extends EntityDto> ext
 
             BeanUtil.copyProperties(d, t);
             boolean save = save(t);
-            if (save) {
-                afterSaveHandler(t);
-                return t;
+            if (!save) {
+               throw new RuntimeException("操作失败");
             }
-            return null;
+            afterSaveHandler(t);
+            return t;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
@@ -78,7 +79,14 @@ public interface EntityService<T extends BaseEntity<T>, D extends EntityDto> ext
         }
     }
 
-    default D getDtoById(Serializable id) {
+    @Override
+    default T getById(Serializable id) {
+        if (id == null)
+            return null;
+        return IService.super.getById(id);
+    }
+
+    /*default D getDtoById(Serializable id) {
         try {
             T t = IService.super.getById(id);
             if (t == null) {
@@ -95,20 +103,18 @@ public interface EntityService<T extends BaseEntity<T>, D extends EntityDto> ext
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
-    }
+    }*/
 
     @Override
     default boolean removeById(T entity) {
-        T t = getById(entity.getId());
-        boolean b = IService.super.removeById(entity);
-        if (b) {
-            afterDeleteHandler(t);
-        }
-        return b;
+        return removeById(entity.getId());
     }
 
     @Override
     default boolean removeById(Serializable id) {
+        if (id == null){
+            throw new RuntimeException("id不能为空");
+        }
         T t = getById(id);
         boolean b = IService.super.removeById(id);
         if (b) {
@@ -125,16 +131,30 @@ public interface EntityService<T extends BaseEntity<T>, D extends EntityDto> ext
         return t;
     }
 
-    default D afterQueryHandler(D d) {
+    /*default D afterQueryHandler(D d) {
         return d;
+    }*/
+
+    default D afterQueryHandler(T t) {
+        Class<D> dClass = getDClass();
+        return BeanUtil.copyProperties(t, dClass);
     }
 
-    default List<D> afterQueryHandler(List<D> list) {
+    default List<D> afterQueryHandler(List<T> list) {
+        List<D> dList = new LinkedList<>();
+        for (T t : list) {
+            D d = afterQueryHandler(t);
+            dList.add(d);
+        }
+        return dList;
+    }
+
+    /*default List<D> afterQueryHandler(List<D> list) {
         for (D d : list) {
             afterQueryHandler(d);
         }
         return list;
-    }
+    }*/
 
     default void afterDeleteHandler(T t) {
 

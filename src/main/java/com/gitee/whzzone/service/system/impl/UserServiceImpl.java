@@ -102,7 +102,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public UserDto afterQueryHandler(UserDto dto) {
+    public UserDto afterQueryHandler(User entity) {
+        UserDto dto = UserService.super.afterQueryHandler(entity);
         dto.setPassword("");
 
         List<Dept> deptList = getUserDeptInfo(dto.getId());
@@ -169,9 +170,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.in(query.getDeptId() != null, User::getId, userIds);
         page(page, queryWrapper);
 
-        List<UserDto> dtoList = BeanUtil.copyToList(page.getRecords(), UserDto.class);
-
-        afterQueryHandler(dtoList);
+        List<UserDto> dtoList = afterQueryHandler(page.getRecords());
 
         return new PageData<>(dtoList, page.getPages(), page.getTotal());
     }

@@ -26,25 +26,27 @@ public abstract class EntityController<T extends BaseEntity<T>, S extends Entity
     @ApiOperation("获取")
     @GetMapping("/get/{id}")
     public Result<D> get(@PathVariable Long id){
-        return Result.ok(service.getDtoById(id));
+        T t = service.getById(id);
+        D d = service.afterQueryHandler(t);
+        return Result.ok("操作成功", d);
     }
 
     @ApiOperation("删除")
     @GetMapping("/delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id){
-        return Result.ok(service.removeById(id));
+        return Result.ok("操作成功", service.removeById(id));
     }
 
     @ApiOperation("保存")
     @PostMapping("save")
     public Result<T> save(@Validated(CreateGroup.class) @RequestBody D d){
-        return Result.ok(service.save(d));
+        return Result.ok("操作成功", service.save(d));
     }
 
     @ApiOperation("更新")
     @PostMapping("update")
     public Result<Boolean> update(@Validated(UpdateGroup.class) @RequestBody D d){
-        return Result.ok(service.updateById(d));
+        return Result.ok("操作成功", service.updateById(d));
     }
 
 }
