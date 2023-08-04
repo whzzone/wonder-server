@@ -6,6 +6,7 @@ import com.gitee.whzzone.common.aspect.DataScopeAspect;
 import com.gitee.whzzone.common.enums.ExpressionEnum;
 import com.gitee.whzzone.common.enums.ProvideTypeEnum;
 import com.gitee.whzzone.common.enums.SpliceTypeEnum;
+import com.gitee.whzzone.common.exception.NoDataException;
 import com.gitee.whzzone.pojo.dto.DataScopeInfo;
 import com.gitee.whzzone.pojo.dto.RuleDto;
 import com.gitee.whzzone.util.SecurityUtil;
@@ -44,7 +45,7 @@ public class DataScopeHandler implements DataPermissionHandler {
 
         if (dto.getProvideType().equals(ProvideTypeEnum.METHOD.getCode())) {
             if (CollectionUtil.isEmpty(idList))
-                throw new RuntimeException("没有查看权限");
+                throw new NoDataException("没有查看权限");
 
             ItemsList itemsList = new ExpressionList(idList.stream().map(LongValue::new).collect(Collectors.toList()));
             InExpression inExpression = new InExpression(new Column(sql), itemsList);

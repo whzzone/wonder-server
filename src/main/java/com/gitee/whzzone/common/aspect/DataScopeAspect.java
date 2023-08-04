@@ -1,6 +1,7 @@
 package com.gitee.whzzone.common.aspect;
 
 import com.gitee.whzzone.common.annotation.DataScope;
+import com.gitee.whzzone.common.exception.NoDataException;
 import com.gitee.whzzone.pojo.dto.DataScopeInfo;
 import com.gitee.whzzone.service.MarkService;
 import com.gitee.whzzone.util.SecurityUtil;
@@ -38,7 +39,8 @@ public class DataScopeAspect {
 
     // 方法切点
     @Pointcut("@annotation(com.gitee.whzzone.common.annotation.DataScope)")
-    public void methodPointCut() {}
+    public void methodPointCut() {
+    }
 
     @After("methodPointCut()")
     public void clearThreadLocal() {
@@ -67,6 +69,8 @@ public class DataScopeAspect {
 
                 threadLocal.set(dataScopeParam);
             }
+        } catch (NoDataException e) {
+            throw new NoDataException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("数据权限 method 切面错误：" + e.getMessage());
@@ -81,7 +85,8 @@ public class DataScopeAspect {
 
     // 形参切点
     @Pointcut("execution(* *(.., @com.gitee.whzzone.common.annotation.DataScope (*), ..))")
-    public void parameterPointCut() {}
+    public void parameterPointCut() {
+    }
 
     @Around("parameterPointCut()")
     public Object doAround(ProceedingJoinPoint point) {
@@ -103,8 +108,8 @@ public class DataScopeAspect {
                     }
                 }
 
-                if (index >= 0){
-                    if (parameterType != DataScopeInfo.class){
+                if (index >= 0) {
+                    if (parameterType != DataScopeInfo.class) {
                         throw new RuntimeException("使用@DataScope的参数类型必须是：DataScopeInfo.class 类型");
                     }
                     DataScope dataScope = (DataScope) annotations[index];

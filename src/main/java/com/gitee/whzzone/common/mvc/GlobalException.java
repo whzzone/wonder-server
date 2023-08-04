@@ -1,5 +1,6 @@
 package com.gitee.whzzone.common.mvc;
 
+import com.gitee.whzzone.common.exception.NoDataException;
 import com.gitee.whzzone.web.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
@@ -63,5 +64,11 @@ public class GlobalException {
     public Result handleNotFoundException(HttpServletRequest request, NoHandlerFoundException ex) {
         String path = request.getRequestURI().substring(request.getContextPath().length()).replaceAll("[/]+$", "");
         return Result.error("访问不存在的接口：" + path);
+    }
+
+    @ExceptionHandler(NoDataException.class)
+    @ResponseBody
+    public Result handleNotFoundException() {
+        return Result.error(Result.NO_DADA, "暂无数据");
     }
 }

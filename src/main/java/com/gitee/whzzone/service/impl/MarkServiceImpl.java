@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitee.whzzone.common.enums.ProvideTypeEnum;
+import com.gitee.whzzone.common.exception.NoDataException;
 import com.gitee.whzzone.mapper.MarkMapper;
 import com.gitee.whzzone.pojo.PageData;
 import com.gitee.whzzone.pojo.dto.DataScopeInfo;
@@ -58,7 +59,7 @@ public class MarkServiceImpl extends ServiceImpl<MarkMapper, Mark> implements Ma
         // 角色 与 标记 的关联
         RoleMark roleMark = roleMarkService.getByRoleIdAndMarkId(roleId, mark.getId());
         if (roleMark == null)
-            throw new RuntimeException("角色 与 标记 的关联为空，无访问权限");
+            throw new NoDataException("角色 与 标记 的关联为空，无访问权限");
 
         Rule rule = ruleService.getById(roleMark.getRuleId());
         if (rule == null)
