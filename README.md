@@ -15,11 +15,56 @@
 #### 当前数据权限思路
 
 1. 注解使用在方法上： 执行SQL前进行拦截，查询该账号拥有的角色List，是否关联有的数据规则，解析拼接SQL。
-
+    ```java
+    @DataScope("order-list")
+    @Override
+    public List<OrderDto> list(OrderQuery query) {
+        LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverName()), Order::getReceiverName, query.getReceiverName());
+        ...
+        List<Order> list = list(queryWrapper);
+        return afterQueryHandler(list);
+    }
+    ```
 2. 注解使用在形参上：AOP解析权限赋值到形参上，开发者自行处理。（适用于Mapper接口的形参，在xml中拼接）
+    ```java
+    @Override
+    public List<OrderDto> list(OrderQuery query, @DataScope("order-list") DataScopeInfo dataScopeInfo) {
+        if (CollectionUtil.isEmpty(dataScopeInfo.getIdList())) {
+            throw new NoDataException();
+        }
 
+        QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in(dataScopeInfo.getDto().getColumnName(), dataScopeInfo.getIdList());
+        queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverName()), "receiverName", query.getReceiverName());
+        ...
+        List<Order> list = list(queryWrapper);
+        return afterQueryHandler(list);
+    }
+   ```
 3. 提供RuleService方法：由开发者根据方法返回值自行处理。（可传递到xml中拼接）
+    ```java
+    // 这样比方法2多出注入一步
+    @Autowired
+    private MarkService dataScopeService;
+    
+    @Override
+    public List<OrderDto> list(OrderQuery query) {
 
+        DataScopeInfo dataScopeInfo = dataScopeService.execRuleByName("order-list");
+
+        if (CollectionUtil.isEmpty(dataScopeInfo.getIdList())) {
+            throw new NoDataException();
+        }
+    
+        QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in(dataScopeInfo.getDto().getColumnName(), dataScopeInfo.getIdList());
+        queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverName()), "receiverName", query.getReceiverName());
+        ...
+        List<Order> list = list(queryWrapper);
+        return afterQueryHandler(list);
+    }
+    ```
 ---
 
 #### 问题
@@ -34,7 +79,7 @@
 3. 如果想限制同一张表的多个字段怎么办？比如某条规则限制`order`表查询付款金额大于100元 && 已经完成的订单时怎么办？
     - 方案一：优先考虑提供类型为`值`的情况是否满足当前需求。如需要限制两个及以上字段时，使用提供类型为`方法`来处理，此时配置记录中字段`column_name`为`id`，配置对应的无参或有参方法，返回`idList`去`IN`，就能满足。例如问题中可一执行一个方法返回 付款金额大于100元 && 已经完成的订单 的`idList`去`order`表拼接`id IN( idList )` 就能满足
 
-
+---
 
 #### 接下来的需求
 
@@ -45,7 +90,11 @@
     |    | number;color | AND;OR             | 100;黑色 | GE;EQ      |        |
     
     这条记录代表着需要拼接SQL语句：xxx AND number >= 100 OR color = '黑色' 
+2. 系统字典
+3. 系统日志
+4. 接口访问频率限制
 
+---
 
 #### Bug && Todo
 1. ~~仅当update菜单时报错：java.lang.NoSuchFieldException: id，其他接口为出现此情况~~

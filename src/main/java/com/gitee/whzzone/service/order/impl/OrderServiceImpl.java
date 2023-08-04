@@ -1,6 +1,5 @@
 package com.gitee.whzzone.service.order.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -37,7 +36,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverAddress()), Order::getReceiverAddress, query.getReceiverAddress());
         queryWrapper.eq(query.getOrderStatus() != null, Order::getOrderStatus, query.getOrderStatus());
         List<Order> list = list(queryWrapper);
-        return BeanUtil.copyToList(list, OrderDto.class);
+        return afterQueryHandler(list);
     }
 
     @Override
@@ -52,7 +51,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverAddress()), "receiverAddress", query.getReceiverAddress());
         queryWrapper.eq(query.getOrderStatus() != null, "orderStatus", query.getOrderStatus());
         List<Order> list = list(queryWrapper);
-        return BeanUtil.copyToList(list, OrderDto.class);
+        return afterQueryHandler(list);
     }
 
     @Override
