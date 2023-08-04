@@ -1,5 +1,6 @@
 package com.gitee.whzzone.common.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -8,6 +9,7 @@ import lombok.Getter;
  */
 
 @Getter
+@AllArgsConstructor
 public enum MenuTypeEnum {
 
     M("目录", 1),
@@ -17,8 +19,4 @@ public enum MenuTypeEnum {
     private final String name;
     private final Integer code;
 
-    MenuTypeEnum(String name, Integer code){
-        this.name = name;
-        this.code = code;
-    }
 }

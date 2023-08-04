@@ -57,7 +57,7 @@ public class DataScopeHandler implements DataPermissionHandler {
                 } else
                     throw new RuntimeException("错误的拼接类型：" + dto.getSpliceType());
 
-            } else if (dto.getExpression().equals(ExpressionEnum.NOTIN.toString())) {
+            } else if (dto.getExpression().equals(ExpressionEnum.NOT_IN.toString())) {
                 NotExpression notExpression = new NotExpression(inExpression);
 
                 if (dto.getSpliceType().equals(SpliceTypeEnum.OR.toString())) {
@@ -165,7 +165,7 @@ public class DataScopeHandler implements DataPermissionHandler {
                 } else
                     throw new RuntimeException("错误的拼接类型：" + dto.getSpliceType());
 
-            } else if (dto.getExpression().equals(ExpressionEnum.ISNULL.toString())) {
+            } else if (dto.getExpression().equals(ExpressionEnum.IS_NULL.toString())) {
                 Column column = new Column(dto.getColumnName());
 
                 IsNullExpression isNullExpression = new IsNullExpression();
@@ -178,7 +178,8 @@ public class DataScopeHandler implements DataPermissionHandler {
                 } else
                     throw new RuntimeException("错误的拼接类型：" + dto.getSpliceType());
 
-            } else if (dto.getExpression().equals(ExpressionEnum.NOTNULL.toString())) {
+            } else if (dto.getExpression().equals(ExpressionEnum.NOT_NULL.toString())) {
+                // FIXME NOT_NULL待处理
                 //                Column column = new Column(dto.getColumnName());
                 //
                 //                IsNotNull isNotNullExpression = new IsNotNull();

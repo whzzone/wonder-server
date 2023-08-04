@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -19,7 +20,8 @@ import java.util.List;
  * @author Create by whz at 2023/8/4
  */
 @Api(tags = "订单相关")
-@RestController("order")
+@RestController
+@RequestMapping("order")
 public class OrderController extends EntityController<Order, OrderService, OrderDto, OrderQuery> {
 
     @Autowired

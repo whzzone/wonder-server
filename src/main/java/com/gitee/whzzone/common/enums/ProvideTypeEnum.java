@@ -1,5 +1,6 @@
 package com.gitee.whzzone.common.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -7,6 +8,7 @@ import lombok.Getter;
  */
 
 @Getter
+@AllArgsConstructor
 public enum ProvideTypeEnum {
 
     VALUE(1, "值"),
@@ -14,10 +16,5 @@ public enum ProvideTypeEnum {
 
     private final Integer code;
     private final String name;
-
-    ProvideTypeEnum(Integer code, String name){
-        this.code = code;
-        this.name = name;
-    }
 
 }

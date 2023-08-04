@@ -7,9 +7,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gitee.whzzone.common.annotation.Query;
 import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
 import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
 import com.gitee.whzzone.common.base.pojo.quey.EntityQuery;
+import com.gitee.whzzone.common.enums.ExpressionEnum;
 import com.gitee.whzzone.pojo.PageData;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +43,7 @@ public interface EntityService<T extends BaseEntity<T>, D extends EntityDto, Q e
             BeanUtil.copyProperties(d, t);
             boolean save = save(t);
             if (!save) {
-               throw new RuntimeException("操作失败");
+                throw new RuntimeException("操作失败");
             }
             afterSaveHandler(t);
             return t;
@@ -116,7 +118,7 @@ public interface EntityService<T extends BaseEntity<T>, D extends EntityDto, Q e
 
     @Override
     default boolean removeById(Serializable id) {
-        if (id == null){
+        if (id == null) {
             throw new RuntimeException("id不能为空");
         }
         T t = getById(id);
@@ -192,24 +194,9 @@ public interface EntityService<T extends BaseEntity<T>, D extends EntityDto, Q e
         return d;
     }
 
-    default PageData<D> page(Q q){
+    default PageData<D> page(Q q) {
         try {
-            Class<? extends EntityQuery> qClass = q.getClass();
-
-            Field[] fields = qClass.getDeclaredFields();
-
-            QueryWrapper<T> queryWrapper = new QueryWrapper<>();
-            for (Field field : fields) {
-                if (isBusinessField(field.getName())){
-                    field.setAccessible(true);
-                    queryWrapper.eq(
-                            Objects.nonNull(field.get(q))
-                                    && !String.valueOf(field.get(q)).equals("null")
-                                    && !field.get(q).equals(""),
-                            StrUtil.toUnderlineCase(field.getName()),
-                            field.get(q));
-                }
-            }
+            QueryWrapper<T> queryWrapper = queryWrapperHandler(q);
 
             IPage<T> page = new Page<>(q.getCurPage(), q.getPageSize());
 
@@ -219,11 +206,111 @@ public interface EntityService<T extends BaseEntity<T>, D extends EntityDto, Q e
 
             return new PageData<>(dList, page.getTotal(), page.getPages());
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    default QueryWrapper<T> queryWrapperHandler(Q q) {
+        try {
+            Class<? extends EntityQuery> qClass = q.getClass();
+
+            Field[] fields = qClass.getDeclaredFields();
+
+            QueryWrapper<T> queryWrapper = new QueryWrapper<>();
+            for (Field field : fields) {
+                // if (isBusinessField(field.getName())) {
+                field.setAccessible(true);
+                Object value = field.get(q);
+
+                // 判断该属性是否存在值
+                if (Objects.isNull(value) || String.valueOf(value).equals("null") || value.equals("")) {
+                    continue;
+                }
+
+                // 是否存在注解@Query
+                Query query = field.getDeclaredAnnotation(Query.class);
+                if (query == null) {
+                    continue;
+                }
+
+                String columnName = StrUtil.isBlank(query.column()) ? StrUtil.toUnderlineCase(field.getName()) : query.column();
+
+                if (query.expression().equals(ExpressionEnum.EQ)) {
+                    queryWrapper.eq(columnName, value);
+                } else if (query.expression().equals(ExpressionEnum.NE)) {
+                    queryWrapper.ne(columnName, value);
+                } else if (query.expression().equals(ExpressionEnum.LIKE)) {
+                    queryWrapper.like(columnName, value);
+                } else if (query.expression().equals(ExpressionEnum.GT)) {
+                    queryWrapper.gt(columnName, value);
+                } else if (query.expression().equals(ExpressionEnum.GE)) {
+                    queryWrapper.ge(columnName, value);
+                } else if (query.expression().equals(ExpressionEnum.LT)) {
+                    queryWrapper.lt(columnName, value);
+                } else if (query.expression().equals(ExpressionEnum.LE)) {
+                    queryWrapper.le(columnName, value);
+                } else if (query.expression().equals(ExpressionEnum.IN)) {
+                    queryWrapper.in(columnName, value);
+                } else if (query.expression().equals(ExpressionEnum.NOT_IN)) {
+                    queryWrapper.notIn(columnName, value);
+                } else if (query.expression().equals(ExpressionEnum.IS_NULL)) {
+                    queryWrapper.isNull(columnName);
+                } else if (query.expression().equals(ExpressionEnum.NOT_NULL)) {
+                    queryWrapper.isNotNull(columnName);
+                }
+
+            }
+            // }
+            return queryWrapper;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+/*
+    default QueryWrapper<T> queryWrapperHandler(Q q) {
+        try {
+            Class<? extends EntityQuery> qClass = q.getClass();
+
+            Field[] fields = qClass.getDeclaredFields();
+
+            QueryWrapper<T> queryWrapper = new QueryWrapper<>();
+            for (Field field : fields) {
+                if (isBusinessField(field.getName())) {
+                    field.setAccessible(true);
+
+                    if (Objects.isNull(field.get(q)) || String.valueOf(field.get(q)).equals("null") || field.get(q).equals("")) {
+                        continue;
+                    }
+
+                    QueryEquals queryEquals = field.getDeclaredAnnotation(QueryEquals.class);
+                    if (queryEquals != null) {
+                        queryWrapper.eq(StrUtil.toUnderlineCase(field.getName()), field.get(q));
+                    }
+
+                    QueryLike queryLike = field.getDeclaredAnnotation(QueryLike.class);
+                    if (queryLike != null) {
+                        queryWrapper.like(StrUtil.toUnderlineCase(field.getName()), field.get(q));
+                    }
+
+                    QueryNotEquals queryNotEquals = field.getDeclaredAnnotation(QueryNotEquals.class);
+                    if (queryNotEquals != null) {
+                        queryWrapper.ne(StrUtil.toUnderlineCase(field.getName()), field.get(q));
+                    }
+
+                }
+            }
+
+            return queryWrapper;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+*/
 
     /*default List<D> list(Q q){
         try {
@@ -253,12 +340,12 @@ public interface EntityService<T extends BaseEntity<T>, D extends EntityDto, Q e
         }
     }*/
 
-    default boolean isBusinessField(String fieldName){
-        String [] notQueryField = new String[] {"id", "createTime", "createBy", "updateTime", "updateBy", "deleted", "curPage", "pageSize"};
+    /*default boolean isBusinessField(String fieldName) {
+        String[] notQueryField = new String[]{"id", "createTime", "createBy", "updateTime", "updateBy", "deleted", "curPage", "pageSize"};
         for (String item : notQueryField) {
             if (fieldName.equals(item))
                 return false;
         }
         return true;
-    }
+    }*/
 }
