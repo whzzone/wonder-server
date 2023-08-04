@@ -1,6 +1,6 @@
 package com.gitee.whzzone.pojo.query.order;
 
-import com.gitee.whzzone.web.QueryPage;
+import com.gitee.whzzone.common.base.pojo.quey.EntityQuery;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import lombok.Data;
  * @author Create by whz at 2023/8/4
  */
 @Data
-public class OrderQuery extends QueryPage {
+public class OrderQuery extends EntityQuery {
 
     @ApiModelProperty("收货人姓名")
     private String receiverName;

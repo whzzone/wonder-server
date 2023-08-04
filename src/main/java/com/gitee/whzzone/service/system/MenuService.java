@@ -12,7 +12,7 @@ import java.util.List;
  * @author : whz
  * @date : 2023/5/22 20:17
  */
-public interface MenuService  extends EntityService<Menu, MenuDto> {
+public interface MenuService  extends EntityService<Menu, MenuDto, MenuQuery> {
     List<String> findPermitByUserId(Long userId);
 
     List<MenuTreeDto> treeList(MenuQuery query);

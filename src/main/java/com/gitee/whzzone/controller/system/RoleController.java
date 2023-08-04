@@ -22,7 +22,7 @@ import java.util.List;
 @Api(tags = "角色相关")
 @RestController
 @RequestMapping("role")
-public class RoleController extends EntityController<Role, RoleService, RoleDto> {
+public class RoleController extends EntityController<Role, RoleService, RoleDto, RoleQuery> {
 
     @Autowired
     private RoleService roleService;

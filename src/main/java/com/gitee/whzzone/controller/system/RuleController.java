@@ -3,6 +3,7 @@ package com.gitee.whzzone.controller.system;
 import com.gitee.whzzone.common.base.controller.EntityController;
 import com.gitee.whzzone.pojo.dto.system.RuleDto;
 import com.gitee.whzzone.pojo.entity.system.Rule;
+import com.gitee.whzzone.pojo.query.system.RuleQuery;
 import com.gitee.whzzone.service.system.RuleService;
 import com.gitee.whzzone.web.Result;
 import io.swagger.annotations.Api;
@@ -23,7 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("rule")
 @Slf4j
-public class RuleController extends EntityController<Rule, RuleService, RuleDto> {
+public class RuleController extends EntityController<Rule, RuleService, RuleDto, RuleQuery> {
 
     @Autowired
     private RuleService ruleService;

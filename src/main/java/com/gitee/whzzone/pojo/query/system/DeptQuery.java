@@ -1,5 +1,6 @@
 package com.gitee.whzzone.pojo.query.system;
 
+import com.gitee.whzzone.common.base.pojo.quey.EntityQuery;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -8,7 +9,7 @@ import lombok.Data;
  */
 
 @Data
-public class DeptQuery {
+public class DeptQuery extends EntityQuery {
 
     @ApiModelProperty("部门名称")
     private String name;

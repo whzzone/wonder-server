@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "用户相关")
 @RestController
 @RequestMapping("user")
-public class UserController extends EntityController<User, UserService, UserDto> {
+public class UserController extends EntityController<User, UserService, UserDto, UserQuery> {
 
     @Autowired
     private UserService userService;

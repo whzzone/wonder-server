@@ -23,7 +23,7 @@ import java.util.List;
 @RequestMapping("mark")
 @Api(tags = "标记相关")
 @Slf4j
-public class MarkController extends EntityController<Mark, MarkService, MarkDto> {
+public class MarkController extends EntityController<Mark, MarkService, MarkDto, MarkQuery> {
 
     @Autowired
     private MarkService markService;

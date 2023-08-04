@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author Create by whz at 2023/7/13
  */
-public interface MarkService extends EntityService<Mark, MarkDto> {
+public interface MarkService extends EntityService<Mark, MarkDto, MarkQuery> {
 
     Rule getByName(String name);
 

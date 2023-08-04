@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Api(tags = "订单相关")
 @RestController("order")
-public class OrderController extends EntityController<Order, OrderService, OrderDto> {
+public class OrderController extends EntityController<Order, OrderService, OrderDto, OrderQuery> {
 
     @Autowired
     private OrderService orderService;

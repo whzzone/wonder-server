@@ -20,7 +20,7 @@ import java.util.List;
 @Api(tags = "部门相关")
 @RestController
 @RequestMapping("dept")
-public class DeptController extends EntityController<Dept, DeptService, DeptDto> {
+public class DeptController extends EntityController<Dept, DeptService, DeptDto, DeptQuery> {
 
     @Autowired
     private DeptService deptService;

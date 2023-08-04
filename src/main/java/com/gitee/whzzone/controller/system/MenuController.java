@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/menu")
 @Validated
-public class MenuController extends EntityController<Menu, MenuService, MenuDto> {
+public class MenuController extends EntityController<Menu, MenuService, MenuDto, MenuQuery> {
 
     @Autowired
     private MenuService menuService;

@@ -11,7 +11,7 @@ import java.util.List;
  * @author Create by whz at 2023/7/8
  */
 
-public interface DeptService extends EntityService<Dept, DeptDto> {
+public interface DeptService extends EntityService<Dept, DeptDto, DeptQuery> {
 
     List<DeptDto> list(DeptQuery query);
 

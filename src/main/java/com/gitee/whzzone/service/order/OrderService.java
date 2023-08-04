@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author Create by whz at 2023/8/4
  */
-public interface OrderService extends EntityService<Order, OrderDto> {
+public interface OrderService extends EntityService<Order, OrderDto, OrderQuery> {
 
     List<OrderDto> list(OrderQuery query);
 

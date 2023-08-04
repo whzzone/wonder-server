@@ -12,7 +12,7 @@ import java.util.List;
  * @author : whz
  * @date : 2023/5/22 15:38
  */
-public interface RoleService extends EntityService<Role, RoleDto> {
+public interface RoleService extends EntityService<Role, RoleDto, RoleQuery> {
 
     PageData<RoleDto> page(RoleQuery query);
 

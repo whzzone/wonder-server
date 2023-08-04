@@ -1,6 +1,6 @@
 package com.gitee.whzzone.pojo.query.system;
 
-import com.gitee.whzzone.web.QueryPage;
+import com.gitee.whzzone.common.base.pojo.quey.EntityQuery;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import lombok.Data;
  * @date : 2022/12/18 14:32
  */
 @Data
-public class UserQuery extends QueryPage {
+public class UserQuery extends EntityQuery {
 
     @ApiModelProperty("姓名")
     private String nickname;
