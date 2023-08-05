@@ -98,7 +98,7 @@
 5. EntityQuery查询时，怎么知道某个字段的匹配方法是什么？ eq? like? ne? 方案1：自定义注解@Equal、@Like、@In，然后反射读取做对应处理
 6. 分页，列表查询，除了EntityQuery，还有另外一种方案：通过自定义注解@Query标记Dto对象中可以查询的字段，page、lis读取这个注解就可以了
 7. between的值可以用特定符号分开 1,9。in同理
-8. 对于使用了@Query直接且expression为BETWEEN时的由运行时校验改成编译时校验，可提高执行速度。目前时运行时校验，其实只要在编译时校验一次够了。
+8. ~~对于使用了@Query直接且expression为BETWEEN时的由运行时校验改成编译时校验，可提高执行速度。目前时运行时校验，其实只要在编译时校验一次够了。~~
     ```java
     @Query(column = "create_time", expression = ExpressionEnum.BETWEEN, left = true)
     @ApiModelProperty("开始时间")
@@ -108,3 +108,4 @@
     @ApiModelProperty("结束时间")
     private Date endTime;
     ```
+9. 如果如何针对某个字段排序？方案1：自定义注解@OrderBy(value = "create_time", sort = "desc/asc")，使用在查询XxxQuery类上
