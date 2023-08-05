@@ -14,5 +14,6 @@ public enum ExpressionEnum {
     IN,
     NOT_IN,
     IS_NULL,
-    NOT_NULL
+    NOT_NULL,
+    BETWEEN
 }

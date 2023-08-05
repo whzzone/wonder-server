@@ -6,6 +6,8 @@ import com.gitee.whzzone.common.enums.ExpressionEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @author Create by whz at 2023/8/4
  */
@@ -27,5 +29,13 @@ public class OrderQuery extends EntityQuery {
     @Query
     @ApiModelProperty("订单状态：0-待付款，1-已取消，2-已付款，3-已完成")
     private Integer orderStatus;
+
+    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN, left = true)
+    @ApiModelProperty("开始时间")
+    private Date startTime;
+
+    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN, left = false)
+    @ApiModelProperty("结束时间")
+    private Date endTime;
 
 }

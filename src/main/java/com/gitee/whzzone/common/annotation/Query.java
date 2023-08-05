@@ -23,4 +23,6 @@ public @interface Query {
      */
     ExpressionEnum expression() default ExpressionEnum.EQ;
 
+    boolean left() default true;
+
 }

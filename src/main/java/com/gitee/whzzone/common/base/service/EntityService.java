@@ -17,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author : whz
@@ -219,6 +217,9 @@ public interface EntityService<T extends BaseEntity<T>, D extends EntityDto, Q e
             Field[] fields = qClass.getDeclaredFields();
 
             QueryWrapper<T> queryWrapper = new QueryWrapper<>();
+
+            Map<String, List<Field>> betweenFieldMap = new HashMap<>();
+
             for (Field field : fields) {
                 // if (isBusinessField(field.getName())) {
                 field.setAccessible(true);
@@ -259,10 +260,50 @@ public interface EntityService<T extends BaseEntity<T>, D extends EntityDto, Q e
                     queryWrapper.isNull(columnName);
                 } else if (query.expression().equals(ExpressionEnum.NOT_NULL)) {
                     queryWrapper.isNotNull(columnName);
+                } else if (query.expression().equals(ExpressionEnum.BETWEEN)) {
+                    if (query.column().isEmpty()) {
+                        throw new RuntimeException("使用expression为BETWEEN时，column不能为空，请手动标注表字段名");
+                    }
+                    if (betweenFieldMap.containsKey(columnName)) {
+                        List<Field> fieldList = betweenFieldMap.get(columnName);
+                        List<Field> tempList = new ArrayList<>(fieldList);
+                        tempList.add(field);
+                        betweenFieldMap.put(columnName, tempList);
+                    } else {
+                        betweenFieldMap.put(columnName, Collections.singletonList(field));
+                    }
                 }
 
             }
             // }
+
+            Set<String> keySet = betweenFieldMap.keySet();
+            for (String key : keySet) {
+                List<Field> itemFieldList = betweenFieldMap.get(key);
+                if (itemFieldList.size() != 2) {
+                    throw new RuntimeException("使用expression为BETWEEN时，必须成对存在");
+                }
+
+                Field field1 = itemFieldList.get(0);
+                Field field2 = itemFieldList.get(1);
+
+                if (field1.getType() != field2.getType()) {
+                    throw new RuntimeException("使用expression为BETWEEN时，相同的字段名的类型必须相同");
+                }
+
+                Query query1 = field1.getDeclaredAnnotation(Query.class);
+                Query query2 = field2.getDeclaredAnnotation(Query.class);
+                if (query1.left() == query2.left()) {
+                    throw new RuntimeException("使用expression为BETWEEN时，请手动指定字段在表达式或左右，且不能相同");
+                }
+
+                if (query1.left()) {
+                    queryWrapper.between(key, field1.get(q), field2.get(q));
+                } else {
+                    queryWrapper.between(key, field2.get(q), field1.get(q));
+                }
+            }
+
             return queryWrapper;
         } catch (Exception e) {
             e.printStackTrace();
