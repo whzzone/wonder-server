@@ -123,6 +123,8 @@ public class DataScopeAspect {
             // 继续执行目标方法
             return point.proceed(args);
 
+        } catch (NoDataException e) {
+            throw new NoDataException();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("数据权限 形参 切面错误：" + e.getMessage());

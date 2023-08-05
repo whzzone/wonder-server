@@ -30,13 +30,10 @@
     ```java
     @Override
     public List<OrderDto> list(OrderQuery query, @DataScope("order-list") DataScopeInfo dataScopeInfo) {
-        if (CollectionUtil.isEmpty(dataScopeInfo.getIdList())) {
-            throw new NoDataException();
-        }
-
         QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in(dataScopeInfo.getDto().getColumnName(), dataScopeInfo.getIdList());
-        queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverName()), "receiverName", query.getReceiverName());
+        // 或者自行处理
+        CommonUtil.handleQueryWrapper(queryWrapper, dataScopeInfo);
+        queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverName()), "receiver_name", query.getReceiverName());
         ...
         List<Order> list = list(queryWrapper);
         return afterQueryHandler(list);
@@ -52,14 +49,11 @@
     public List<OrderDto> list(OrderQuery query) {
 
         DataScopeInfo dataScopeInfo = dataScopeService.execRuleByName("order-list");
-
-        if (CollectionUtil.isEmpty(dataScopeInfo.getIdList())) {
-            throw new NoDataException();
-        }
-    
+        
         QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in(dataScopeInfo.getDto().getColumnName(), dataScopeInfo.getIdList());
-        queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverName()), "receiverName", query.getReceiverName());
+        // 或者自行处理
+        CommonUtil.handleQueryWrapper(queryWrapper, dataScopeInfo);
+        queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverName()), "receiver_name", query.getReceiverName());
         ...
         List<Order> list = list(queryWrapper);
         return afterQueryHandler(list);
