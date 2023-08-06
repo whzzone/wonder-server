@@ -2,6 +2,7 @@ package com.gitee.whzzone.generator;
 
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
+import com.baomidou.mybatisplus.generator.config.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
 import com.baomidou.mybatisplus.generator.config.querys.MySqlQuery;
@@ -15,7 +16,10 @@ import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
 import com.gitee.whzzone.admin.common.base.service.EntityService;
 import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
 
+import java.io.File;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Create by whz at 2023/8/6
@@ -96,8 +100,17 @@ public class Generator {
         AbstractTemplateEngine templateEngine = new FreemarkerTemplateEngine();
         fastAutoGenerator.templateEngine(templateEngine);
 
-        // 5.注入配置 TODO
+        // 5.注入配置-自定义
+        fastAutoGenerator.injectionConfig(injectionConfig -> {
+            HashMap<String, String> customFileMap = new HashMap<>();
 
+            injectionConfig.beforeOutputFile((tableInfo, biConsumer) -> {
+                customFileMap.put(tableInfo.getEntityName() + "Dto.java", "/templates/dto.java.ftl");
+                customFileMap.put(tableInfo.getEntityName() + "Query.java", "/templates/query.java.ftl");
+            });
+
+            injectionConfig.customFile(customFileMap);
+        });
 
         // 6.策略配置
         // 设置需要生成的表名
@@ -145,9 +158,24 @@ public class Generator {
         fastAutoGenerator.strategyConfig(strategyConfigBuilder -> strategyConfigBuilder.mapperBuilder()
                 .formatMapperFileName("%sMapper")
                 .formatXmlFileName("%sMapper")
+                .enableMapperAnnotation()
         );
 
         // 7.生成代码
         fastAutoGenerator.execute();
+    }
+
+    private static InjectionConfig.Builder injectionConfig() {
+        /**自定义生成模板参数**/
+        Map<String, Object> paramMap = new HashMap<>();
+
+        /** 自定义 生成类**/
+        Map<String, String> customFileMap = new HashMap<>();
+        /**DTO实体**/
+        customFileMap.put("dto" + File.separator + "%sDto.java", "/templates/dto.java");
+
+        return new InjectionConfig.Builder()
+                .customMap(paramMap)
+                .customFile(customFileMap);
     }
 }

@@ -7,13 +7,9 @@ import org.apache.ibatis.annotations.Mapper;
 </#if>
 
 /**
- * <p>
- * ${table.comment!} Mapper 接口
- * </p>
- *
- * @author ${author}
- * @since ${date}
- */
+* ${table.comment!} Mapper接口
+* @author Create by ${author} at ${date}
+*/
 <#if mapperAnnotation>
 @Mapper
 </#if>
