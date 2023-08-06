@@ -2,7 +2,6 @@ package com.gitee.whzzone.generator;
 
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
-import com.baomidou.mybatisplus.generator.config.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
 import com.baomidou.mybatisplus.generator.config.querys.MySqlQuery;
@@ -16,10 +15,8 @@ import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
 import com.gitee.whzzone.admin.common.base.service.EntityService;
 import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Create by whz at 2023/8/6
@@ -75,14 +72,15 @@ public class Generator {
         // 设置父包模块名
         // 设置MVC下各个模块的包名
         // 设置XML资源文件的目录
-        fastAutoGenerator.packageConfig(packageConfigBuilder -> packageConfigBuilder.parent(PACKAGE_NAME)
+        fastAutoGenerator.packageConfig(packageConfigBuilder -> packageConfigBuilder
+                .parent(PACKAGE_NAME)
                 // .moduleName(MODULE_NAME)
                 .entity("pojo.entity." + MODULE_NAME)
                 .mapper("mapper." + MODULE_NAME)
                 .service("service." + MODULE_NAME)
                 .serviceImpl("service." + MODULE_NAME + ".impl")
                 .controller("controller." + MODULE_NAME)
-                .other("other")
+                .other("pojo.other")
                 .pathInfo(Collections.singletonMap(OutputFile.xml, "wonder-admin\\src\\main\\resources\\mapper\\" + MODULE_NAME))
         );
 
@@ -165,17 +163,4 @@ public class Generator {
         fastAutoGenerator.execute();
     }
 
-    private static InjectionConfig.Builder injectionConfig() {
-        /**自定义生成模板参数**/
-        Map<String, Object> paramMap = new HashMap<>();
-
-        /** 自定义 生成类**/
-        Map<String, String> customFileMap = new HashMap<>();
-        /**DTO实体**/
-        customFileMap.put("dto" + File.separator + "%sDto.java", "/templates/dto.java");
-
-        return new InjectionConfig.Builder()
-                .customMap(paramMap)
-                .customFile(customFileMap);
-    }
 }
