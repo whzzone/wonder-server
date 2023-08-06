@@ -2,9 +2,11 @@ package com.gitee.whzzone.admin.service.system.impl;
 
 import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.mapper.system.UserDeptMapper;
+import com.gitee.whzzone.admin.pojo.dto.system.UserDeptDto;
 import com.gitee.whzzone.admin.pojo.entity.system.UserDept;
+import com.gitee.whzzone.admin.pojo.query.system.UserDeptQuery;
 import com.gitee.whzzone.admin.service.system.DeptService;
 import com.gitee.whzzone.admin.service.system.UserDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ import java.util.List;
 
 @Validated
 @Service
-public class UserDeptServiceImpl extends ServiceImpl<UserDeptMapper, UserDept> implements UserDeptService {
+public class UserDeptServiceImpl extends EntityServiceImpl<UserDeptMapper, UserDept, UserDeptDto, UserDeptQuery> implements UserDeptService {
 
     @Autowired
     private DeptService deptService;

@@ -3,11 +3,12 @@ package com.gitee.whzzone.admin.service.system.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.mapper.system.RuleMapper;
 import com.gitee.whzzone.admin.pojo.dto.system.RuleDto;
 import com.gitee.whzzone.admin.pojo.entity.system.RoleMark;
 import com.gitee.whzzone.admin.pojo.entity.system.Rule;
+import com.gitee.whzzone.admin.pojo.query.system.RuleQuery;
 import com.gitee.whzzone.admin.service.system.RoleMarkService;
 import com.gitee.whzzone.admin.service.system.RuleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import java.util.List;
  * @author Create by whz at 2023/7/16
  */
 @Service
-public class RuleServiceImpl extends ServiceImpl<RuleMapper, Rule> implements RuleService {
+public class RuleServiceImpl extends EntityServiceImpl<RuleMapper, Rule, RuleDto, RuleQuery> implements RuleService {
 
     @Autowired
     private RoleMarkService roleMarkService;

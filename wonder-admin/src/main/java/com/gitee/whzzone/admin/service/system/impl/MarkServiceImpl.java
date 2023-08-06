@@ -4,8 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.gitee.whzzone.common.exception.NoDataException;
+import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.mapper.system.MarkMapper;
 import com.gitee.whzzone.admin.pojo.PageData;
 import com.gitee.whzzone.admin.pojo.dto.system.DataScopeInfo;
@@ -21,6 +20,7 @@ import com.gitee.whzzone.admin.service.system.RoleService;
 import com.gitee.whzzone.admin.service.system.RuleService;
 import com.gitee.whzzone.admin.util.SecurityUtil;
 import com.gitee.whzzone.common.enums.ProvideTypeEnum;
+import com.gitee.whzzone.common.exception.NoDataException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -36,7 +36,7 @@ import java.util.List;
  */
 
 @Service
-public class MarkServiceImpl extends ServiceImpl<MarkMapper, Mark> implements MarkService {
+public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDto, MarkQuery> implements MarkService {
 
     @Autowired
     private ApplicationContext context;
@@ -186,7 +186,7 @@ public class MarkServiceImpl extends ServiceImpl<MarkMapper, Mark> implements Ma
         if (existSameName(dto.getId(), dto.getName()))
             throw new RuntimeException("存在相同的名称：" + dto.getName());
 
-        return MarkService.super.beforeSaveHandler(dto);
+        return super.beforeSaveHandler(dto);
     }
 
     @Override
@@ -194,7 +194,7 @@ public class MarkServiceImpl extends ServiceImpl<MarkMapper, Mark> implements Ma
         if (existSameName(dto.getId(), dto.getName()))
             throw new RuntimeException("存在相同的名称：" + dto.getName());
 
-        return MarkService.super.beforeUpdateHandler(dto);
+        return super.beforeUpdateHandler(dto);
     }
 
     @Override

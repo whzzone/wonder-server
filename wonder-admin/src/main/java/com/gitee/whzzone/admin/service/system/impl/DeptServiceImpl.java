@@ -4,8 +4,8 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.mapper.system.DeptMapper;
 import com.gitee.whzzone.admin.pojo.dto.system.DeptDto;
 import com.gitee.whzzone.admin.pojo.entity.system.Dept;
@@ -13,6 +13,7 @@ import com.gitee.whzzone.admin.pojo.query.system.DeptQuery;
 import com.gitee.whzzone.admin.service.system.DeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,14 +26,13 @@ import java.util.stream.Collectors;
  */
 
 @Service
-public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements DeptService {
+public class DeptServiceImpl extends EntityServiceImpl<DeptMapper, Dept, DeptDto, DeptQuery> implements DeptService {
 
     @Autowired
     private DeptMapper deptMapper;
 
     @Override
     public List<DeptDto> list(DeptQuery query) {
-
         LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StrUtil.isNotBlank(query.getName()), Dept::getName, query.getName());
         queryWrapper.eq(query.getParentId() != null, Dept::getParentId, query.getParentId());
@@ -40,6 +40,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         return afterQueryHandler(list(queryWrapper));
     }
 
+    @Transactional
     @Override
     public Dept save(DeptDto dto) {
         if (dto.getParentId() == null) {
@@ -53,15 +54,16 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         if (dto.getSort() == null) {
             dto.setSort(99);
         }
-        return DeptService.super.save(dto);
+        return super.save(dto);
     }
 
+    @Transactional
     @Override
     public boolean updateById(DeptDto dto) {
         if (dto.getParentId() != null && !dto.getParentId().equals(0L) && !isExist(dto.getParentId())) {
             throw new RuntimeException("父级不存在");
         }
-        return DeptService.super.updateById(dto);
+        return super.updateById(dto);
     }
 
     @Override
@@ -71,8 +73,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     @Override
     public DeptDto afterQueryHandler(Dept entity) {
-        DeptDto dto = DeptService.super.afterQueryHandler(entity);
-        dto.setHasChildren(hasChildren(dto.getParentId()));
+        DeptDto dto = super.afterQueryHandler(entity);
+
+        dto.setHasChildren(hasChildren(dto.getId()));
+
         if (!dto.getParentId().equals(0L)) {
             Dept parent = getById(dto.getParentId());
             if (parent != null) {
@@ -160,6 +164,9 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.in(BaseEntity::getId, ids);
         List<Dept> list = list(queryWrapper);
+        if (CollectionUtil.isEmpty(list)) {
+            return null;
+        }
         return BeanUtil.copyToList(list, DeptDto.class);
     }
 }

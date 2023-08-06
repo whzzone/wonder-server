@@ -7,8 +7,8 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.mapper.system.UserMapper;
 import com.gitee.whzzone.admin.pojo.PageData;
 import com.gitee.whzzone.admin.pojo.dto.system.ResetPWDDto;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto, UserQuery> implements UserService {
 
     @Autowired
     private UserDeptService userDeptService;
@@ -103,7 +103,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public UserDto afterQueryHandler(User entity) {
-        UserDto dto = UserService.super.afterQueryHandler(entity);
+        UserDto dto = super.afterQueryHandler(entity);
         dto.setPassword("");
 
         List<Dept> deptList = getUserDeptInfo(dto.getId());
@@ -218,7 +218,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             dto.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
 
-        User save = UserService.super.save(dto);
+        User save = super.save(dto);
 
         // 添加用户与角色的关联
         roleService.addRelation(save.getId(), dto.getRoleIdList());

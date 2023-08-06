@@ -31,8 +31,7 @@ public abstract class EntityController<T extends BaseEntity<T>, S extends Entity
     @GetMapping("/get/{id}")
     public Result<D> get(@PathVariable Long id){
         T t = service.getById(id);
-        D d = service.afterQueryHandler(t);
-        return Result.ok("操作成功", d);
+        return Result.ok("操作成功", service.afterQueryHandler(t));
     }
 
     @ApiOperation("删除")

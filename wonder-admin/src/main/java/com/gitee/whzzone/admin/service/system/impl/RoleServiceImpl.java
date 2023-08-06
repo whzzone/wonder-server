@@ -6,9 +6,9 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitee.whzzone.admin.common.annotation.DataScope;
 import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.mapper.system.RoleMapper;
 import com.gitee.whzzone.admin.pojo.PageData;
 import com.gitee.whzzone.admin.pojo.dto.system.RoleDto;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  */
 
 @Service
-public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
+public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto, RoleQuery> implements RoleService {
 
     @Autowired
     private RoleMenuService roleMenuService;
@@ -178,7 +178,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public RoleDto afterQueryHandler(Role entity) {
-        RoleDto dto = RoleService.super.afterQueryHandler(entity);
+        RoleDto dto = super.afterQueryHandler(entity);
         List<Long> menuIdList = menuService.getIdListByRoleId(dto.getId());
         dto.setMenuIds(menuIdList);
         return dto;
@@ -186,7 +186,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public Role save(RoleDto dto) {
-        Role save = RoleService.super.save(dto);
+        Role save = super.save(dto);
         // 添加角色与权限的关联
         roleMenuService.addRelation(save.getId(), dto.getMenuIds());
         return save;

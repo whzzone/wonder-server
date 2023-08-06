@@ -2,11 +2,12 @@ package com.gitee.whzzone.admin.service.system.impl;
 
 import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.mapper.system.RoleMenuMapper;
+import com.gitee.whzzone.admin.pojo.dto.system.RoleMenuDto;
 import com.gitee.whzzone.admin.pojo.entity.system.RoleMenu;
+import com.gitee.whzzone.admin.pojo.query.system.RoleMenuQuery;
 import com.gitee.whzzone.admin.service.system.RoleMenuService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,10 +18,7 @@ import java.util.List;
  * @date : 2023/5/23 10:06
  */
 @Service
-public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu> implements RoleMenuService {
-
-    @Autowired
-    private RoleMenuMapper roleMenuMapper;
+public class RoleMenuServiceImpl extends EntityServiceImpl<RoleMenuMapper, RoleMenu, RoleMenuDto, RoleMenuQuery> implements RoleMenuService {
 
     @Override
     public void addRelation(Long roleId, List<Long> menuIds) {

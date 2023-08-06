@@ -4,9 +4,9 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gitee.whzzone.admin.common.annotation.DataScope;
 import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.mapper.order.OrderMapper;
 import com.gitee.whzzone.admin.pojo.dto.order.OrderDto;
 import com.gitee.whzzone.admin.pojo.dto.system.DataScopeInfo;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * @author Create by whz at 2023/8/4
  */
 @Service
-public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
+public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, OrderDto, OrderQuery> implements OrderService {
 
     @DataScope("order-list")
     @Override

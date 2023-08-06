@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.mapper.system.MenuMapper;
 import com.gitee.whzzone.admin.pojo.dto.system.MenuDto;
 import com.gitee.whzzone.admin.pojo.dto.system.MenuTreeDto;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * @date : 2023/5/22 20:17
  */
 @Service
-public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
+public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto, MenuQuery> implements MenuService {
 
     @Autowired
     private MenuMapper menuMapper;
@@ -92,7 +92,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public MenuDto afterQueryHandler(Menu entity) {
-        MenuDto dto = MenuService.super.afterQueryHandler(entity);
+        MenuDto dto = super.afterQueryHandler(entity);
         Menu parent = getById(dto.getParentId());
         if (parent != null){
             dto.setParentName(parent.getName());
@@ -173,7 +173,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         if (dto.getParentId() == null){
             dto.setParentId(0L);
         }
-        return MenuService.super.save(dto);
+        return super.save(dto);
     }
 
     @Override
@@ -181,6 +181,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         if (dto.getParentId() == null){
             dto.setParentId(0L);
         }
-        return MenuService.super.updateById(dto);
+        return super.updateById(dto);
     }
 }
