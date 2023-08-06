@@ -11,6 +11,7 @@
         <module>wonder-processor</module>
         <module>wonder-admin</module>
         <module>wonder-common</module>
+        <module>wonder-generator</module>
     </modules>
 
     <properties>
@@ -148,6 +149,18 @@
                 <groupId>com.google.auto.service</groupId>
                 <artifactId>auto-service-annotations</artifactId>
                 <version>${auto-service.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>3.5.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>2.3.29</version>
             </dependency>
 
         </dependencies>
