@@ -96,9 +96,9 @@ CREATE TABLE `sys_data_scope`  (
 -- ----------------------------
 -- Records of sys_data_scope
 -- ----------------------------
-INSERT INTO `sys_data_scope` VALUES (1677667851445518440, '无参测试', b'1', 'sn1', NULL, 'enabled', 'OR', 'IN', 2, NULL, NULL, 'com.gitee.whzzone.controller.A', 'getIds', NULL, NULL, NULL, NULL, NULL, NULL, b'0');
-INSERT INTO `sys_data_scope` VALUES (1677667851445518441, '查看创建人是当前登录用户的数据', b'0', 'sn2', NULL, 'create_by', 'AND', 'IN', 2, '', NULL, 'com.gitee.whzzone.util.SecurityUtil', 'loginUserId', NULL, NULL, NULL, NULL, '2023-07-15 17:53:42', 1658729760682242049, b'0');
-INSERT INTO `sys_data_scope` VALUES (1677667851445518442, '带参注入测试', b'1', 'sn3', NULL, 'create_by', 'AND', 'IN', 2, NULL, NULL, 'com.gitee.whzzone.controller.A', 'getByName', 'java.lang.String;java.lang.Integer', 'hello world;18', NULL, NULL, NULL, NULL, b'0');
+INSERT INTO `sys_data_scope` VALUES (1677667851445518440, '无参测试', b'1', 'sn1', NULL, 'enabled', 'OR', 'IN', 2, NULL, NULL, 'com.gitee.whzzone.admin.controller.A', 'getIds', NULL, NULL, NULL, NULL, NULL, NULL, b'0');
+INSERT INTO `sys_data_scope` VALUES (1677667851445518441, '查看创建人是当前登录用户的数据', b'0', 'sn2', NULL, 'create_by', 'AND', 'IN', 2, '', NULL, 'com.gitee.whzzone.admin.util.SecurityUtil', 'loginUserId', NULL, NULL, NULL, NULL, '2023-07-15 17:53:42', 1658729760682242049, b'0');
+INSERT INTO `sys_data_scope` VALUES (1677667851445518442, '带参注入测试', b'1', 'sn3', NULL, 'create_by', 'AND', 'IN', 2, NULL, NULL, 'com.gitee.whzzone.admin.controller.A', 'getByName', 'java.lang.String;java.lang.Integer', 'hello world;18', NULL, NULL, NULL, NULL, b'0');
 INSERT INTO `sys_data_scope` VALUES (1677667851445518443, '查看父级id为0的数据', b'1', 'sn5', NULL, 'parent_id', 'AND', 'EQ', 1, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0');
 INSERT INTO `sys_data_scope` VALUES (1677667851445518444, '查看编码不是work的角色', b'1', 'sn4', NULL, 'code', 'AND', 'NE', 1, 'worker', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0');
 
@@ -480,9 +480,9 @@ CREATE TABLE `sys_rule`  (
 -- ----------------------------
 -- Records of sys_rule
 -- ----------------------------
-INSERT INTO `sys_rule` VALUES (1677667851445518440, '无参测试-1', 1, NULL, 'enabled', 'OR', 'IN', 2, NULL, NULL, 'com.gitee.whzzone.controller.A', 'getIds', NULL, NULL, '2023-07-16 09:11:11', 1658729760682242049, '2023-07-16 09:11:09', 1658729760682242049, b'0');
-INSERT INTO `sys_rule` VALUES (1677667851445518441, '查看创建人是当前登录用户的数据', 0, NULL, 'create_by', 'AND', 'IN', 2, '', NULL, 'com.gitee.whzzone.util.SecurityUtil', 'loginUserId', NULL, NULL, '2023-07-16 09:11:04', 1658729760682242049, '2023-07-15 17:53:42', 1658729760682242049, b'0');
-INSERT INTO `sys_rule` VALUES (1677667851445518442, '带参注入测试', 1, NULL, 'create_by', 'AND', 'IN', 2, NULL, NULL, 'com.gitee.whzzone.controller.A', 'getByName', 'java.lang.String;java.lang.Integer', 'hello world;18', '2023-07-16 09:11:44', 1658729760682242049, '2023-07-16 09:11:09', 1658729760682242049, b'0');
+INSERT INTO `sys_rule` VALUES (1677667851445518440, '无参测试-1', 1, NULL, 'enabled', 'OR', 'IN', 2, NULL, NULL, 'com.gitee.whzzone.admin.controller.A', 'getIds', NULL, NULL, '2023-07-16 09:11:11', 1658729760682242049, '2023-07-16 09:11:09', 1658729760682242049, b'0');
+INSERT INTO `sys_rule` VALUES (1677667851445518441, '查看创建人是当前登录用户的数据', 0, NULL, 'create_by', 'AND', 'IN', 2, '', NULL, 'com.gitee.whzzone.admin.util.SecurityUtil', 'loginUserId', NULL, NULL, '2023-07-16 09:11:04', 1658729760682242049, '2023-07-15 17:53:42', 1658729760682242049, b'0');
+INSERT INTO `sys_rule` VALUES (1677667851445518442, '带参注入测试', 1, NULL, 'create_by', 'AND', 'IN', 2, NULL, NULL, 'com.gitee.whzzone.admin.controller.A', 'getByName', 'java.lang.String;java.lang.Integer', 'hello world;18', '2023-07-16 09:11:44', 1658729760682242049, '2023-07-16 09:11:09', 1658729760682242049, b'0');
 INSERT INTO `sys_rule` VALUES (1677667851445518443, '查看父级id为0的数据', 1, NULL, 'parent_id', 'AND', 'EQ', 1, '0', NULL, NULL, NULL, NULL, NULL, '2023-07-16 09:11:05', 1658729760682242049, '2023-07-16 09:11:09', 1658729760682242049, b'0');
 INSERT INTO `sys_rule` VALUES (1677667851445518666, '查看编码不是work的角色', 1677667851445518444, NULL, 'code', 'AND', 'NE', 1, 'worker', NULL, NULL, NULL, NULL, NULL, '2023-07-16 09:11:54', 1658729760682242049, '2023-07-16 09:11:09', 1658729760682242049, b'0');
 INSERT INTO `sys_rule` VALUES (1677667851445518667, '只查看编码work的角色', 1677667851445518444, NULL, 'code', 'AND', 'EQ', 1, 'worker', NULL, NULL, NULL, NULL, NULL, '2023-07-16 09:11:09', 1658729760682242049, '2023-07-16 09:11:09', 1658729760682242049, b'0');
@@ -492,7 +492,7 @@ INSERT INTO `sys_rule` VALUES (1687285131765313537, '查看收货地址为钦南
 INSERT INTO `sys_rule` VALUES (1687285284731580417, '查看收货地址为钦北区的订单', 1687284686216982529, NULL, 'receiver_address', 'AND', 'LIKE', 1, '钦北区', NULL, NULL, NULL, NULL, NULL, '2023-08-04 10:12:15', 1658729760682242049, '2023-08-04 10:12:15', 1658729760682242049, b'0');
 INSERT INTO `sys_rule` VALUES (1687285464780468226, '查看订单金额大于100的订单', 1687284686216982529, NULL, 'order_amount', 'AND', 'GT', 1, '100', NULL, NULL, NULL, NULL, NULL, '2023-08-04 10:12:58', 1658729760682242049, '2023-08-04 10:12:58', 1658729760682242049, b'0');
 INSERT INTO `sys_rule` VALUES (1687285633752199169, '查看订单金额小于等于100的订单', 1687284686216982529, NULL, 'order_amount', 'AND', 'LE', 1, '100', NULL, NULL, NULL, NULL, NULL, '2023-08-04 10:13:38', 1658729760682242049, '2023-08-04 10:13:38', 1658729760682242049, b'0');
-INSERT INTO `sys_rule` VALUES (1687290513451610113, '查看订单金额大于100且小于500的订单', 1687284686216982529, NULL, 'id', 'AND', 'IN', 2, NULL, NULL, 'com.gitee.whzzone.service.order.impl.OrderServiceImpl', 'limitAmountBetween', 'java.math.BigDecimal;java.math.BigDecimal', '100;500', '2023-08-04 10:33:01', 1658729760682242049, '2023-08-04 10:33:01', 1658729760682242049, b'0');
+INSERT INTO `sys_rule` VALUES (1687290513451610113, '查看订单金额大于100且小于500的订单', 1687284686216982529, NULL, 'id', 'AND', 'IN', 2, NULL, NULL, 'com.gitee.whzzone.admin.service.order.impl.OrderServiceImpl', 'limitAmountBetween', 'java.math.BigDecimal;java.math.BigDecimal', '100;500', '2023-08-04 10:33:01', 1658729760682242049, '2023-08-04 10:33:01', 1658729760682242049, b'0');
 
 -- ----------------------------
 -- Table structure for sys_user
