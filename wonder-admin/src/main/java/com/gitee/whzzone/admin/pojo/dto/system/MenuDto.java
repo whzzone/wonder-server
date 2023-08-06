@@ -65,4 +65,7 @@ public class MenuDto extends EntityDto {
     @ApiModelProperty(value = "路由名称")
     private String routeName;
 
+    @ApiModelProperty(value = "是否存在下级")
+    private Boolean hasChildren;
+
 }

@@ -234,8 +234,7 @@ public class MarkServiceImpl extends ServiceImpl<MarkMapper, Mark> implements Ma
         LambdaQueryWrapper<Mark> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StrUtil.isNotBlank(query.getName()), Mark::getName, query.getName());
         queryWrapper.orderByAsc(Mark::getSort);
-        List<Mark> list = list(queryWrapper);
-        return BeanUtil.copyToList(list, MarkDto.class);
+        return afterQueryHandler(list(queryWrapper));
     }
 
     @Override

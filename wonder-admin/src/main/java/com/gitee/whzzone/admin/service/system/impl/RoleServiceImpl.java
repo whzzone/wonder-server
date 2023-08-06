@@ -80,10 +80,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         queryWrapper.ne(Role::getCode, SecurityUtil.ADMIN);
 
         queryWrapper.like(StrUtil.isNotBlank(query.getName()), Role::getName, query.getName());
-
-        List<Role> roleList = list(queryWrapper);
-
-        return BeanUtil.copyToList(roleList, RoleDto.class);
+        return afterQueryHandler(list(queryWrapper));
     }
 
     @Transactional

@@ -38,8 +38,8 @@ public class MenuController extends EntityController<Menu, MenuService, MenuDto,
 
     @ApiOperation("列表")
     //    @PreAuthorize("hasAuthority('sys:menu:view')")
-    @PostMapping("/list")
-    public Result<List<MenuTreeDto>> list(@RequestBody MenuQuery query){
+    @PostMapping("list")
+    public Result<List<MenuDto>> list(@RequestBody MenuQuery query){
         return Result.ok("操作成功", menuService.list(query));
     }
 

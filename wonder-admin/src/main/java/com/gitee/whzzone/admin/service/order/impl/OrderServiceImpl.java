@@ -35,14 +35,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverPhone()), Order::getReceiverPhone, query.getReceiverPhone());
         queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverAddress()), Order::getReceiverAddress, query.getReceiverAddress());
         queryWrapper.eq(query.getOrderStatus() != null, Order::getOrderStatus, query.getOrderStatus());
-        List<Order> list = list(queryWrapper);
-        return afterQueryHandler(list);
+        return afterQueryHandler(list(queryWrapper));
     }
 
     @Override
     public List<OrderDto> list2(OrderQuery query, @DataScope("order-list") DataScopeInfo dataScopeInfo) {
         QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.in(dataScopeInfo.getDto().getColumnName(), dataScopeInfo.getIdList());
         CommonUtil.handleQueryWrapper(queryWrapper, dataScopeInfo);
         queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverName()), "receiver_name", query.getReceiverName());
         queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverPhone()), "receiver_phone", query.getReceiverPhone());

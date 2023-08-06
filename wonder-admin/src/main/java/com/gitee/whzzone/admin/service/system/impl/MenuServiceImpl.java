@@ -65,23 +65,15 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
-    public List<MenuTreeDto> list(MenuQuery query) {
+    public List<MenuDto> list(MenuQuery query) {
         if (query.getParentId() == null)
             query.setParentId(0L);
 
         LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Menu::getParentId, query.getParentId());
         queryWrapper.orderByAsc(Menu::getSort);
-        List<Menu> menuList = menuMapper.selectList(queryWrapper);
-
-        List<MenuTreeDto> menuTreeVos = BeanUtil.copyToList(menuList, MenuTreeDto.class);
-
-        for (MenuTreeDto menuTreeVo : menuTreeVos) {
-            Long count = menuMapper.selectCount(new LambdaQueryWrapper<Menu>().eq(Menu::getParentId, menuTreeVo.getId()));
-            menuTreeVo.setHasChildren(count > 0);
-        }
-
-        return menuTreeVos;
+        List<Menu> list = list(queryWrapper);
+        return afterQueryHandler(list);
     }
 
     @Override
@@ -105,6 +97,10 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         if (parent != null){
             dto.setParentName(parent.getName());
         }
+
+        long count = count(new LambdaQueryWrapper<Menu>().eq(Menu::getParentId, entity.getId()));
+        dto.setHasChildren(count > 0);
+
         return dto;
     }
 

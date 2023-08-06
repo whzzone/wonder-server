@@ -1,6 +1,7 @@
 package com.gitee.whzzone.admin.common.base.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -145,20 +146,18 @@ public interface EntityService<T extends BaseEntity<T>, D extends EntityDto, Q e
     }
 
     default List<D> afterQueryHandler(List<T> list) {
-        List<D> dList = new LinkedList<>();
+        List<D> dList = new ArrayList<>();
+
+        if (CollectionUtil.isEmpty(list)) {
+            return dList;
+        }
+
         for (T t : list) {
             D d = afterQueryHandler(t);
             dList.add(d);
         }
         return dList;
     }
-
-    /*default List<D> afterQueryHandler(List<D> list) {
-        for (D d : list) {
-            afterQueryHandler(d);
-        }
-        return list;
-    }*/
 
     default void afterDeleteHandler(T t) {
 
@@ -299,75 +298,15 @@ public interface EntityService<T extends BaseEntity<T>, D extends EntityDto, Q e
         }
     }
 
-/*
-    default QueryWrapper<T> queryWrapperHandler(Q q) {
+    default List<D> list(Q q){
         try {
-            Class<? extends EntityQuery> qClass = q.getClass();
-
-            Field[] fields = qClass.getDeclaredFields();
-
-            QueryWrapper<T> queryWrapper = new QueryWrapper<>();
-            for (Field field : fields) {
-                if (isBusinessField(field.getName())) {
-                    field.setAccessible(true);
-
-                    if (Objects.isNull(field.get(q)) || String.valueOf(field.get(q)).equals("null") || field.get(q).equals("")) {
-                        continue;
-                    }
-
-                    QueryEquals queryEquals = field.getDeclaredAnnotation(QueryEquals.class);
-                    if (queryEquals != null) {
-                        queryWrapper.eq(StrUtil.toUnderlineCase(field.getName()), field.get(q));
-                    }
-
-                    QueryLike queryLike = field.getDeclaredAnnotation(QueryLike.class);
-                    if (queryLike != null) {
-                        queryWrapper.like(StrUtil.toUnderlineCase(field.getName()), field.get(q));
-                    }
-
-                    QueryNotEquals queryNotEquals = field.getDeclaredAnnotation(QueryNotEquals.class);
-                    if (queryNotEquals != null) {
-                        queryWrapper.ne(StrUtil.toUnderlineCase(field.getName()), field.get(q));
-                    }
-
-                }
-            }
-
-            return queryWrapper;
+            QueryWrapper<T> queryWrapper = queryWrapperHandler(q);
+            return afterQueryHandler(list(queryWrapper));
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
     }
-*/
-
-    /*default List<D> list(Q q){
-        try {
-            Class<? extends EntityQuery> qClass = q.getClass();
-
-            Field[] fields = qClass.getDeclaredFields();
-
-            QueryWrapper<T> queryWrapper = new QueryWrapper<>();
-            for (Field field : fields) {
-                if (isBusinessField(field.getName())){
-                    field.setAccessible(true);
-                    queryWrapper.eq(
-                            Objects.nonNull(field.get(q))
-                                    && !String.valueOf(field.get(q)).equals("null")
-                                    && !field.get(q).equals(""),
-                            StrUtil.toUnderlineCase(field.getName()),
-                            field.get(q));
-                }
-            }
-
-            List<T> list = list(queryWrapper);
-            return afterQueryHandler(list);
-
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
-        }
-    }*/
 
     /*default boolean isBusinessField(String fieldName) {
         String[] notQueryField = new String[]{"id", "createTime", "createBy", "updateTime", "updateBy", "deleted", "curPage", "pageSize"};

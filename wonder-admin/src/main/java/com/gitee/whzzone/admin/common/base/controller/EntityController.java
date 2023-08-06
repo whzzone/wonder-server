@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
+
 /**
  * @author Create by whz at 2023/7/8
  */
@@ -57,11 +59,10 @@ public abstract class EntityController<T extends BaseEntity<T>, S extends Entity
         return Result.ok("操作成功", service.page(q));
     }
 
-    //TODO 待放开-跟菜单list冲突
-    /* @ApiOperation("列表")
+    @ApiOperation("列表")
     @PostMapping("list")
     public Result<List<D>> list(@RequestBody Q q){
         return Result.ok("操作成功", service.list(q));
-    }*/
+    }
 
 }

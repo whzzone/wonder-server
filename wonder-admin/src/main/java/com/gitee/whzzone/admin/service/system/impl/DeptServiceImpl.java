@@ -37,17 +37,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         queryWrapper.like(StrUtil.isNotBlank(query.getName()), Dept::getName, query.getName());
         queryWrapper.eq(query.getParentId() != null, Dept::getParentId, query.getParentId());
         queryWrapper.orderByAsc(Dept::getSort);
-
-        List<Dept> list = list(queryWrapper);
-
-        List<DeptDto> dtoList = BeanUtil.copyToList(list, DeptDto.class);
-
-        for (DeptDto dto : dtoList) {
-            long count = count(new LambdaQueryWrapper<Dept>().eq(Dept::getParentId, dto.getId()));
-            dto.setHasChildren(count > 0);
-        }
-
-        return dtoList;
+        return afterQueryHandler(list(queryWrapper));
     }
 
     @Override

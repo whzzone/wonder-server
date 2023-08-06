@@ -17,7 +17,7 @@ public interface MenuService  extends EntityService<Menu, MenuDto, MenuQuery> {
 
     List<MenuTreeDto> treeList(MenuQuery query);
 
-    List<MenuTreeDto> list(MenuQuery query);
+    List<MenuDto> list(MenuQuery query);
 
     List<Menu> getEnabledList();
 

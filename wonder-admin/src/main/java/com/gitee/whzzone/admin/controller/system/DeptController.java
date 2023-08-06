@@ -28,7 +28,7 @@ public class DeptController extends EntityController<Dept, DeptService, DeptDto,
     @ApiOperation("列表")
     @PostMapping("list")
     public Result<List<DeptDto>> list(@RequestBody DeptQuery query) {
-        return Result.ok(deptService.list(query));
+        return Result.ok("", deptService.list(query));
     }
 
     @ApiOperation("树")

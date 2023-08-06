@@ -44,7 +44,7 @@ public class MarkController extends EntityController<Mark, MarkService, MarkDto,
     @ApiOperation("列表")
     @PostMapping("list")
     public Result<List<MarkDto>> list(@Validated @RequestBody MarkQuery query){
-        return Result.ok(markService.list(query));
+        return Result.ok("", markService.list(query));
     }
 
 }
