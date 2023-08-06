@@ -157,6 +157,8 @@ public class Generator {
                 .formatMapperFileName("%sMapper")
                 .formatXmlFileName("%sMapper")
                 .enableMapperAnnotation()
+                .enableBaseResultMap()
+                .enableBaseColumnList()
         );
 
         // 7.生成代码
