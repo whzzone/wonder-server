@@ -39,7 +39,7 @@
         return afterQueryHandler(list);
     }
    ```
-3. 提供service方法：由开发者根据方法返回值自行处理。（可传递到xml中拼接）
+3. 提供`service`方法：由开发者根据方法返回值自行处理。（可传递到xml中拼接）
     ```java
     // 这样比方法2多出注入一步
     @Autowired
@@ -77,28 +77,28 @@
 
 #### 接下来的需求
 
-1. `column_name`可以设计成分号隔开的类型，同时新增一个连接条件
+- [ ] `column_name`可以设计成分号隔开的类型，同时新增一个连接条件
 
     | id | column_name  | column_splice_type | value  | expression | 其他属性不变 |
     |----|--------------|--------------------|--------|------------|--------|
     |    | number;color | AND;OR             | 100;黑色 | GE;EQ      |        |
     
     这条记录代表着需要拼接SQL语句：xxx AND number >= 100 OR color = '黑色' 
-2. 系统字典
-3. 系统日志
-4. 接口访问频率限制
+2. [ ] 系统字典
+3. [x] 系统日志
+4. [ ] 接口访问频率限制
 
 ---
 
 #### Bug && Todo
-1. ~~仅当update菜单时报错：java.lang.NoSuchFieldException: id，其他接口为出现此情况~~
-2. 在菜单页面编辑后，如何局部刷新，现在是整个页面刷新，影响体验
-3. 新增菜单是`按钮`时，后端在处理时设置`inFrame = true`，因为按钮也可以表示打开一个新的tab页，（是不是一定是框架内打开，待考虑）
-4. ~~代码生成，包括controller、service、mapper...~~
-5. ~~EntityQuery查询时，怎么知道某个字段的匹配方法是什么？ eq? like? ne? 方案1：自定义注解@Equal、@Like、@In，然后反射读取做对应处理~~
-6. 分页，列表查询，除了EntityQuery，还有另外一种方案：通过自定义注解@Query标记Dto对象中可以查询的字段，page、lis读取这个注解就可以了
-7. between的值可以用特定符号分开 1,9。in同理
-8. ~~对于使用了@Query直接且expression为BETWEEN时的由运行时校验改成编译时校验，可提高执行速度。目前时运行时校验，其实只要在编译时校验一次够了。~~
+1. [x] 仅当update菜单时报错：`java.lang.NoSuchFieldException: id`，其他接口为出现此情况
+2. [ ] 在菜单页面编辑后，如何局部刷新，现在是整个页面刷新，影响体验
+3. [ ] 新增菜单是`按钮`时，后端在处理时设置`inFrame = true`，因为按钮也可以表示打开一个新的tab页，（是不是一定是框架内打开，待考虑）
+4. [x] 代码生成，包括`controller`、`service`、`mapper`...
+5. [x] `EntityQuery`查询时，怎么知道某个字段的匹配方法是什么？ eq? like? ne? 方案1：自定义注解@Equal、@Like、@In，然后反射读取做对应处理
+6. [ ] 分页，列表查询，除了`EntityQuery`，还有另外一种方案：通过自定义注解`@Query`标记`Dto`对象中可以查询的字段，`page`接口、`list`接口读取这个注解就可以了
+7. [ ] `between`的值可以用特定符号分开 1,9。in同理
+8. [x] 对于使用了`@Query`直接且`expression`为`BETWEEN`时的由运行时校验改成编译时校验，可提高执行速度。目前时运行时校验，其实只要在编译时校验一次够了。
     ```java
     @Query(column = "create_time", expression = ExpressionEnum.BETWEEN, left = true)
     @ApiModelProperty("开始时间")
@@ -108,4 +108,3 @@
     @ApiModelProperty("结束时间")
     private Date endTime;
     ```
-9. 如果如何排序？而且需要让前端控制，后端不能写死
