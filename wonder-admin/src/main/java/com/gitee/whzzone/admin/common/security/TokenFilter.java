@@ -117,7 +117,7 @@ public class TokenFilter extends OncePerRequestFilter {
             }
 
             List<String> permitByUserId = menuService.findPermitByUserId(userId);
-            log.warn(permitByUserId.toString());
+            log.debug(permitByUserId.toString());
 
             List<SimpleGrantedAuthority> list = new ArrayList<>();
             for (String authority : permitByUserId) {

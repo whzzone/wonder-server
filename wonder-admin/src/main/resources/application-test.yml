@@ -33,5 +33,9 @@ mybatis-plus:
       logic-delete-value: 1
 
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    #log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+
+logging:
+  level:
+    root: info
+    com.gitee.whzzone: info

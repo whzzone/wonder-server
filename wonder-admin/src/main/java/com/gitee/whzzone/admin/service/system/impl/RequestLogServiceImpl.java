@@ -22,26 +22,26 @@ public class RequestLogServiceImpl extends EntityServiceImpl<RequestLogMapper, R
     @Override
     public void saveAsync(RequestLog requestLog) {
         try {
-            log.warn("====================================开始请求========================================");
+            log.debug("====================================开始请求========================================");
             //请求用户
-            log.warn("请求用户：{}", requestLog.getUserId());
+            log.debug("请求用户：{}", requestLog.getUserId());
             //请求链接
-            log.warn("请求URI：{}", requestLog.getUrl());
+            log.debug("请求URI：{}", requestLog.getUrl());
             //接口描述信息
-            log.warn("接口描述：{}", requestLog.getDesc());
+            log.debug("接口描述：{}", requestLog.getDesc());
             //请求类型
-            log.warn("接口类型：{}", requestLog.getType());
+            log.debug("接口类型：{}", requestLog.getType());
             //请求方法
-            log.warn("请求方法：{}", requestLog.getMethod());
+            log.debug("请求方法：{}", requestLog.getMethod());
             //请求IP
-            log.warn("请求IP：{}", requestLog.getIp());
+            log.debug("请求IP：{}", requestLog.getIp());
             //请求入参
-            log.warn("请求入参：{}", requestLog.getParams());
+            log.debug("请求入参：{}", requestLog.getParams());
             //请求耗时
-            log.warn("请求耗时：{}", requestLog.getDuration());
+            log.debug("请求耗时：{}", requestLog.getDuration());
             //请求返回
-            log.warn("请求返回：{}", requestLog.getResult());
-            log.warn("====================================请求结束========================================");
+            log.debug("请求返回：{}", requestLog.getResult());
+            log.debug("====================================请求结束========================================");
 
             save(requestLog);
         }catch (Exception e){
