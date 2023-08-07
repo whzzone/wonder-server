@@ -5,6 +5,7 @@ import com.gitee.whzzone.common.enums.ExpressionEnum;
 import com.google.auto.service.AutoService;
 
 import javax.annotation.processing.*;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.ElementFilter;
@@ -19,6 +20,7 @@ import java.util.Set;
  */
 @AutoService(Processor.class)
 @SupportedAnnotationTypes("com.gitee.whzzone.common.annotation.Query")
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class QueryProcessor extends AbstractProcessor {
 
     private Elements elementUtils;
@@ -36,7 +38,7 @@ public class QueryProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        messager.printMessage(Diagnostic.Kind.NOTE, "------开始校验@Query注解------");
+        messager.printMessage(Diagnostic.Kind.NOTE, "------开始校验 @Query 注解------");
         for (TypeElement annotation : annotations) {
             for (VariableElement fieldElement : ElementFilter.fieldsIn(roundEnv.getElementsAnnotatedWith(annotation))) {
                 Query queryAnnotation = fieldElement.getAnnotation(Query.class);
@@ -87,6 +89,7 @@ public class QueryProcessor extends AbstractProcessor {
                 }
             }
         }
+        messager.printMessage(Diagnostic.Kind.NOTE, "------处理 @Query 注解结束------");
         return false;
     }
 

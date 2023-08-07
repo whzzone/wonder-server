@@ -14,6 +14,8 @@ import com.gitee.whzzone.admin.common.base.pojo.quey.EntityQuery;
 import com.gitee.whzzone.admin.common.base.service.EntityService;
 import com.gitee.whzzone.admin.pojo.PageData;
 import com.gitee.whzzone.common.annotation.Query;
+import com.gitee.whzzone.common.annotation.QueryOrder;
+import com.gitee.whzzone.common.annotation.QuerySort;
 import com.gitee.whzzone.common.enums.ExpressionEnum;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -186,6 +188,9 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
             Map<String, Field[]> betweenFieldMap = new HashMap<>();
 
+            String sortColumn = "";
+            String sortOrder = "";
+
             for (Field field : fields) {
                 // if (isBusinessField(field.getName())) {
                 field.setAccessible(true);
@@ -194,6 +199,17 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
                 // 判断该属性是否存在值
                 if (Objects.isNull(value) || String.valueOf(value).equals("null") || value.equals("")) {
                     continue;
+                }
+
+                // 是否存在注解@QuerySort
+                QuerySort querySort = field.getDeclaredAnnotation(QuerySort.class);
+                if (querySort != null) {
+                    sortColumn = (String) field.get(q);
+                }
+
+                QueryOrder queryOrder = field.getDeclaredAnnotation(QueryOrder.class);
+                if (queryOrder != null) {
+                    sortOrder = (String) field.get(q);
                 }
 
                 // 是否存在注解@Query
@@ -256,6 +272,12 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
                 } else {
                     queryWrapper.between(key, field2.get(q), field1.get(q));
                 }
+            }
+
+            if (sortOrder.equalsIgnoreCase("desc")){
+                queryWrapper.orderByDesc(StrUtil.isNotBlank(sortColumn), StrUtil.toUnderlineCase(sortColumn));
+            }else {
+                queryWrapper.orderByAsc(StrUtil.isNotBlank(sortColumn), StrUtil.toUnderlineCase(sortColumn));
             }
 
             return queryWrapper;
