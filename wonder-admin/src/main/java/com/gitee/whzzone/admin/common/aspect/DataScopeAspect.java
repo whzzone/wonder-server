@@ -23,7 +23,6 @@ import java.lang.reflect.Method;
  */
 @Aspect
 @Slf4j
-//@OrderDto(1)
 @Component
 public class DataScopeAspect {
 

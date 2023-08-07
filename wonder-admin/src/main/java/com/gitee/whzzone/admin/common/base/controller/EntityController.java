@@ -7,6 +7,7 @@ import com.gitee.whzzone.admin.common.base.service.EntityService;
 import com.gitee.whzzone.admin.common.validation.group.CreateGroup;
 import com.gitee.whzzone.admin.common.validation.group.UpdateGroup;
 import com.gitee.whzzone.admin.pojo.PageData;
+import com.gitee.whzzone.common.annotation.RequestLogger;
 import com.gitee.whzzone.web.Result;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ public abstract class EntityController<T extends BaseEntity<T>, S extends Entity
     @Autowired
     private S service;
 
+    @RequestLogger
     @ApiOperation("获取")
     @GetMapping("/get/{id}")
     public Result<D> get(@PathVariable Long id){
@@ -34,30 +36,35 @@ public abstract class EntityController<T extends BaseEntity<T>, S extends Entity
         return Result.ok("操作成功", service.afterQueryHandler(t));
     }
 
+    @RequestLogger
     @ApiOperation("删除")
     @GetMapping("/delete/{id}")
     public Result<Boolean> delete(@PathVariable Long id){
         return Result.ok("操作成功", service.removeById(id));
     }
 
+    @RequestLogger
     @ApiOperation("保存")
     @PostMapping("save")
     public Result<T> save(@Validated(CreateGroup.class) @RequestBody D d){
         return Result.ok("操作成功", service.save(d));
     }
 
+    @RequestLogger
     @ApiOperation("更新")
     @PostMapping("update")
     public Result<Boolean> update(@Validated(UpdateGroup.class) @RequestBody D d){
         return Result.ok("操作成功", service.updateById(d));
     }
 
+    @RequestLogger
     @ApiOperation("分页")
     @PostMapping("page")
     public Result<PageData<D>> page(@RequestBody Q q){
         return Result.ok("操作成功", service.page(q));
     }
 
+    @RequestLogger
     @ApiOperation("列表")
     @PostMapping("list")
     public Result<List<D>> list(@RequestBody Q q){
