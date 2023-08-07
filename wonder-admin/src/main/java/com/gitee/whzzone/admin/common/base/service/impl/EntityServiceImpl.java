@@ -16,6 +16,7 @@ import com.gitee.whzzone.admin.pojo.PageData;
 import com.gitee.whzzone.common.annotation.Query;
 import com.gitee.whzzone.common.annotation.QueryOrder;
 import com.gitee.whzzone.common.annotation.QuerySort;
+import com.gitee.whzzone.common.annotation.SelectColumn;
 import com.gitee.whzzone.common.enums.ExpressionEnum;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -187,6 +188,16 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             QueryWrapper<T> queryWrapper = new QueryWrapper<>();
 
             Map<String, Field[]> betweenFieldMap = new HashMap<>();
+
+            // 处理@SelectColumn
+            SelectColumn selectColumn = qClass.getAnnotation(SelectColumn.class);
+            if (selectColumn != null && selectColumn.value() != null && selectColumn.value().length > 0){
+                String[] strings = selectColumn.value();
+                for (int i = 0; i < strings.length; i++) {
+                    strings[i] = StrUtil.toUnderlineCase(strings[i]);
+                }
+                queryWrapper.select(strings);
+            }
 
             String sortColumn = "";
             String sortOrder = "";

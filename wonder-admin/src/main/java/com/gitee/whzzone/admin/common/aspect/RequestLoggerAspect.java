@@ -16,6 +16,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -33,6 +34,9 @@ public class RequestLoggerAspect {
 
     @Autowired
     private RequestLogService requestLogService;
+
+    @Value("server.servlet.context-path")
+    private String contextPath;
 
     @Pointcut("@annotation(com.gitee.whzzone.common.annotation.RequestLogger)")
     public void pointcut() {
@@ -70,7 +74,7 @@ public class RequestLoggerAspect {
         RequestLog requestLog = new RequestLog();
         Result r = (Result) result;
         requestLog.setCode(r.getCode());
-        requestLog.setUrl(request.getRequestURL().toString());
+        requestLog.setUrl(request.getRequestURI().substring(request.getContextPath().length()).replaceAll(contextPath, ""));
         requestLog.setDesc(desc);
         requestLog.setType(request.getMethod());
         requestLog.setMethod(signature.getDeclaringTypeName() + '.' + signature.getName());

@@ -4,6 +4,7 @@ import com.gitee.whzzone.admin.common.base.pojo.quey.EntityQuery;
 import com.gitee.whzzone.common.annotation.Query;
 import com.gitee.whzzone.common.annotation.QueryOrder;
 import com.gitee.whzzone.common.annotation.QuerySort;
+import com.gitee.whzzone.common.annotation.SelectColumn;
 import com.gitee.whzzone.common.enums.ExpressionEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -20,6 +21,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
+@SelectColumn({"id", "`code`", "`desc`", "createTime"})
 @ApiModel(value = "RequestLogQuery对象", description = "请求日志")
 public class RequestLogQuery extends EntityQuery {
 
@@ -27,41 +29,17 @@ public class RequestLogQuery extends EntityQuery {
     @ApiModelProperty("响应码")
     private Integer code;
 
-    @Query
-    @ApiModelProperty("请求人")
-    private Long userId;
-
-    @Query
+    @Query(expression = ExpressionEnum.LIKE)
     @ApiModelProperty("请求url")
     private String url;
 
-    @Query
+    @Query(expression = ExpressionEnum.LIKE)
     @ApiModelProperty("接口描述")
     private String desc;
 
     @Query
     @ApiModelProperty("请求类型")
     private String type;
-
-    @Query
-    @ApiModelProperty("接口方法")
-    private String method;
-
-    @Query
-    @ApiModelProperty("来源IP")
-    private String ip;
-
-    @Query
-    @ApiModelProperty("请求参数")
-    private String params;
-
-    @Query
-    @ApiModelProperty("请求耗时ms")
-    private Long duration;
-
-    @Query
-    @ApiModelProperty("响应数据")
-    private String result;
 
     @Query(column = "create_time", expression = ExpressionEnum.BETWEEN, left = true)
     @ApiModelProperty("开始时间")
