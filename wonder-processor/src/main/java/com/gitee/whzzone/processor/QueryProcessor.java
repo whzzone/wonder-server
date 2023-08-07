@@ -2,6 +2,7 @@ package com.gitee.whzzone.processor;
 
 import com.gitee.whzzone.common.annotation.Query;
 import com.gitee.whzzone.common.enums.ExpressionEnum;
+import com.google.auto.service.AutoService;
 
 import javax.annotation.processing.*;
 import javax.lang.model.element.TypeElement;
@@ -16,6 +17,7 @@ import java.util.Set;
 /**
  * @author Create by whz at 2023/8/5
  */
+@AutoService(Processor.class)
 @SupportedAnnotationTypes("com.gitee.whzzone.common.annotation.Query")
 public class QueryProcessor extends AbstractProcessor {
 
