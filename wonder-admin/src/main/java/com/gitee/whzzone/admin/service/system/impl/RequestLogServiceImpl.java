@@ -26,7 +26,7 @@ public class RequestLogServiceImpl extends EntityServiceImpl<RequestLogMapper, R
             //请求用户
             log.warn("请求用户：{}", requestLog.getUserId());
             //请求链接
-            log.warn("请求链接：{}", requestLog.getUrl());
+            log.warn("请求URI：{}", requestLog.getUrl());
             //接口描述信息
             log.warn("接口描述：{}", requestLog.getDesc());
             //请求类型
