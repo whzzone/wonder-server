@@ -63,7 +63,7 @@ public class Generator {
                 .enableSwagger()
                 .outputDir("wonder-admin\\src\\main\\java")
                 .author("generator")
-                .commentDate("yyyy/MM/dd")
+                .commentDate("yyyy/M/d")
                 .dateType(DateType.ONLY_DATE)
         );
 

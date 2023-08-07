@@ -4,6 +4,7 @@ import com.gitee.whzzone.admin.common.base.pojo.quey.EntityQuery;
 import com.gitee.whzzone.common.annotation.Query;
 import com.gitee.whzzone.common.annotation.QueryOrder;
 import com.gitee.whzzone.common.annotation.QuerySort;
+import com.gitee.whzzone.common.annotation.SelectColumn;
 import com.gitee.whzzone.common.enums.ExpressionEnum;
 <#if swagger>
 import io.swagger.annotations.ApiModel;
@@ -32,6 +33,7 @@ import java.util.Date;
 @Accessors(chain = true)
     </#if>
 </#if>
+@SelectColumn({<#list table.fields as field>"${field.annotationColumnName}"<#if field_has_next>, </#if></#list>})
 <#if swagger>
 @ApiModel(value = "${entity}Query对象", description = "${table.comment!}")
 </#if>
