@@ -1,5 +1,10 @@
-package ${package.Entity};
+package ${package.Other}.${entity};
 
+<#list table.importPackages as pkg>
+    <#if pkg != "com.baomidou.mybatisplus.annotation.TableField" && pkg != "com.baomidou.mybatisplus.annotation.TableName" &&  pkg != "com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity">
+import ${pkg};
+    </#if>
+</#list>
 import com.gitee.whzzone.admin.common.base.pojo.quey.EntityQuery;
 import com.gitee.whzzone.common.annotation.Query;
 import com.gitee.whzzone.common.annotation.QueryOrder;
@@ -33,7 +38,7 @@ import java.util.Date;
 @Accessors(chain = true)
     </#if>
 </#if>
-@SelectColumn({<#list table.fields as field>"${field.annotationColumnName}"<#if field_has_next>, </#if></#list>})
+@SelectColumn({<#list table.commonFields as field>"${field.columnName}", </#list><#list table.fields as field>"${field.annotationColumnName}"<#if field_has_next>, </#if></#list>})
 <#if swagger>
 @ApiModel(value = "${entity}Query对象", description = "${table.comment!}")
 </#if>

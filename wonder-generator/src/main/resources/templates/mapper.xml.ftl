@@ -32,7 +32,9 @@
 <#list table.commonFields as field>
         ${field.columnName},
 </#list>
-        ${table.fieldNames}
+<#list table.fields as field>
+        ${field.columnName}<#if field_has_next>,</#if>
+</#list>
     </sql>
 
 </#if>
