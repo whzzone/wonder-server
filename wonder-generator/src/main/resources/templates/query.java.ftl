@@ -61,11 +61,11 @@ public class ${entity}Query extends EntityQuery {
     @ApiModelProperty("结束时间")
     private Date endTime;
 
-    @QuerySort
+    @QuerySort("id")
     @ApiModelProperty("排序字段")
     private String sortColumn;
 
-    @QueryOrder
+    @QueryOrder("asc")
     @ApiModelProperty("排序方式-asc/desc")
     private String sortOrder;
 <#------------  END 字段循环遍历  ---------->

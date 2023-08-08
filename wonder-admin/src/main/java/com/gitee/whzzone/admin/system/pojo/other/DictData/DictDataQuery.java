@@ -41,14 +41,6 @@ public class DictDataQuery extends EntityQuery {
     @ApiModelProperty("字典值")
     private String dictValue;
 
-    @Query
-    @ApiModelProperty("备注")
-    private String remark;
-
-    @Query
-    @ApiModelProperty("排序")
-    private Integer sort;
-
     @Query(column = "create_time", expression = ExpressionEnum.BETWEEN, left = true)
     @ApiModelProperty("开始时间")
     private Date startTime;
@@ -62,7 +54,7 @@ public class DictDataQuery extends EntityQuery {
     private String sortColumn;
 
     @QueryOrder("asc")
-    @ApiModelProperty("排序方式-asc/desc")
+    @ApiModelProperty("排序方式，asc/desc")
     private String sortOrder;
 
 }

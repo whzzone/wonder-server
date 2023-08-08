@@ -1,11 +1,14 @@
 package com.gitee.whzzone.admin.system.service.impl;
 
-import com.gitee.whzzone.admin.system.entity.DictData;
-import com.gitee.whzzone.admin.system.pojo.other.DictData.DictDataQuery;
-import com.gitee.whzzone.admin.system.pojo.other.DictData.DictDataDto;
-import com.gitee.whzzone.admin.system.mapper.DictDataMapper;
-import com.gitee.whzzone.admin.system.service.DictDataService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
+import com.gitee.whzzone.admin.system.entity.DictData;
+import com.gitee.whzzone.admin.system.mapper.DictDataMapper;
+import com.gitee.whzzone.admin.system.pojo.other.DictData.DictDataDto;
+import com.gitee.whzzone.admin.system.pojo.other.DictData.DictDataQuery;
+import com.gitee.whzzone.admin.system.service.DictDataService;
+import com.gitee.whzzone.admin.system.service.DictService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,5 +17,30 @@ import org.springframework.stereotype.Service;
 */
 @Service
 public class DictDataServiceImpl extends EntityServiceImpl<DictDataMapper, DictData, DictDataDto, DictDataQuery> implements DictDataService {
+
+    @Autowired
+    private DictService dictService;
+
+    @Override
+    public DictDataDto beforeSaveOrUpdateHandler(DictDataDto dto) {
+        if (!dictService.isExist(dto.getDictId())) {
+            throw new RuntimeException("不存在字典：" + dto.getDictId());
+        }
+
+        if (existSameDictValue(dto.getId(), dto.getDictId(), dto.getDictValue())){
+            throw new RuntimeException("该字典中存在相同的值：" + dto.getDictValue());
+        }
+
+        return dto;
+    }
+
+    @Override
+    public boolean existSameDictValue(Long id, Long dictId, String dictValue) {
+        LambdaQueryWrapper<DictData> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(DictData::getDictValue, dictValue);
+        queryWrapper.eq(DictData::getDictId, dictId);
+        queryWrapper.ne(id != null, DictData::getId, id);
+        return count(queryWrapper) > 0;
+    }
 
 }

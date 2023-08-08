@@ -11,4 +11,5 @@ import com.gitee.whzzone.admin.system.pojo.other.Dict.DictDto;
 */
 public interface DictService extends EntityService<Dict, DictDto, DictQuery> {
 
+    boolean existSameDictCode(Long id, String dictCode);
 }

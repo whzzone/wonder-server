@@ -55,6 +55,8 @@ public interface EntityService<T extends BaseEntity<T>, D extends EntityDto, Q e
 
     boolean isExist(Long id);
 
+    D beforeSaveOrUpdateHandler(D d);
+
     D beforeSaveHandler(D d);
 
     D beforeUpdateHandler(D d);

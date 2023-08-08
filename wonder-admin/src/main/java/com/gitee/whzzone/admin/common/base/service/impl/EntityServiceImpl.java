@@ -33,6 +33,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     @Transactional(rollbackFor = Exception.class)
     public T save(D d) {
         try {
+            d = beforeSaveOrUpdateHandler(d);
             d = beforeSaveHandler(d);
 
             Class<T> dClass = getTClass();
@@ -55,6 +56,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     @Transactional(rollbackFor = Exception.class)
     public boolean updateById(D d) {
         try {
+            d = beforeSaveOrUpdateHandler(d);
             d = beforeUpdateHandler(d);
 
             Class<D> dClass = getDClass();
@@ -150,6 +152,11 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     }
 
     @Override
+    public D beforeSaveOrUpdateHandler(D d) {
+        return d;
+    }
+
+    @Override
     public D beforeSaveHandler(D d) {
         return d;
     }
@@ -215,12 +222,15 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
                 // 是否存在注解@QuerySort
                 QuerySort querySort = field.getDeclaredAnnotation(QuerySort.class);
                 if (querySort != null) {
-                    sortColumn = (String) field.get(q);
+                    String paramValue = (String) field.get(q);
+                    sortColumn = paramValue.isEmpty() ? querySort.value() : paramValue;
                 }
 
+                // 是否存在注解@QueryOrder
                 QueryOrder queryOrder = field.getDeclaredAnnotation(QueryOrder.class);
                 if (queryOrder != null) {
-                    sortOrder = (String) field.get(q);
+                    String paramValue = (String) field.get(q);
+                    sortOrder = paramValue.isEmpty() ? queryOrder.value() : paramValue;
                 }
 
                 // 是否存在注解@Query
