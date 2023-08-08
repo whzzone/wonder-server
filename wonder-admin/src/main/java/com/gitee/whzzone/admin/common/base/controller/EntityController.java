@@ -6,7 +6,7 @@ import com.gitee.whzzone.admin.common.base.pojo.quey.EntityQuery;
 import com.gitee.whzzone.admin.common.base.service.EntityService;
 import com.gitee.whzzone.admin.common.validation.group.CreateGroup;
 import com.gitee.whzzone.admin.common.validation.group.UpdateGroup;
-import com.gitee.whzzone.admin.pojo.PageData;
+import com.gitee.whzzone.admin.common.PageData;
 import com.gitee.whzzone.common.annotation.RequestLogger;
 import com.gitee.whzzone.web.Result;
 import io.swagger.annotations.ApiOperation;

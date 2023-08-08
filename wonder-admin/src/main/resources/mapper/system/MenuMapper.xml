@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.gitee.whzzone.admin.mapper.system.MenuMapper">
+<mapper namespace="com.gitee.whzzone.admin.system.mapper.MenuMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.gitee.whzzone.admin.pojo.entity.system.Menu">
+    <resultMap id="BaseResultMap" type="com.gitee.whzzone.admin.system.entity.Menu">
         <id column="id" property="id"/>
         <result column="parent_id" property="parentId"/>
         <result column="name" property="name"/>
@@ -56,7 +56,7 @@
           AND sur.deleted = FALSE
           AND sp.deleted = FALSE
     </select>
-    <select id="getRoutes" resultType="com.gitee.whzzone.admin.pojo.entity.system.Menu">
+    <select id="getRoutes" resultType="com.gitee.whzzone.admin.system.entity.Menu">
         SELECT
             sm.id,
             sm.path,
@@ -71,7 +71,7 @@
             sur.user_id = #{userId}
             AND sm.menu_type = #{code}
     </select>
-    <select id="findByUserId" resultType="com.gitee.whzzone.admin.pojo.entity.system.Menu">
+    <select id="findByUserId" resultType="com.gitee.whzzone.admin.system.entity.Menu">
         SELECT DISTINCT (sm.id) as id,
                sm.parent_id,
                sm.path,

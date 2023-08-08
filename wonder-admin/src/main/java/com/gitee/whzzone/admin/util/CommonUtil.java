@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.util;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.gitee.whzzone.admin.pojo.dto.system.DataScopeInfo;
+import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
 import com.gitee.whzzone.common.enums.ExpressionEnum;
 
 /**

@@ -1,8 +1,8 @@
 package com.gitee.whzzone.admin.common.aspect;
 
 import com.alibaba.fastjson.JSON;
-import com.gitee.whzzone.admin.pojo.entity.system.RequestLog;
-import com.gitee.whzzone.admin.service.system.RequestLogService;
+import com.gitee.whzzone.admin.system.entity.RequestLog;
+import com.gitee.whzzone.admin.system.service.RequestLogService;
 import com.gitee.whzzone.admin.util.IpUtil;
 import com.gitee.whzzone.admin.util.SecurityUtil;
 import com.gitee.whzzone.common.annotation.RequestLogger;

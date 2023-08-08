@@ -44,14 +44,29 @@ public class SwaggerConfig {
                 .useDefaultResponseMessages(false)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.gitee.whzzone"))
+                .apis(RequestHandlerSelectors.basePackage("com.gitee.whzzone.admin.system"))
                 .paths(PathSelectors.any())
                 .build()
                 .securityContexts(securityContexts())
                 .securitySchemes(securitySchemes())
+                .groupName("1、系统分组")
                 ;
     }
 
+    @Bean
+    public Docket docketDemo2() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .useDefaultResponseMessages(false)
+                .apiInfo(apiInfo())
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.gitee.whzzone.admin.business"))
+                .paths(PathSelectors.any())
+                .build()
+                .securityContexts(securityContexts())
+                .securitySchemes(securitySchemes())
+                .groupName("2、业务分组")
+                ;
+    }
 
     /**
      * 此处主要是API文档页面显示信息
