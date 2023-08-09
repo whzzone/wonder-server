@@ -41,6 +41,9 @@ public class DictDataDto extends EntityDto {
     @ApiModelProperty("字典值")
     private String dictValue;
 
+    @ApiModelProperty("列表回显样式")
+    private String listClass;
+
     @ApiModelProperty("备注")
     private String remark;
 

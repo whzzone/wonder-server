@@ -31,4 +31,15 @@ public class DictServiceImpl extends EntityServiceImpl<DictMapper, Dict, DictDto
         queryWrapper.ne(id != null, Dict::getId, id);
         return count(queryWrapper) > 0;
     }
+
+    @Override
+    public Dict findByDictCode(String dictCode) {
+        if (dictCode.isEmpty()){
+            throw new RuntimeException("dictCode 不能为空");
+        }
+
+        LambdaQueryWrapper<Dict> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Dict::getDictCode, dictCode);
+        return getOne(queryWrapper);
+    }
 }

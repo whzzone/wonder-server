@@ -1,7 +1,9 @@
 package com.gitee.whzzone.admin.system.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
+import com.gitee.whzzone.admin.system.entity.Dict;
 import com.gitee.whzzone.admin.system.entity.DictData;
 import com.gitee.whzzone.admin.system.mapper.DictDataMapper;
 import com.gitee.whzzone.admin.system.pojo.other.DictData.DictDataDto;
@@ -10,6 +12,8 @@ import com.gitee.whzzone.admin.system.service.DictDataService;
 import com.gitee.whzzone.admin.system.service.DictService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
 * 系统字典数据 服务实现类
@@ -43,4 +47,21 @@ public class DictDataServiceImpl extends EntityServiceImpl<DictDataMapper, DictD
         return count(queryWrapper) > 0;
     }
 
+    @Override
+    public List<DictDataDto> findByDictCode(String dictCode) {
+        Dict dict = dictService.findByDictCode(dictCode);
+        if (dict == null) {
+            return null;
+        }
+
+        List<DictData> dictDataList = findByDictId(dict.getId());
+
+        return BeanUtil.copyToList(dictDataList, DictDataDto.class);
+    }
+
+    public List<DictData> findByDictId(Long dictId){
+        LambdaQueryWrapper<DictData> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(DictData::getDictId, dictId);
+        return list(queryWrapper);
+    }
 }

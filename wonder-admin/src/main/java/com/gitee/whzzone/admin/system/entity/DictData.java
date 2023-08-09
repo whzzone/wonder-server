@@ -36,6 +36,10 @@ public class DictData extends BaseEntity<DictData> {
     @TableField("dict_value")
     private String dictValue;
 
+    @ApiModelProperty("列表回显样式")
+    @TableField("list_class")
+    private String listClass;
+
     @ApiModelProperty("备注")
     @TableField("remark")
     private String remark;
