@@ -2,17 +2,18 @@ package com.gitee.whzzone.admin.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
-import com.gitee.whzzone.admin.system.mapper.MarkMapper;
 import com.gitee.whzzone.admin.common.PageData;
-import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
-import com.gitee.whzzone.admin.system.pojo.dto.MarkDto;
-import com.gitee.whzzone.admin.system.pojo.dto.RuleDto;
+import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.system.entity.Mark;
 import com.gitee.whzzone.admin.system.entity.RoleMark;
 import com.gitee.whzzone.admin.system.entity.Rule;
+import com.gitee.whzzone.admin.system.mapper.MarkMapper;
+import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
+import com.gitee.whzzone.admin.system.pojo.dto.MarkDto;
+import com.gitee.whzzone.admin.system.pojo.dto.RuleDto;
 import com.gitee.whzzone.admin.system.pojo.query.MarkQuery;
 import com.gitee.whzzone.admin.system.service.MarkService;
 import com.gitee.whzzone.admin.system.service.RoleMarkService;
@@ -28,7 +29,6 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -74,24 +74,6 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDto
         return rule;
     }
 
-    private Object parseArgValues(Class<?> type, String s) {
-        if (type == String.class) {
-            return s;
-        } else if (type == Integer.class || type == int.class) {
-            return Integer.parseInt(s);
-        } else if (type == Double.class || type == double.class) {
-            return Double.parseDouble(s);
-        } else if (type == Boolean.class || type == boolean.class) {
-            return Boolean.parseBoolean(s);
-        } else if (type == Long.class || type == long.class) {
-            return Long.parseLong(s);
-        } else if (type == BigDecimal.class) {
-            return new BigDecimal(s);
-        }
-
-        throw new IllegalArgumentException("Cannot convert argument to type " + type.getName());
-    }
-
     @Override
     public DataScopeInfo execRuleByEntity(Rule entity) {
         return execRuleHandler(entity);
@@ -131,7 +113,7 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDto
                     // 转换实参为Object数组
                     argValues = new Object[actualArray.length];
                     for (int i = 0; i < actualArray.length; i++) {
-                        argValues[i] = parseArgValues(paramsTypes[i], actualArray[i]);
+                        argValues[i] = JSONObject.parseObject(actualArray[i], paramsTypes[i]);
                     }
                 }
 
