@@ -51,7 +51,7 @@
         WHERE
             sur.user_id = #{userId}
 
-          AND ( permission IS NOT NULL OR permission != '' )
+          AND ( permission IS NOT NULL AND permission != '' )
           AND srp.deleted = FALSE
           AND sur.deleted = FALSE
           AND sp.deleted = FALSE
