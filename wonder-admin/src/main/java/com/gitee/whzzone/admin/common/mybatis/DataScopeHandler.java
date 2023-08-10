@@ -165,10 +165,13 @@ public class DataScopeHandler implements DataPermissionHandler {
                 } else
                     throw new RuntimeException("错误的拼接类型：" + dto.getSpliceType());
 
-            } else if (dto.getExpression().equals(ExpressionEnum.IS_NULL.toString())) {
+            } else if (dto.getExpression().equals(ExpressionEnum.IS_NULL.toString()) || dto.getExpression().equals(ExpressionEnum.NOT_NULL.toString())) {
                 Column column = new Column(dto.getColumnName());
 
                 IsNullExpression isNullExpression = new IsNullExpression();
+                if (dto.getExpression().equals(ExpressionEnum.NOT_NULL.toString())) {
+                    isNullExpression.setNot(true);
+                }
                 isNullExpression.setLeftExpression(column);
 
                 if (dto.getSpliceType().equals(SpliceTypeEnum.OR.toString())) {
@@ -178,26 +181,11 @@ public class DataScopeHandler implements DataPermissionHandler {
                 } else
                     throw new RuntimeException("错误的拼接类型：" + dto.getSpliceType());
 
-            } else if (dto.getExpression().equals(ExpressionEnum.NOT_NULL.toString())) {
-                // FIXME NOT_NULL待处理
-                //                Column column = new Column(dto.getColumnName());
-                //
-                //                IsNotNull isNotNullExpression = new IsNotNull();
-                //                isNotNullExpression.setLeftExpression(column);
-                //
-                //                if (dto.getSpliceType().equals(SpliceTypeEnum.OR.toString())){
-                //                    return where == null ? isNullExpression : new OrExpression(where, isNullExpression);
-                //                }else if (dto.getSpliceType().equals(SpliceTypeEnum.AND.toString())){
-                //                    return where == null ? isNullExpression : new AndExpression(where, isNullExpression);
-                //                }else
-                //                    throw new RuntimeException("错误的拼接类型：" + dto.getSpliceType());
-
             } else
                 throw new RuntimeException("错误的表达式：" + dto.getExpression());
 
         } else
             throw new RuntimeException("无效的提供方式：" + dto.getProvideType());
-        return where;
     }
 
 }
