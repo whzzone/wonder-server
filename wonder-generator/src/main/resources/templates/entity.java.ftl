@@ -85,7 +85,6 @@ public class ${entity} {
     @TableLogic
     </#if>
     private ${field.propertyType} ${field.propertyName};
-    </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
 <#if !entityLombokModel>
