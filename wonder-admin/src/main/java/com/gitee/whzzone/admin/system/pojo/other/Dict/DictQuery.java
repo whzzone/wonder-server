@@ -53,7 +53,7 @@ public class DictQuery extends EntityQuery {
     @ApiModelProperty("结束时间")
     private Date endTime;
 
-    @QuerySort
+    @QuerySort("sort")
     @ApiModelProperty("排序字段")
     private String sortColumn;
 

@@ -8,11 +8,12 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import com.gitee.whzzone.admin.common.PageData;
 import com.gitee.whzzone.admin.common.base.pojo.dto.EntityDto;
 import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
 import com.gitee.whzzone.admin.common.base.pojo.quey.EntityQuery;
 import com.gitee.whzzone.admin.common.base.service.EntityService;
-import com.gitee.whzzone.admin.common.PageData;
 import com.gitee.whzzone.common.annotation.Query;
 import com.gitee.whzzone.common.annotation.QueryOrder;
 import com.gitee.whzzone.common.annotation.QuerySort;
@@ -98,8 +99,11 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
         if (id == null) {
             throw new RuntimeException("id不能为空");
         }
+
         T t = getById(id);
-        boolean b = super.removeById(id);
+
+        boolean b = SqlHelper.retBool(getBaseMapper().deleteById(id));
+
         if (b) {
             afterDeleteHandler(t);
         }
@@ -219,6 +223,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
                     continue;
                 }
 
+                // FIXME 存在bug，应该在判空前执行
                 // 是否存在注解@QuerySort
                 QuerySort querySort = field.getDeclaredAnnotation(QuerySort.class);
                 if (querySort != null) {
@@ -318,5 +323,4 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             throw new RuntimeException(e.getMessage());
         }
     }
-
 }

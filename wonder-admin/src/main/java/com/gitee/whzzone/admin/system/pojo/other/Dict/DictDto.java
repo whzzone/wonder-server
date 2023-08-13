@@ -10,7 +10,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 /**
 * 系统字典
@@ -30,9 +29,9 @@ public class DictDto extends EntityDto {
     @ApiModelProperty(value = "字典编码（唯一）", required = true)
     private String dictCode;
 
-    @NotNull(message = "字典类型不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+/*    @NotNull(message = "字典类型不能为空", groups = {CreateGroup.class, UpdateGroup.class})
     @ApiModelProperty(value = "字典类型，0-列表，1-树", required = true)
-    private Integer dictType;
+    private Integer dictType;*/
 
     @ApiModelProperty("排序")
     private Integer sort;

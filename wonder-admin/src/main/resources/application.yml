@@ -11,6 +11,14 @@ spring:
   web:
     resources:
       add-mappings: true
+  servlet:
+    multipart:
+      max-file-size: 10MB #单个文件的最大大小限制为10MB
+      max-request-size: 20MB #整个请求体的最大大小限制为20MB，包括所有文件和其他表单字段
+
+upload:
+  path: E:/phpstudy_pro/WWW/upload
+  allow-type: jpg,jpeg,gif,png,zip,7z,rar,txt,doc,docx,xls,xlsx,mp3,mp4
 
 security:
   default-password: 123456
