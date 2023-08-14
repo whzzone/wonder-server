@@ -28,8 +28,8 @@ public class Generator {
     private static final String JDBC_PASSWORD = "5278eedc6119a326";
 
     // 包名和模块名
-    private static final String PACKAGE_NAME = "com.gitee.whzzone.admin";
-    private static final String MODULE_NAME = "demo";
+    private static final String PACKAGE_NAME = "com.gitee.whzzone.admin.business";
+    private static final String MODULE_NAME = "";
 
     // 表名，多个表使用英文逗号分割
     private static final String[] TBL_NAMES = {"ex_book"};
@@ -63,7 +63,7 @@ public class Generator {
                 .enableSwagger()
                 .outputDir("wonder-admin\\src\\main\\java")
                 .author("generator")
-                .commentDate("yyyy/MM/dd")
+                .commentDate("yyyy/M/d")
                 .dateType(DateType.ONLY_DATE)
         );
 
@@ -75,13 +75,13 @@ public class Generator {
         fastAutoGenerator.packageConfig(packageConfigBuilder -> packageConfigBuilder
                 .parent(PACKAGE_NAME)
                 // .moduleName(MODULE_NAME)
-                .entity("pojo.entity." + MODULE_NAME)
-                .mapper("mapper." + MODULE_NAME)
-                .service("service." + MODULE_NAME)
-                .serviceImpl("service." + MODULE_NAME + ".impl")
-                .controller("controller." + MODULE_NAME)
-                .other("pojo.other")
-                .pathInfo(Collections.singletonMap(OutputFile.xml, "wonder-admin\\src\\main\\resources\\mapper\\" + MODULE_NAME))
+                .entity(MODULE_NAME.isEmpty() ? "entity" : "entity." + MODULE_NAME)
+                .mapper(MODULE_NAME.isEmpty() ? "mapper" : "mapper." + MODULE_NAME)
+                .service(MODULE_NAME.isEmpty() ? "service" : "service." + MODULE_NAME)
+                .serviceImpl(MODULE_NAME.isEmpty() ? "service.impl" : "service." + MODULE_NAME + ".impl")
+                .controller(MODULE_NAME.isEmpty() ? "controller" : "controller." + MODULE_NAME)
+                .other(MODULE_NAME.isEmpty() ? "pojo.other" : "pojo." + MODULE_NAME + "other")
+                .pathInfo(Collections.singletonMap(OutputFile.xml, MODULE_NAME.isEmpty() ? "wonder-admin\\src\\main\\resources\\mapper\\business\\" : "wonder-admin\\src\\main\\resources\\mapper\\business\\" + MODULE_NAME + "\\"))
         );
 
         fastAutoGenerator.templateConfig(templateConfigBuilder -> templateConfigBuilder

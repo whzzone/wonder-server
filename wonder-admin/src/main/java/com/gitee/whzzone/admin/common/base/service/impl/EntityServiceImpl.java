@@ -8,12 +8,16 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import com.gitee.whzzone.admin.common.PageData;
 import com.gitee.whzzone.admin.common.base.pojo.dto.EntityDto;
 import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
 import com.gitee.whzzone.admin.common.base.pojo.quey.EntityQuery;
 import com.gitee.whzzone.admin.common.base.service.EntityService;
-import com.gitee.whzzone.admin.pojo.PageData;
 import com.gitee.whzzone.common.annotation.Query;
+import com.gitee.whzzone.common.annotation.QueryOrder;
+import com.gitee.whzzone.common.annotation.QuerySort;
+import com.gitee.whzzone.common.annotation.SelectColumn;
 import com.gitee.whzzone.common.enums.ExpressionEnum;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +34,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     @Transactional(rollbackFor = Exception.class)
     public T save(D d) {
         try {
+            d = beforeSaveOrUpdateHandler(d);
             d = beforeSaveHandler(d);
 
             Class<T> dClass = getTClass();
@@ -52,6 +57,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     @Transactional(rollbackFor = Exception.class)
     public boolean updateById(D d) {
         try {
+            d = beforeSaveOrUpdateHandler(d);
             d = beforeUpdateHandler(d);
 
             Class<D> dClass = getDClass();
@@ -93,8 +99,11 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
         if (id == null) {
             throw new RuntimeException("id不能为空");
         }
+
         T t = getById(id);
-        boolean b = super.removeById(id);
+
+        boolean b = SqlHelper.retBool(getBaseMapper().deleteById(id));
+
         if (b) {
             afterDeleteHandler(t);
         }
@@ -147,6 +156,11 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     }
 
     @Override
+    public D beforeSaveOrUpdateHandler(D d) {
+        return d;
+    }
+
+    @Override
     public D beforeSaveHandler(D d) {
         return d;
     }
@@ -186,6 +200,19 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
             Map<String, Field[]> betweenFieldMap = new HashMap<>();
 
+            // 处理@SelectColumn
+            SelectColumn selectColumn = qClass.getAnnotation(SelectColumn.class);
+            if (selectColumn != null && selectColumn.value() != null && selectColumn.value().length > 0) {
+                String[] strings = selectColumn.value();
+                for (int i = 0; i < strings.length; i++) {
+                    strings[i] = StrUtil.toUnderlineCase(strings[i]);
+                }
+                queryWrapper.select(strings);
+            }
+
+            String sortColumn = "";
+            String sortOrder = "";
+
             for (Field field : fields) {
                 // if (isBusinessField(field.getName())) {
                 field.setAccessible(true);
@@ -194,6 +221,21 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
                 // 判断该属性是否存在值
                 if (Objects.isNull(value) || String.valueOf(value).equals("null") || value.equals("")) {
                     continue;
+                }
+
+                // FIXME 存在bug，应该在判空前执行
+                // 是否存在注解@QuerySort
+                QuerySort querySort = field.getDeclaredAnnotation(QuerySort.class);
+                if (querySort != null) {
+                    String paramValue = (String) field.get(q);
+                    sortColumn = paramValue.isEmpty() ? querySort.value() : paramValue;
+                }
+
+                // 是否存在注解@QueryOrder
+                QueryOrder queryOrder = field.getDeclaredAnnotation(QueryOrder.class);
+                if (queryOrder != null) {
+                    String paramValue = (String) field.get(q);
+                    sortOrder = paramValue.isEmpty() ? queryOrder.value() : paramValue;
                 }
 
                 // 是否存在注解@Query
@@ -245,17 +287,36 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             for (String key : keySet) {
                 // 已在编译时做了相关校验，在此无须做重复且耗时的校验
                 Field[] itemFieldList = betweenFieldMap.get(key);
+                if (itemFieldList.length != 2){
+                    throw new IllegalArgumentException("查询参数数量对应异常");
+                }
 
                 Field field1 = itemFieldList[0];
                 Field field2 = itemFieldList[1];
 
                 Query query1 = field1.getDeclaredAnnotation(Query.class);
 
-                if (query1.left()) {
-                    queryWrapper.between(key, field1.get(q), field2.get(q));
+                if (field1.get(q) instanceof Date) {
+                    if (query1.left()) {
+                        queryWrapper.apply("date_format(" + key + ",'%y%m%d') >= date_format({0},'%y%m%d')", field1.get(q));
+                        queryWrapper.apply("date_format(" + key + ",'%y%m%d') <= date_format({0},'%y%m%d')", field2.get(q));
+                    } else {
+                        queryWrapper.apply("date_format(" + key + ",'%y%m%d') <= date_format({0},'%y%m%d')", field1.get(q));
+                        queryWrapper.apply("date_format(" + key + ",'%y%m%d') >= date_format({0},'%y%m%d')", field2.get(q));
+                    }
                 } else {
-                    queryWrapper.between(key, field2.get(q), field1.get(q));
+                    if (query1.left()) {
+                        queryWrapper.between(key, field1.get(q), field2.get(q));
+                    } else {
+                        queryWrapper.between(key, field2.get(q), field1.get(q));
+                    }
                 }
+            }
+
+            if (sortOrder.equalsIgnoreCase("desc")) {
+                queryWrapper.orderByDesc(StrUtil.isNotBlank(sortColumn), StrUtil.toUnderlineCase(sortColumn));
+            } else {
+                queryWrapper.orderByAsc(StrUtil.isNotBlank(sortColumn), StrUtil.toUnderlineCase(sortColumn));
             }
 
             return queryWrapper;
@@ -266,7 +327,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     }
 
     @Override
-    public List<D> list(Q q){
+    public List<D> list(Q q) {
         try {
             QueryWrapper<T> queryWrapper = queryWrapperHandler(q);
             return afterQueryHandler(list(queryWrapper));
@@ -275,5 +336,4 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             throw new RuntimeException(e.getMessage());
         }
     }
-
 }

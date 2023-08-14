@@ -1,7 +1,15 @@
-package ${package.Entity};
+package ${package.Other}.${entity};
 
+<#list table.importPackages as pkg>
+    <#if pkg != "com.baomidou.mybatisplus.annotation.TableField" && pkg != "com.baomidou.mybatisplus.annotation.TableName" &&  pkg != "com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity">
+import ${pkg};
+    </#if>
+</#list>
 import com.gitee.whzzone.admin.common.base.pojo.quey.EntityQuery;
 import com.gitee.whzzone.common.annotation.Query;
+import com.gitee.whzzone.common.annotation.QueryOrder;
+import com.gitee.whzzone.common.annotation.QuerySort;
+import com.gitee.whzzone.common.annotation.SelectColumn;
 import com.gitee.whzzone.common.enums.ExpressionEnum;
 <#if swagger>
 import io.swagger.annotations.ApiModel;
@@ -30,6 +38,7 @@ import java.util.Date;
 @Accessors(chain = true)
     </#if>
 </#if>
+@SelectColumn({<#list table.commonFields as field>"${field.columnName}", </#list><#list table.fields as field>"${field.annotationColumnName}"<#if field_has_next>, </#if></#list>})
 <#if swagger>
 @ApiModel(value = "${entity}Query对象", description = "${table.comment!}")
 </#if>
@@ -45,12 +54,20 @@ public class ${entity}Query extends EntityQuery {
 </#list>
 
     @Query(column = "create_time", expression = ExpressionEnum.BETWEEN, left = true)
-    @ApiModelProperty("开始时间")
-    private Date startTime;
+    @ApiModelProperty("开始日期")
+    private Date beginDate;
 
     @Query(column = "create_time", expression = ExpressionEnum.BETWEEN, left = false)
-    @ApiModelProperty("结束时间")
-    private Date endTime;
+    @ApiModelProperty("结束日期")
+    private Date endDate;
+
+    @QuerySort("id")
+    @ApiModelProperty("排序字段")
+    private String sortColumn;
+
+    @QueryOrder("asc")
+    @ApiModelProperty("排序方式-asc/desc")
+    private String sortOrder;
 <#------------  END 字段循环遍历  ---------->
 <#if !entityLombokModel>
     <#list table.fields as field>

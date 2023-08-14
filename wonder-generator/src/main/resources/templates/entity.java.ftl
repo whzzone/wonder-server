@@ -56,9 +56,9 @@ public class ${entity} {
     </#if>
 
     <#if field.comment!?length gt 0>
-        <#if swagger>
+        <#--<#if swagger>
     @ApiModelProperty("${field.comment}")
-        <#else>
+        <#else>-->
     /**
      * ${field.comment}
      */
@@ -85,7 +85,6 @@ public class ${entity} {
     @TableLogic
     </#if>
     private ${field.propertyType} ${field.propertyName};
-    </#if>
 </#list>
 <#------------  END 字段循环遍历  ---------->
 <#if !entityLombokModel>

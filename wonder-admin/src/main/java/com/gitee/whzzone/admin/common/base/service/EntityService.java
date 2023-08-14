@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.gitee.whzzone.admin.common.base.pojo.dto.EntityDto;
 import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
 import com.gitee.whzzone.admin.common.base.pojo.quey.EntityQuery;
-import com.gitee.whzzone.admin.pojo.PageData;
+import com.gitee.whzzone.admin.common.PageData;
 
 import java.io.Serializable;
 import java.util.List;
@@ -54,6 +54,8 @@ public interface EntityService<T extends BaseEntity<T>, D extends EntityDto, Q e
     }
 
     boolean isExist(Long id);
+
+    D beforeSaveOrUpdateHandler(D d);
 
     D beforeSaveHandler(D d);
 

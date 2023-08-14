@@ -5,10 +5,10 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.gitee.whzzone.admin.pojo.entity.system.User;
-import com.gitee.whzzone.admin.service.system.MenuService;
-import com.gitee.whzzone.admin.service.system.UserService;
-import com.gitee.whzzone.admin.util.CacheKey;
+import com.gitee.whzzone.admin.system.entity.User;
+import com.gitee.whzzone.admin.system.service.MenuService;
+import com.gitee.whzzone.admin.system.service.UserService;
+import com.gitee.whzzone.common.util.CacheKey;
 import com.gitee.whzzone.admin.util.RedisCache;
 import com.gitee.whzzone.web.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -117,7 +117,7 @@ public class TokenFilter extends OncePerRequestFilter {
             }
 
             List<String> permitByUserId = menuService.findPermitByUserId(userId);
-            log.warn(permitByUserId.toString());
+            log.debug(permitByUserId.toString());
 
             List<SimpleGrantedAuthority> list = new ArrayList<>();
             for (String authority : permitByUserId) {

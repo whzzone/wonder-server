@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.gitee.whzzone.admin.mapper.system.RoleMapper">
+<mapper namespace="com.gitee.whzzone.admin.system.mapper.RoleMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.gitee.whzzone.admin.pojo.entity.system.Role">
+    <resultMap id="BaseResultMap" type="com.gitee.whzzone.admin.system.entity.Role">
         <id column="id" property="id"/>
         <result column="parent_id" property="parentId"/>
         <result column="name" property="name"/>
@@ -23,7 +23,7 @@
         id, parent_id, name, code, enabled, description, create_time, create_by, update_time, update_by, deleted
     </sql>
 
-    <select id="findByUserId" resultType="com.gitee.whzzone.admin.pojo.entity.system.Role">
+    <select id="findByUserId" resultType="com.gitee.whzzone.admin.system.entity.Role">
         select
             sr.*
         from sys_role sr
@@ -35,7 +35,7 @@
             and user_id = #{userId}
     </select>
 
-    <select id="selectAllTest" resultType="com.gitee.whzzone.admin.pojo.entity.system.Role">
+    <select id="selectAllTest" resultType="com.gitee.whzzone.admin.system.entity.Role">
         select * from sys_role where deleted = 0
     </select>
 

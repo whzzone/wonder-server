@@ -1,8 +1,8 @@
 package com.gitee.whzzone.admin.common.aspect;
 
-import com.gitee.whzzone.admin.common.annotation.DataScope;
-import com.gitee.whzzone.admin.pojo.dto.system.DataScopeInfo;
-import com.gitee.whzzone.admin.service.system.MarkService;
+import com.gitee.whzzone.common.annotation.DataScope;
+import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
+import com.gitee.whzzone.admin.system.service.MarkService;
 import com.gitee.whzzone.admin.util.SecurityUtil;
 import com.gitee.whzzone.common.exception.NoDataException;
 import lombok.Data;
@@ -23,7 +23,6 @@ import java.lang.reflect.Method;
  */
 @Aspect
 @Slf4j
-//@OrderDto(1)
 @Component
 public class DataScopeAspect {
 
@@ -38,7 +37,7 @@ public class DataScopeAspect {
     }
 
     // 方法切点
-    @Pointcut("@annotation(com.gitee.whzzone.admin.common.annotation.DataScope)")
+    @Pointcut("@annotation(com.gitee.whzzone.common.annotation.DataScope)")
     public void methodPointCut() {
     }
 
@@ -84,7 +83,7 @@ public class DataScopeAspect {
     }
 
     // 形参切点
-    @Pointcut("execution(* *(.., @com.gitee.whzzone.admin.common.annotation.DataScope (*), ..))")
+    @Pointcut("execution(* *(.., @com.gitee.whzzone.common.annotation.DataScope (*), ..))")
     public void parameterPointCut() {
     }
 

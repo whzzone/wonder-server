@@ -1,8 +1,8 @@
 package com.gitee.whzzone.admin.common.security;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.gitee.whzzone.admin.pojo.entity.system.User;
-import com.gitee.whzzone.admin.service.system.UserService;
+import com.gitee.whzzone.admin.system.entity.User;
+import com.gitee.whzzone.admin.system.service.UserService;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
