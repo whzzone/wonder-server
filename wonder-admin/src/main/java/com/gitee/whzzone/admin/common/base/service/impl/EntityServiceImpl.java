@@ -202,7 +202,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
             // 处理@SelectColumn
             SelectColumn selectColumn = qClass.getAnnotation(SelectColumn.class);
-            if (selectColumn != null && selectColumn.value() != null && selectColumn.value().length > 0){
+            if (selectColumn != null && selectColumn.value() != null && selectColumn.value().length > 0) {
                 String[] strings = selectColumn.value();
                 for (int i = 0; i < strings.length; i++) {
                     strings[i] = StrUtil.toUnderlineCase(strings[i]);
@@ -287,22 +287,35 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             for (String key : keySet) {
                 // 已在编译时做了相关校验，在此无须做重复且耗时的校验
                 Field[] itemFieldList = betweenFieldMap.get(key);
+                if (itemFieldList.length != 2){
+                    throw new IllegalArgumentException("查询参数数量对应异常");
+                }
 
                 Field field1 = itemFieldList[0];
                 Field field2 = itemFieldList[1];
 
                 Query query1 = field1.getDeclaredAnnotation(Query.class);
 
-                if (query1.left()) {
-                    queryWrapper.between(key, field1.get(q), field2.get(q));
+                if (field1.get(q) instanceof Date) {
+                    if (query1.left()) {
+                        queryWrapper.apply("date_format(" + key + ",'%y%m%d') >= date_format({0},'%y%m%d')", field1.get(q));
+                        queryWrapper.apply("date_format(" + key + ",'%y%m%d') <= date_format({0},'%y%m%d')", field2.get(q));
+                    } else {
+                        queryWrapper.apply("date_format(" + key + ",'%y%m%d') <= date_format({0},'%y%m%d')", field1.get(q));
+                        queryWrapper.apply("date_format(" + key + ",'%y%m%d') >= date_format({0},'%y%m%d')", field2.get(q));
+                    }
                 } else {
-                    queryWrapper.between(key, field2.get(q), field1.get(q));
+                    if (query1.left()) {
+                        queryWrapper.between(key, field1.get(q), field2.get(q));
+                    } else {
+                        queryWrapper.between(key, field2.get(q), field1.get(q));
+                    }
                 }
             }
 
-            if (sortOrder.equalsIgnoreCase("desc")){
+            if (sortOrder.equalsIgnoreCase("desc")) {
                 queryWrapper.orderByDesc(StrUtil.isNotBlank(sortColumn), StrUtil.toUnderlineCase(sortColumn));
-            }else {
+            } else {
                 queryWrapper.orderByAsc(StrUtil.isNotBlank(sortColumn), StrUtil.toUnderlineCase(sortColumn));
             }
 
@@ -314,7 +327,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     }
 
     @Override
-    public List<D> list(Q q){
+    public List<D> list(Q q) {
         try {
             QueryWrapper<T> queryWrapper = queryWrapperHandler(q);
             return afterQueryHandler(list(queryWrapper));

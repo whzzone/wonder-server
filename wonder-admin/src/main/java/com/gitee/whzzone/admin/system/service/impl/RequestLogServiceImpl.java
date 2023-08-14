@@ -22,7 +22,7 @@ public class RequestLogServiceImpl extends EntityServiceImpl<RequestLogMapper, R
     @Override
     public void saveAsync(RequestLog requestLog) {
         try {
-            log.debug("====================================开始请求========================================");
+            /*log.debug("====================================开始请求========================================");
             //请求用户
             log.debug("请求用户：{}", requestLog.getUserId());
             //请求链接
@@ -41,7 +41,7 @@ public class RequestLogServiceImpl extends EntityServiceImpl<RequestLogMapper, R
             log.debug("请求耗时：{}", requestLog.getDuration());
             //请求返回
             log.debug("请求返回：{}", requestLog.getResult());
-            log.debug("====================================请求结束========================================");
+            log.debug("====================================请求结束========================================");*/
 
             save(requestLog);
         }catch (Exception e){

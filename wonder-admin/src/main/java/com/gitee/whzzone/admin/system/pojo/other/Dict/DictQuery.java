@@ -46,12 +46,12 @@ public class DictQuery extends EntityQuery {
     private String remark;
 
     @Query(column = "create_time", expression = ExpressionEnum.BETWEEN, left = true)
-    @ApiModelProperty("开始时间")
-    private Date startTime;
+    @ApiModelProperty("开始日期")
+    private Date beginDate;
 
     @Query(column = "create_time", expression = ExpressionEnum.BETWEEN, left = false)
-    @ApiModelProperty("结束时间")
-    private Date endTime;
+    @ApiModelProperty("结束日期")
+    private Date endDate;
 
     @QuerySort("sort")
     @ApiModelProperty("排序字段")
