@@ -25,7 +25,7 @@ import java.util.Date;
 @ApiModel(value = "DictQuery对象", description = "系统字典")
 public class DictQuery extends EntityQuery {
 
-    @Query
+    @Query(expression = ExpressionEnum.LIKE)
     @ApiModelProperty("字典名称")
     private String dictName;
 
