@@ -28,14 +28,14 @@ public class Generator {
     private static final String JDBC_PASSWORD = "5278eedc6119a326";
 
     // 包名和模块名
-    private static final String PACKAGE_NAME = "com.gitee.whzzone.admin.business";
+    private static final String PACKAGE_NAME = "com.gitee.whzzone.admin.gen";
     private static final String MODULE_NAME = "";
 
     // 表名，多个表使用英文逗号分割
-    private static final String[] TBL_NAMES = {"ex_book"};
+    private static final String[] TBL_NAMES = {"gen_table"};
 
     // 表名的前缀，从表生成代码时会去掉前缀
-    private static final String TABLE_PREFIX = "ex_";
+    private static final String TABLE_PREFIX = "";
 
     // 生成代码入口main方法
     public static void main(String[] args) {

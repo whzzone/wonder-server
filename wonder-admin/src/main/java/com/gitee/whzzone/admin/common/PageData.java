@@ -23,8 +23,8 @@ public class PageData<T> {
 
     public PageData(IPage<T> page){
         this.list = page.getRecords();
-        this.pages = page.getPages();
         this.total = page.getTotal();
+        this.pages = page.getPages();
     }
 
 }
