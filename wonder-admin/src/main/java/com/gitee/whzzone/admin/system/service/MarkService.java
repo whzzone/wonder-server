@@ -15,11 +15,9 @@ import java.util.List;
  */
 public interface MarkService extends EntityService<Mark, MarkDto, MarkQuery> {
 
-    Rule getByName(String name);
+    List<Rule> getByName(String name);
 
     DataScopeInfo execRuleByName(String name);
-
-    DataScopeInfo execRuleByEntity(Rule entity);
 
     boolean existSameName(Long id, String scopeName);
 

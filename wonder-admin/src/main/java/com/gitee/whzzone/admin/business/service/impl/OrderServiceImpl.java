@@ -4,16 +4,15 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.gitee.whzzone.common.annotation.DataScope;
-import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
-import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
+import com.gitee.whzzone.admin.business.entity.Order;
 import com.gitee.whzzone.admin.business.mapper.OrderMapper;
 import com.gitee.whzzone.admin.business.pojo.dto.OrderDto;
-import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
-import com.gitee.whzzone.admin.business.entity.Order;
 import com.gitee.whzzone.admin.business.pojo.query.OrderQuery;
 import com.gitee.whzzone.admin.business.service.OrderService;
-import com.gitee.whzzone.admin.util.CommonUtil;
+import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
+import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
+import com.gitee.whzzone.common.annotation.DataScope;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -41,7 +40,7 @@ public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, Orde
     @Override
     public List<OrderDto> list2(OrderQuery query, @DataScope("order-list") DataScopeInfo dataScopeInfo) {
         QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
-        CommonUtil.handleQueryWrapper(queryWrapper, dataScopeInfo);
+//        CommonUtil.handleQueryWrapper(queryWrapper, dataScopeInfo);
         queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverName()), "receiver_name", query.getReceiverName());
         queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverPhone()), "receiver_phone", query.getReceiverPhone());
         queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverAddress()), "receiver_address", query.getReceiverAddress());

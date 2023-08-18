@@ -47,8 +47,8 @@ public class RuleDto extends EntityDto {
     @ApiModelProperty("值1")
     private String value1;
 
-    @ApiModelProperty("值2")
-    private String value2;
+/*    @ApiModelProperty("值2")
+    private String value2;*/
 
     @ApiModelProperty("全限定类名")
     private String className;
@@ -64,4 +64,7 @@ public class RuleDto extends EntityDto {
 
     @ApiModelProperty("参数")
     private List<ParamDto> paramList;
+
+    @ApiModelProperty("方法执行返回结果")
+    private Object result;
 }
