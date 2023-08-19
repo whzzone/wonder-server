@@ -10,7 +10,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface DataScope {
-
+    /**
+     * 标记这是那个接口，
+     */
     String value();
 
 }

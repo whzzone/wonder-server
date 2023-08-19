@@ -30,7 +30,7 @@ public class DataScopeHandler implements DataPermissionHandler {
 
     @PostConstruct
     public void init() {
-        expressStrategyMap.put(ExpressionEnum.EQ.toString(), new QeStrategyImpl());
+        expressStrategyMap.put(ExpressionEnum.EQ.toString(), new EqStrategyImpl());
         expressStrategyMap.put(ExpressionEnum.NE.toString(), new NeStrategyImpl());
         expressStrategyMap.put(ExpressionEnum.LIKE.toString(), new LikeStrategyImpl());
         expressStrategyMap.put(ExpressionEnum.RIGHT_LIKE.toString(), new RightLikeStrategyImpl());

@@ -11,7 +11,7 @@ import net.sf.jsqlparser.schema.Column;
 /**
  * @author Create by whz at 2023/8/18
  */
-public class QeStrategyImpl implements ExpressStrategy{
+public class EqStrategyImpl implements ExpressStrategy{
 
     @Override
     public Expression apply(RuleDto rule, Expression where) {
