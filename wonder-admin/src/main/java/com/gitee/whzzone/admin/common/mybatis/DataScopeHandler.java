@@ -8,13 +8,10 @@ import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
 import com.gitee.whzzone.admin.system.pojo.dto.RuleDto;
 import com.gitee.whzzone.admin.util.SecurityUtil;
 import com.gitee.whzzone.common.enums.ExpressionEnum;
-import com.gitee.whzzone.common.enums.ProvideTypeEnum;
-import com.gitee.whzzone.common.enums.SpliceTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.Parenthesis;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
-import net.sf.jsqlparser.schema.Column;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -33,19 +30,19 @@ public class DataScopeHandler implements DataPermissionHandler {
 
     @PostConstruct
     public void init() {
-        expressStrategyMap.put(ExpressionEnum.EQ.toString(), new QeStrategy());
-        expressStrategyMap.put(ExpressionEnum.NE.toString(), new NeStrategy());
-        expressStrategyMap.put(ExpressionEnum.LIKE.toString(), new LikeStrategy());
-        expressStrategyMap.put(ExpressionEnum.RIGHT_LIKE.toString(), new RightLikeStrategy());
-        expressStrategyMap.put(ExpressionEnum.LEFT_LIKE.toString(), new LeftLikeStrategy());
-        expressStrategyMap.put(ExpressionEnum.GT.toString(), new GtStrategy());
-        expressStrategyMap.put(ExpressionEnum.GE.toString(), new GeStrategy());
-        expressStrategyMap.put(ExpressionEnum.LT.toString(), new LtStrategy());
-        expressStrategyMap.put(ExpressionEnum.LE.toString(), new LeStrategy());
-        expressStrategyMap.put(ExpressionEnum.IN.toString(), new InStrategy());
-        expressStrategyMap.put(ExpressionEnum.NOT_IN.toString(), new NotInStrategy());
-        expressStrategyMap.put(ExpressionEnum.IS_NULL.toString(), new IsNullStrategy());
-        expressStrategyMap.put(ExpressionEnum.NOT_NULL.toString(), new NotNullStrategy());
+        expressStrategyMap.put(ExpressionEnum.EQ.toString(), new QeStrategyImpl());
+        expressStrategyMap.put(ExpressionEnum.NE.toString(), new NeStrategyImpl());
+        expressStrategyMap.put(ExpressionEnum.LIKE.toString(), new LikeStrategyImpl());
+        expressStrategyMap.put(ExpressionEnum.RIGHT_LIKE.toString(), new RightLikeStrategyImpl());
+        expressStrategyMap.put(ExpressionEnum.LEFT_LIKE.toString(), new LeftLikeStrategyImpl());
+        expressStrategyMap.put(ExpressionEnum.GT.toString(), new GtStrategyImpl());
+        expressStrategyMap.put(ExpressionEnum.GE.toString(), new GeStrategyImpl());
+        expressStrategyMap.put(ExpressionEnum.LT.toString(), new LtStrategyImpl());
+        expressStrategyMap.put(ExpressionEnum.LE.toString(), new LeStrategyImpl());
+        expressStrategyMap.put(ExpressionEnum.IN.toString(), new InStrategyImpl());
+        expressStrategyMap.put(ExpressionEnum.NOT_IN.toString(), new NotInStrategyImpl());
+        expressStrategyMap.put(ExpressionEnum.IS_NULL.toString(), new IsNullStrategyImpl());
+        expressStrategyMap.put(ExpressionEnum.NOT_NULL.toString(), new NotNullStrategyImpl());
         // TODO 还差一个 BETWEEN
     }
 
@@ -62,33 +59,13 @@ public class DataScopeHandler implements DataPermissionHandler {
         DataScopeInfo dataScopeInfo = dataScopeParam.getDataScopeInfo();
         List<RuleDto> ruleList = dataScopeInfo.getRuleList();
         for (RuleDto rule : ruleList) {
-            String sql = "".equals(rule.getTableAlias()) || rule.getTableAlias() == null ? rule.getColumnName() : rule.getTableAlias() + "." + rule.getColumnName();
-
-            Column column = new Column(sql);
-
-            Object value;
-
-            if (rule.getProvideType().equals(ProvideTypeEnum.METHOD.getCode())) {
-                value = rule.getResult();
-            } else if (rule.getProvideType().equals(ProvideTypeEnum.VALUE.getCode())) {
-                value = rule.getValue1();
-            } else {
-                throw new IllegalArgumentException("错误的提供类型");
-            }
-
-            if (!rule.getSpliceType().equals(SpliceTypeEnum.AND.toString()) && !rule.getSpliceType().equals(SpliceTypeEnum.OR.toString())) {
-                throw new IllegalArgumentException("错误的拼接类型：" + rule.getSpliceType());
-            }
-
-            boolean or = rule.getSpliceType().equals(SpliceTypeEnum.OR.toString());
-
             ExpressStrategy expressStrategy = expressStrategyMap.get(rule.getExpression());
             if (expressStrategy == null)
                 throw new IllegalArgumentException("错误的表达式：" + rule.getExpression());
 
-            newWhere = expressStrategy.apply(value, column, or, newWhere);
-
+            newWhere = expressStrategy.apply(rule, newWhere);
         }
-        return new AndExpression(oldWhere, new Parenthesis(newWhere));
+
+        return oldWhere == null ? newWhere : new AndExpression(oldWhere, new Parenthesis(newWhere));
     }
 }
