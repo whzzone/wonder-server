@@ -63,7 +63,7 @@ public interface EntityService<T extends BaseEntity<T>, D extends EntityDto, Q e
 
     PageData<D> page(Q q);
 
-    QueryWrapper<T> queryWrapperHandler(Q q);
+    QueryWrapper<T> handleQueryWrapper(Q q);
 
     List<D> list(Q q);
 

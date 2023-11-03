@@ -18,7 +18,6 @@ import com.gitee.whzzone.common.annotation.Query;
 import com.gitee.whzzone.common.annotation.QueryOrder;
 import com.gitee.whzzone.common.annotation.QuerySort;
 import com.gitee.whzzone.common.annotation.SelectColumn;
-import com.gitee.whzzone.common.enums.ExpressionEnum;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
@@ -173,7 +172,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     @Override
     public PageData<D> page(Q q) {
         try {
-            QueryWrapper<T> queryWrapper = queryWrapperHandler(q);
+            QueryWrapper<T> queryWrapper = handleQueryWrapper(q);
 
             IPage<T> page = new Page<>(q.getCurPage(), q.getPageSize());
 
@@ -189,8 +188,34 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
         }
     }
 
+    private void handleSelectColumn(QueryWrapper<T> queryWrapper, Class<? extends EntityQuery> qclass) {
+        SelectColumn selectColumn = qclass.getAnnotation(SelectColumn.class);
+        if (queryWrapper == null || selectColumn == null)
+            return;
+
+        if (selectColumn.value() != null && selectColumn.value().length > 0) {
+            String[] strings = selectColumn.value();
+            for (int i = 0; i < strings.length; i++) {
+                strings[i] = StrUtil.toUnderlineCase(strings[i]);
+            }
+            queryWrapper.select(strings);
+        }
+    }
+
+    private String handleQuerySort(Field field, Object value) {
+        QuerySort querySort = field.getDeclaredAnnotation(QuerySort.class);
+        String paramValue = (String) value;
+        return paramValue.isEmpty() ? querySort.value() : paramValue;
+    }
+
+    private String handleQueryOrder(Field field, Object value) {
+        QueryOrder queryOrder = field.getDeclaredAnnotation(QueryOrder.class);
+        String paramValue = (String) value;
+        return paramValue.isEmpty() ? queryOrder.value() : paramValue;
+    }
+
     @Override
-    public QueryWrapper<T> queryWrapperHandler(Q q) {
+    public QueryWrapper<T> handleQueryWrapper(Q q) {
         try {
             Class<? extends EntityQuery> qClass = q.getClass();
 
@@ -201,41 +226,28 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             Map<String, Field[]> betweenFieldMap = new HashMap<>();
 
             // 处理@SelectColumn
-            SelectColumn selectColumn = qClass.getAnnotation(SelectColumn.class);
-            if (selectColumn != null && selectColumn.value() != null && selectColumn.value().length > 0) {
-                String[] strings = selectColumn.value();
-                for (int i = 0; i < strings.length; i++) {
-                    strings[i] = StrUtil.toUnderlineCase(strings[i]);
-                }
-                queryWrapper.select(strings);
-            }
+            handleSelectColumn(queryWrapper, qClass);
 
-            String sortColumn = "";
-            String sortOrder = "";
+            String sortColumn = ""; // 排序字段
+            String sortOrder = ""; // 排序方式
 
+            // 遍历所有字段
             for (Field field : fields) {
-                // if (isBusinessField(field.getName())) {
                 field.setAccessible(true);
                 Object value = field.get(q);
+
+                // 解析排序字段
+                if (field.isAnnotationPresent(QuerySort.class)) {
+                    sortColumn = handleQuerySort(field, value);
+                }
+                // 解析排序方式
+                if (field.isAnnotationPresent(QueryOrder.class)) {
+                    sortOrder = handleQueryOrder(field, value);
+                }
 
                 // 判断该属性是否存在值
                 if (Objects.isNull(value) || String.valueOf(value).equals("null") || value.equals("")) {
                     continue;
-                }
-
-                // FIXME 存在bug，应该在判空前执行
-                // 是否存在注解@QuerySort
-                QuerySort querySort = field.getDeclaredAnnotation(QuerySort.class);
-                if (querySort != null) {
-                    String paramValue = (String) field.get(q);
-                    sortColumn = paramValue.isEmpty() ? querySort.value() : paramValue;
-                }
-
-                // 是否存在注解@QueryOrder
-                QueryOrder queryOrder = field.getDeclaredAnnotation(QueryOrder.class);
-                if (queryOrder != null) {
-                    String paramValue = (String) field.get(q);
-                    sortOrder = paramValue.isEmpty() ? queryOrder.value() : paramValue;
                 }
 
                 // 是否存在注解@Query
@@ -246,48 +258,59 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
                 String columnName = StrUtil.isBlank(query.column()) ? StrUtil.toUnderlineCase(field.getName()) : query.column();
 
-                if (query.expression().equals(ExpressionEnum.EQ)) {
-                    queryWrapper.eq(columnName, value);
-                } else if (query.expression().equals(ExpressionEnum.NE)) {
-                    queryWrapper.ne(columnName, value);
-                } else if (query.expression().equals(ExpressionEnum.LIKE)) {
-                    queryWrapper.like(columnName, value);
-                } else if (query.expression().equals(ExpressionEnum.GT)) {
-                    queryWrapper.gt(columnName, value);
-                } else if (query.expression().equals(ExpressionEnum.GE)) {
-                    queryWrapper.ge(columnName, value);
-                } else if (query.expression().equals(ExpressionEnum.LT)) {
-                    queryWrapper.lt(columnName, value);
-                } else if (query.expression().equals(ExpressionEnum.LE)) {
-                    queryWrapper.le(columnName, value);
-                } else if (query.expression().equals(ExpressionEnum.IN)) {
-                    queryWrapper.in(columnName, value);
-                } else if (query.expression().equals(ExpressionEnum.NOT_IN)) {
-                    queryWrapper.notIn(columnName, value);
-                } else if (query.expression().equals(ExpressionEnum.IS_NULL)) {
-                    queryWrapper.isNull(columnName);
-                } else if (query.expression().equals(ExpressionEnum.NOT_NULL)) {
-                    queryWrapper.isNotNull(columnName);
-                } else if (query.expression().equals(ExpressionEnum.BETWEEN)) {
-                    if (betweenFieldMap.containsKey(columnName)) {
-                        Field[] f = betweenFieldMap.get(columnName);
-                        Field[] tempList = new Field[2];
-                        tempList[0] = f[0];
-                        tempList[1] = field;
-                        betweenFieldMap.put(columnName, tempList);
-                    } else {
-                        betweenFieldMap.put(columnName, new Field[]{field});
-                    }
+                switch (query.expression()){
+                    case EQ:
+                        queryWrapper.eq(columnName, value);
+                        break;
+                    case NE:
+                        queryWrapper.ne(columnName, value);
+                        break;
+                    case LIKE:
+                        queryWrapper.like(columnName, value);
+                        break;
+                    case GT:
+                        queryWrapper.gt(columnName, value);
+                        break;
+                    case GE:
+                        queryWrapper.ge(columnName, value);
+                        break;
+                    case LE:
+                        queryWrapper.le(columnName, value);
+                        break;
+                    case LT:
+                        queryWrapper.lt(columnName, value);
+                        break;
+                    case IN:
+                        queryWrapper.in(columnName, value);
+                        break;
+                    case NOT_IN:
+                        queryWrapper.notIn(columnName, value);
+                        break;
+                    case IS_NULL:
+                        queryWrapper.isNull(columnName);
+                        break;
+                    case NOT_NULL:
+                        queryWrapper.isNotNull(columnName);
+                        break;
+                    case BETWEEN:
+                        if (betweenFieldMap.containsKey(columnName)) {
+                            Field[] f = betweenFieldMap.get(columnName);
+                            Field[] tempList = new Field[2];
+                            tempList[0] = f[0];
+                            tempList[1] = field;
+                            betweenFieldMap.put(columnName, tempList);
+                        } else {
+                            betweenFieldMap.put(columnName, new Field[]{field});
+                        }
+                        break;
                 }
-
             }
-            // }
 
             Set<String> keySet = betweenFieldMap.keySet();
             for (String key : keySet) {
                 // 已在编译时做了相关校验，在此无须做重复且耗时的校验
                 Field[] itemFieldList = betweenFieldMap.get(key);
-                if (itemFieldList.length != 2){
+                if (itemFieldList.length != 2) {
                     throw new IllegalArgumentException("查询参数数量对应异常");
                 }
 
@@ -329,7 +352,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     @Override
     public List<D> list(Q q) {
         try {
-            QueryWrapper<T> queryWrapper = queryWrapperHandler(q);
+            QueryWrapper<T> queryWrapper = handleQueryWrapper(q);
             return afterQueryHandler(list(queryWrapper));
         } catch (Exception e) {
             e.printStackTrace();
