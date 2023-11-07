@@ -1,4 +1,4 @@
-package com.gitee.whzzone.admin.common.serializer;
+package com.gitee.whzzone.common.serializer;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

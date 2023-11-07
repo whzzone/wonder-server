@@ -1,4 +1,4 @@
-package com.gitee.whzzone.admin.common;
+package com.gitee.whzzone.common;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.AllArgsConstructor;

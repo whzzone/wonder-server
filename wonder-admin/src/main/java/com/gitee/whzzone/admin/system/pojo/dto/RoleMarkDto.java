@@ -1,8 +1,8 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gitee.whzzone.admin.common.base.pojo.dto.EntityDto;
-import com.gitee.whzzone.admin.common.serializer.LongSerializer;
+import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
+import com.gitee.whzzone.common.serializer.LongSerializer;
 import lombok.Data;
 
 /**

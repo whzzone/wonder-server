@@ -10,10 +10,10 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.keywords.MySqlKeyWordsHandler;
-import com.gitee.whzzone.admin.common.base.controller.EntityController;
-import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
-import com.gitee.whzzone.admin.common.base.service.EntityService;
-import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
+import com.gitee.whzzone.common.base.controller.EntityController;
+import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.common.base.service.EntityService;
+import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,14 +25,14 @@ public class Generator {
     // 数据库连接配置
     private static final String JDBC_URL = "jdbc:mysql://weihuazhou.top:3306/wonder?useUnicode=true&useSSL=false&characterEncoding=utf8";
     private static final String JDBC_USER_NAME = "root";
-    private static final String JDBC_PASSWORD = "5278eedc6119a326";
+    private static final String JDBC_PASSWORD = "123456";
 
     // 包名和模块名
-    private static final String PACKAGE_NAME = "com.gitee.whzzone.admin.gen";
+    private static final String PACKAGE_NAME = "com.gitee.whzzone.admin.business";
     private static final String MODULE_NAME = "";
 
     // 表名，多个表使用英文逗号分割
-    private static final String[] TBL_NAMES = {"gen_table"};
+    private static final String[] TBL_NAMES = {"position_competency"};
 
     // 表名的前缀，从表生成代码时会去掉前缀
     private static final String TABLE_PREFIX = "";

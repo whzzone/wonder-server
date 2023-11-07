@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
+import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.system.mapper.MenuMapper;
 import com.gitee.whzzone.admin.system.pojo.dto.MenuDto;
 import com.gitee.whzzone.admin.system.pojo.dto.MenuTreeDto;

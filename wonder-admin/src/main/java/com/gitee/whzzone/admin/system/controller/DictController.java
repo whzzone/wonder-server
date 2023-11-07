@@ -2,7 +2,7 @@ package com.gitee.whzzone.admin.system.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.gitee.whzzone.admin.common.base.controller.EntityController;
+import com.gitee.whzzone.common.base.controller.EntityController;
 import com.gitee.whzzone.admin.system.entity.Dict;
 import com.gitee.whzzone.admin.system.pojo.other.Dict.DictQuery;
 import com.gitee.whzzone.admin.system.pojo.other.Dict.DictDto;

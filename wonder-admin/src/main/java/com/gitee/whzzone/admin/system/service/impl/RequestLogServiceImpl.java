@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.service.impl;
 
-import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
+import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.system.mapper.RequestLogMapper;
 import com.gitee.whzzone.admin.system.pojo.dto.RequestLogDto;
 import com.gitee.whzzone.admin.system.entity.RequestLog;

@@ -1,4 +1,4 @@
-package com.gitee.whzzone.admin.common.validation.group;
+package com.gitee.whzzone.common.group;
 
 /**
  * @author : whz

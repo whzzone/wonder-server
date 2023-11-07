@@ -1,4 +1,4 @@
-package com.gitee.whzzone.admin.common.base.service.impl;
+package com.gitee.whzzone.common.base.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
@@ -9,25 +9,32 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
-import com.gitee.whzzone.admin.common.PageData;
-import com.gitee.whzzone.admin.common.base.pojo.dto.EntityDto;
-import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
-import com.gitee.whzzone.admin.common.base.pojo.quey.EntityQuery;
-import com.gitee.whzzone.admin.common.base.service.EntityService;
+import com.gitee.whzzone.common.PageData;
 import com.gitee.whzzone.common.annotation.Query;
-import com.gitee.whzzone.common.annotation.QueryOrder;
-import com.gitee.whzzone.common.annotation.QuerySort;
+import com.gitee.whzzone.common.annotation.SaveField;
 import com.gitee.whzzone.common.annotation.SelectColumn;
+import com.gitee.whzzone.common.annotation.UpdateField;
+import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
+import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.common.base.pojo.quey.EntityQuery;
+import com.gitee.whzzone.common.base.pojo.sort.Sort;
+import com.gitee.whzzone.common.base.service.EntityService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 
 /**
  * @author Create by whz at 2023/7/16
  */
-public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseEntity<T>, D extends EntityDto, Q extends EntityQuery> extends ServiceImpl<M, T> implements EntityService<T, D, Q> {
+public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseEntity, D extends EntityDto, Q extends EntityQuery> extends ServiceImpl<M, T> implements EntityService<T, D, Q> {
+
+    @Autowired
+    private ApplicationContext context;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -39,7 +46,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             Class<T> dClass = getTClass();
             T t = dClass.getDeclaredConstructor().newInstance();
 
-            BeanUtil.copyProperties(d, t);
+            BeanUtil.copyProperties(d, t, getIgnoreSaveField(d));
             boolean save = save(t);
             if (!save) {
                 throw new RuntimeException("操作失败");
@@ -63,13 +70,13 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             Class<? super D> superclass = dClass.getSuperclass();
             Field fieldId = superclass.getDeclaredField("id");
             fieldId.setAccessible(true);
-            long id = (long) fieldId.get(d);
+            Integer id = (Integer) fieldId.get(d);
             T t = getById(id);
             if (t == null) {
                 throw new RuntimeException(StrUtil.format("【{}】不存在", id));
             }
 
-            BeanUtil.copyProperties(d, t);
+            BeanUtil.copyProperties(d, t, getIgnoreUpdateField(d));
             boolean b = super.updateById(t);
             if (b) {
                 afterUpdateHandler(t);
@@ -79,6 +86,33 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+
+    private String[] getIgnoreSaveField(D d) {
+
+        List<String> list = new ArrayList<>();
+
+        Field[] fields = d.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            if (!field.isAnnotationPresent(SaveField.class)) {
+                list.add(field.getName());
+            }
+        }
+        return list.toArray(new String[0]);
+    }
+
+    private String[] getIgnoreUpdateField(D d) {
+
+        List<String> list = new ArrayList<>();
+
+        Field[] fields = d.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            if (!field.isAnnotationPresent(UpdateField.class)) {
+                list.add(field.getName());
+            }
+        }
+        return list.toArray(new String[0]);
     }
 
     @Override
@@ -121,23 +155,63 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
     @Override
     public D afterQueryHandler(T t) {
-        Class<D> dClass = getDClass();
-        return BeanUtil.copyProperties(t, dClass);
+        return afterQueryHandler(t, null);
+    }
+
+    @Override
+    public D afterQueryHandler(T t, String methodName) {
+        try {
+            if (methodName == null || methodName.isEmpty()) {
+                Class<D> dClass = getDClass();
+                return BeanUtil.copyProperties(t, dClass);
+            }
+
+            // 尝试从容器中获取实例
+            Object instance = context.getBean(Class.forName(this.getClass().getName()));
+            Method method = this.getClass().getDeclaredMethod(methodName, getTClass());
+            return (D) method.invoke(instance, t);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override
     public List<D> afterQueryHandler(List<T> list) {
-        List<D> dList = new ArrayList<>();
 
-        if (CollectionUtil.isEmpty(list)) {
+        return afterQueryHandler(list, null);
+
+//        List<D> dList = new ArrayList<>();
+//
+//        if (CollectionUtil.isEmpty(list)) {
+//            return dList;
+//        }
+//
+//        for (T t : list) {
+//            D d = afterQueryHandler(t);
+//            dList.add(d);
+//        }
+//        return dList;
+    }
+
+    @Override
+    public List<D> afterQueryHandler(List<T> list, String methodName) {
+        try {
+            List<D> dList = new ArrayList<>();
+
+            if (CollectionUtil.isEmpty(list)) {
+                return dList;
+            }
+
+            for (T t : list) {
+                D d = afterQueryHandler(t, methodName);
+                dList.add(d);
+            }
             return dList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
-
-        for (T t : list) {
-            D d = afterQueryHandler(t);
-            dList.add(d);
-        }
-        return dList;
     }
 
     @Override
@@ -171,6 +245,11 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
     @Override
     public PageData<D> page(Q q) {
+        return page(q, null);
+    }
+
+    @Override
+    public PageData<D> page(Q q, String methodName) {
         try {
             QueryWrapper<T> queryWrapper = handleQueryWrapper(q);
 
@@ -178,10 +257,32 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
             page(page, queryWrapper);
 
-            List<D> dList = afterQueryHandler(page.getRecords());
+            List<D> dList = afterQueryHandler(page.getRecords(), methodName);
 
             return new PageData<>(dList, page.getTotal(), page.getPages());
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<D> list(Q q) {
+        try {
+            QueryWrapper<T> queryWrapper = handleQueryWrapper(q);
+            return afterQueryHandler(list(queryWrapper));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<D> list(Q q, String methodName) {
+        try {
+            QueryWrapper<T> queryWrapper = handleQueryWrapper(q);
+            return methodName.isEmpty() ? afterQueryHandler(list(queryWrapper)) : afterQueryHandler(list(queryWrapper), methodName);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
@@ -202,18 +303,6 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
         }
     }
 
-    private String handleQuerySort(Field field, Object value) {
-        QuerySort querySort = field.getDeclaredAnnotation(QuerySort.class);
-        String paramValue = (String) value;
-        return paramValue.isEmpty() ? querySort.value() : paramValue;
-    }
-
-    private String handleQueryOrder(Field field, Object value) {
-        QueryOrder queryOrder = field.getDeclaredAnnotation(QueryOrder.class);
-        String paramValue = (String) value;
-        return paramValue.isEmpty() ? queryOrder.value() : paramValue;
-    }
-
     @Override
     public QueryWrapper<T> handleQueryWrapper(Q q) {
         try {
@@ -228,22 +317,12 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             // 处理@SelectColumn
             handleSelectColumn(queryWrapper, qClass);
 
-            String sortColumn = ""; // 排序字段
-            String sortOrder = ""; // 排序方式
+            handleSort(queryWrapper, q);
 
             // 遍历所有字段
             for (Field field : fields) {
                 field.setAccessible(true);
                 Object value = field.get(q);
-
-                // 解析排序字段
-                if (field.isAnnotationPresent(QuerySort.class)) {
-                    sortColumn = handleQuerySort(field, value);
-                }
-                // 解析排序方式
-                if (field.isAnnotationPresent(QueryOrder.class)) {
-                    sortOrder = handleQueryOrder(field, value);
-                }
 
                 // 判断该属性是否存在值
                 if (Objects.isNull(value) || String.valueOf(value).equals("null") || value.equals("")) {
@@ -258,7 +337,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
                 String columnName = StrUtil.isBlank(query.column()) ? StrUtil.toUnderlineCase(field.getName()) : query.column();
 
-                switch (query.expression()){
+                switch (query.expression()) {
                     case EQ:
                         queryWrapper.eq(columnName, value);
                         break;
@@ -336,12 +415,6 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
                 }
             }
 
-            if (sortOrder.equalsIgnoreCase("desc")) {
-                queryWrapper.orderByDesc(StrUtil.isNotBlank(sortColumn), StrUtil.toUnderlineCase(sortColumn));
-            } else {
-                queryWrapper.orderByAsc(StrUtil.isNotBlank(sortColumn), StrUtil.toUnderlineCase(sortColumn));
-            }
-
             return queryWrapper;
         } catch (Exception e) {
             e.printStackTrace();
@@ -349,14 +422,19 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
         }
     }
 
-    @Override
-    public List<D> list(Q q) {
-        try {
-            QueryWrapper<T> queryWrapper = handleQueryWrapper(q);
-            return afterQueryHandler(list(queryWrapper));
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
+    private void handleSort(QueryWrapper<T> queryWrapper, Q q) {
+        List<Sort> sorts = q.getSorts();
+        if (CollectionUtil.isEmpty(sorts)) {
+            return;
+        }
+
+        for (Sort sort : sorts) {
+            if (sort.getAsc()) {
+                queryWrapper.orderByAsc(StrUtil.toUnderlineCase(sort.getField()));
+            } else {
+                queryWrapper.orderByDesc(StrUtil.toUnderlineCase(sort.getField()));
+            }
         }
     }
+
 }

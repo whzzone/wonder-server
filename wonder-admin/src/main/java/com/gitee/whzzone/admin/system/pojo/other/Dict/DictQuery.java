@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.pojo.other.Dict;
 
-import com.gitee.whzzone.admin.common.base.pojo.quey.EntityQuery;
+import com.gitee.whzzone.common.base.pojo.quey.EntityQuery;
 import com.gitee.whzzone.common.annotation.Query;
 import com.gitee.whzzone.common.annotation.QueryOrder;
 import com.gitee.whzzone.common.annotation.QuerySort;

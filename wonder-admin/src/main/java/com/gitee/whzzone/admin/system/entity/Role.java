@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,7 +14,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @TableName("sys_role")
-public class Role extends BaseEntity<Role> {
+public class Role extends BaseEntity {
 
     private Long parentId;
 

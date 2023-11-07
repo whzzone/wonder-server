@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.service;
 
 import com.gitee.whzzone.admin.system.entity.Dict;
-import com.gitee.whzzone.admin.common.base.service.EntityService;
+import com.gitee.whzzone.common.base.service.EntityService;
 import com.gitee.whzzone.admin.system.pojo.other.Dict.DictQuery;
 import com.gitee.whzzone.admin.system.pojo.other.Dict.DictDto;
 

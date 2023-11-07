@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.controller;
 
-import com.gitee.whzzone.admin.common.base.controller.EntityController;
-import com.gitee.whzzone.admin.common.PageData;
+import com.gitee.whzzone.common.base.controller.EntityController;
+import com.gitee.whzzone.common.PageData;
 import com.gitee.whzzone.admin.system.pojo.dto.MarkDto;
 import com.gitee.whzzone.admin.system.entity.Mark;
 import com.gitee.whzzone.admin.system.pojo.query.MarkQuery;

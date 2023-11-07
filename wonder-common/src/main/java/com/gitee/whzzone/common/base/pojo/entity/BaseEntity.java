@@ -1,12 +1,11 @@
-package com.gitee.whzzone.admin.common.base.pojo.entity;
+package com.gitee.whzzone.common.base.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gitee.whzzone.admin.common.serializer.LongSerializer;
+import com.gitee.whzzone.common.serializer.LongSerializer;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,7 +19,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-public class BaseEntity <T extends Model<?>> extends Model<T> {
+public class BaseEntity {
 
     @JsonSerialize(using = LongSerializer.class)
     @TableId(type = IdType.ASSIGN_ID)

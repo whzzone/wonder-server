@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.controller;
 
-import com.gitee.whzzone.admin.common.base.controller.EntityController;
+import com.gitee.whzzone.common.base.controller.EntityController;
 import com.gitee.whzzone.admin.system.pojo.dto.RuleDto;
 import com.gitee.whzzone.admin.system.entity.Rule;
 import com.gitee.whzzone.admin.system.pojo.query.RuleQuery;

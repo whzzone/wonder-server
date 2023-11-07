@@ -1,13 +1,13 @@
-package com.gitee.whzzone.admin.common.base.controller;
+package com.gitee.whzzone.common.base.controller;
 
-import com.gitee.whzzone.admin.common.base.pojo.dto.EntityDto;
-import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
-import com.gitee.whzzone.admin.common.base.pojo.quey.EntityQuery;
-import com.gitee.whzzone.admin.common.base.service.EntityService;
-import com.gitee.whzzone.admin.common.validation.group.CreateGroup;
-import com.gitee.whzzone.admin.common.validation.group.UpdateGroup;
-import com.gitee.whzzone.admin.common.PageData;
+import com.gitee.whzzone.common.PageData;
 import com.gitee.whzzone.common.annotation.RequestLogger;
+import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
+import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.common.base.pojo.quey.EntityQuery;
+import com.gitee.whzzone.common.base.service.EntityService;
+import com.gitee.whzzone.common.group.CreateGroup;
+import com.gitee.whzzone.common.group.UpdateGroup;
 import com.gitee.whzzone.web.Result;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.util.List;
  * @author Create by whz at 2023/7/8
  */
 
-public abstract class EntityController<T extends BaseEntity<T>, S extends EntityService<T, D, Q>, D extends EntityDto, Q extends EntityQuery> {
+public abstract class EntityController<T extends BaseEntity, S extends EntityService<T, D, Q>, D extends EntityDto, Q extends EntityQuery> {
 
     @Autowired
     private S service;

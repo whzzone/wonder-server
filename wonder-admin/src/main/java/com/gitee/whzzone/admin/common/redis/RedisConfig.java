@@ -13,7 +13,6 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
@@ -31,11 +30,12 @@ public class RedisConfig {
         Jackson2JsonRedisSerializer jsonRedisSerializer = getJsonRedisSerializer();
 
         // String的序列化
-        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+//        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+        RedisKeySerializer redisKeySerializer = new RedisKeySerializer();
 
         //key和hash的key都采用String的序列化方式
-        template.setKeySerializer(stringRedisSerializer);
-        template.setHashKeySerializer(stringRedisSerializer);
+        template.setKeySerializer(redisKeySerializer);
+        template.setHashKeySerializer(redisKeySerializer);
 
         //value和hash的value都采用jackson的序列化方式
         template.setValueSerializer(jsonRedisSerializer);

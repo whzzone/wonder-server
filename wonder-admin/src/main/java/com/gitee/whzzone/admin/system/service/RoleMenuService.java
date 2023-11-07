@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.service;
 
-import com.gitee.whzzone.admin.common.base.service.EntityService;
+import com.gitee.whzzone.common.base.service.EntityService;
 import com.gitee.whzzone.admin.system.pojo.dto.RoleMenuDto;
 import com.gitee.whzzone.admin.system.entity.RoleMenu;
 import com.gitee.whzzone.admin.system.pojo.query.RoleMenuQuery;

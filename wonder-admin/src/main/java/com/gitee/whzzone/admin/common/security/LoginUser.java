@@ -1,8 +1,8 @@
 package com.gitee.whzzone.admin.common.security;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gitee.whzzone.admin.common.serializer.ListLongSerializer;
-import com.gitee.whzzone.admin.common.serializer.LongSerializer;
+import com.gitee.whzzone.common.serializer.ListLongSerializer;
+import com.gitee.whzzone.common.serializer.LongSerializer;
 import com.gitee.whzzone.admin.system.pojo.dto.DeptDto;
 import com.gitee.whzzone.admin.system.pojo.dto.RoleDto;
 import com.gitee.whzzone.admin.system.entity.User;
