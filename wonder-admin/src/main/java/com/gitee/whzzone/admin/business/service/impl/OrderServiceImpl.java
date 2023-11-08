@@ -8,11 +8,12 @@ import com.gitee.whzzone.admin.business.entity.Order;
 import com.gitee.whzzone.admin.business.mapper.OrderMapper;
 import com.gitee.whzzone.admin.business.pojo.dto.OrderDto;
 import com.gitee.whzzone.admin.business.pojo.query.OrderQuery;
+import com.gitee.whzzone.admin.business.queryhandler.order.BOrderQueryHandler;
 import com.gitee.whzzone.admin.business.service.OrderService;
-import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
-import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
 import com.gitee.whzzone.common.annotation.DataScope;
+import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
 @Service
 public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, OrderDto, OrderQuery> implements OrderService {
 
-    @DataScope("order-list")
+    // @DataScope("order-list")
     @Override
     public List<OrderDto> list(OrderQuery query) {
         LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
@@ -34,7 +35,11 @@ public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, Orde
         queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverPhone()), Order::getReceiverPhone, query.getReceiverPhone());
         queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverAddress()), Order::getReceiverAddress, query.getReceiverAddress());
         queryWrapper.eq(query.getOrderStatus() != null, Order::getOrderStatus, query.getOrderStatus());
-        return afterQueryHandler(list(queryWrapper));
+        // AOrderQueryHandler 已注入容器
+//        return afterQueryHandler(list(queryWrapper), AOrderQueryHandler.class);
+
+        // BOrderQueryHandler为注入容器
+        return afterQueryHandler(list(queryWrapper), new BOrderQueryHandler());
     }
 
     @Override

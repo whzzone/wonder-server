@@ -18,14 +18,15 @@ import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
 import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
 import com.gitee.whzzone.common.base.pojo.quey.EntityQuery;
 import com.gitee.whzzone.common.base.pojo.sort.Sort;
+import com.gitee.whzzone.common.base.queryhandler.BaseQueryHandler;
 import com.gitee.whzzone.common.base.service.EntityService;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -155,21 +156,16 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
     @Override
     public D afterQueryHandler(T t) {
-        return afterQueryHandler(t, null);
+        return BeanUtil.copyProperties(t, getDClass());
     }
 
     @Override
-    public D afterQueryHandler(T t, String methodName) {
+    public D afterQueryHandler(T t, BaseQueryHandler<T, D> queryHandler) {
         try {
-            if (methodName == null || methodName.isEmpty()) {
-                Class<D> dClass = getDClass();
-                return BeanUtil.copyProperties(t, dClass);
+            if (queryHandler == null) {
+                return afterQueryHandler(t);
             }
-
-            // 尝试从容器中获取实例
-            Object instance = context.getBean(Class.forName(this.getClass().getName()));
-            Method method = this.getClass().getDeclaredMethod(methodName, getTClass());
-            return (D) method.invoke(instance, t);
+            return queryHandler.apply(t);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
@@ -177,25 +173,33 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     }
 
     @Override
-    public List<D> afterQueryHandler(List<T> list) {
-
-        return afterQueryHandler(list, null);
-
-//        List<D> dList = new ArrayList<>();
-//
-//        if (CollectionUtil.isEmpty(list)) {
-//            return dList;
-//        }
-//
-//        for (T t : list) {
-//            D d = afterQueryHandler(t);
-//            dList.add(d);
-//        }
-//        return dList;
+    public D afterQueryHandler(T t, Class<? extends BaseQueryHandler<T, D>> queryHandlerClass) {
+        try {
+            BaseQueryHandler<T, D> queryHandler;
+            try {
+                queryHandler = context.getBean(queryHandlerClass);
+            } catch (NoSuchBeanDefinitionException ignored) {
+                queryHandler = queryHandlerClass.getDeclaredConstructor().newInstance();
+            }
+            return afterQueryHandler(t, queryHandler);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public List<D> afterQueryHandler(List<T> list, String methodName) {
+    public List<D> afterQueryHandler(List<T> list) {
+        return afterQueryHandler(list, new BaseQueryHandler<T, D>() {
+            @Override
+            public D apply(T entity) {
+                return afterQueryHandler(entity);
+            }
+        });
+    }
+
+    @Override
+    public List<D> afterQueryHandler(List<T> list, BaseQueryHandler<T, D> queryHandler) {
         try {
             List<D> dList = new ArrayList<>();
 
@@ -204,13 +208,32 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             }
 
             for (T t : list) {
-                D d = afterQueryHandler(t, methodName);
+                D d = afterQueryHandler(t, queryHandler);
                 dList.add(d);
+            }
+            return dList;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<D> afterQueryHandler(List<T> list, Class<? extends BaseQueryHandler<T, D>> queryHandlerClass) {
+        try {
+            List<D> dList = new ArrayList<>();
+            if (CollectionUtil.isEmpty(list)) {
+                return dList;
+            }
+
+            for (T t : list) {
+                dList.add(afterQueryHandler(t, queryHandlerClass));
             }
             return dList;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -245,11 +268,16 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
     @Override
     public PageData<D> page(Q q) {
-        return page(q, null);
+        return page(q, new BaseQueryHandler<T, D>() {
+            @Override
+            public D apply(T entity) {
+                return afterQueryHandler(entity);
+            }
+        });
     }
 
     @Override
-    public PageData<D> page(Q q, String methodName) {
+    public PageData<D> page(Q q, BaseQueryHandler<T, D> queryHandler) {
         try {
             QueryWrapper<T> queryWrapper = handleQueryWrapper(q);
 
@@ -257,7 +285,26 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
             page(page, queryWrapper);
 
-            List<D> dList = afterQueryHandler(page.getRecords(), methodName);
+            List<D> dList = afterQueryHandler(page.getRecords(), queryHandler);
+
+            return new PageData<>(dList, page.getTotal(), page.getPages());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public PageData<D> page(Q q, Class<? extends BaseQueryHandler<T, D>> queryHandlerClass) {
+        try {
+            QueryWrapper<T> queryWrapper = handleQueryWrapper(q);
+
+            IPage<T> page = new Page<>(q.getCurPage(), q.getPageSize());
+
+            page(page, queryWrapper);
+
+            List<D> dList = afterQueryHandler(page.getRecords(), queryHandlerClass);
 
             return new PageData<>(dList, page.getTotal(), page.getPages());
 
@@ -279,10 +326,21 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     }
 
     @Override
-    public List<D> list(Q q, String methodName) {
+    public List<D> list(Q q, BaseQueryHandler<T, D> queryHandler) {
         try {
             QueryWrapper<T> queryWrapper = handleQueryWrapper(q);
-            return methodName.isEmpty() ? afterQueryHandler(list(queryWrapper)) : afterQueryHandler(list(queryWrapper), methodName);
+            return afterQueryHandler(list(queryWrapper), queryHandler);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<D> list(Q q, Class<? extends BaseQueryHandler<T, D>> queryHandlerClass) {
+        try {
+            QueryWrapper<T> queryWrapper = handleQueryWrapper(q);
+            return afterQueryHandler(list(queryWrapper), queryHandlerClass);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
