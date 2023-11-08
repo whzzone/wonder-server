@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.business.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  */
 @Data
 @TableName("ex_order")
-public class Order extends BaseEntity<Order> {
+public class Order extends BaseEntity {
 
     private String receiverName;
 

@@ -7,6 +7,8 @@ public enum ExpressionEnum {
     EQ,
     NE,
     LIKE,
+    RIGHT_LIKE,
+    LEFT_LIKE,
     GT,
     GE,
     LT,

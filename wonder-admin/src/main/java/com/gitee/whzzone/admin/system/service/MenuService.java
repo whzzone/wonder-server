@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.service;
 
-import com.gitee.whzzone.admin.common.base.service.EntityService;
+import com.gitee.whzzone.common.base.service.EntityService;
 import com.gitee.whzzone.admin.system.pojo.dto.MenuTreeDto;
 import com.gitee.whzzone.admin.system.pojo.dto.MenuDto;
 import com.gitee.whzzone.admin.system.entity.Menu;

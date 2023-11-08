@@ -61,9 +61,11 @@
 
         <dependency>
             <groupId>com.gitee.whzzone</groupId>
-            <artifactId>wonder-admin</artifactId>
+            <artifactId>wonder-common</artifactId>
             <version>1.0</version>
+            <scope>compile</scope>
         </dependency>
+
     </dependencies>
 
 </project>

@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.service;
 
-import com.gitee.whzzone.admin.common.base.service.EntityService;
+import com.gitee.whzzone.common.base.service.EntityService;
 import com.gitee.whzzone.admin.system.pojo.dto.RoleMarkDto;
 import com.gitee.whzzone.admin.system.entity.RoleMark;
 import com.gitee.whzzone.admin.system.pojo.query.RoleMarkQuery;
@@ -14,6 +14,6 @@ public interface RoleMarkService extends EntityService<RoleMark, RoleMarkDto, Ro
 
     List<RoleMark> getByRoleId(Long roleId);
 
-    RoleMark getByRoleIdAndMarkId(Long roleId, Long ruleId);
+    List<RoleMark> getByRoleIdAndMarkId(Long roleId, Long ruleId);
 
 }

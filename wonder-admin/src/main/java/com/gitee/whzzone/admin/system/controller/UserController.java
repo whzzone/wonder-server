@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.controller;
 
-import com.gitee.whzzone.admin.common.base.controller.EntityController;
-import com.gitee.whzzone.admin.common.PageData;
+import com.gitee.whzzone.common.base.controller.EntityController;
+import com.gitee.whzzone.common.PageData;
 import com.gitee.whzzone.admin.system.pojo.dto.ResetPWDDto;
 import com.gitee.whzzone.admin.system.pojo.dto.UserDto;
 import com.gitee.whzzone.admin.system.entity.User;

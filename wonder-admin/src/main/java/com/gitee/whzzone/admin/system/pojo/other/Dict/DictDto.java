@@ -1,8 +1,8 @@
 package com.gitee.whzzone.admin.system.pojo.other.Dict;
 
-import com.gitee.whzzone.admin.common.base.pojo.dto.EntityDto;
-import com.gitee.whzzone.admin.common.validation.group.CreateGroup;
-import com.gitee.whzzone.admin.common.validation.group.UpdateGroup;
+import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
+import com.gitee.whzzone.common.group.CreateGroup;
+import com.gitee.whzzone.common.group.UpdateGroup;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

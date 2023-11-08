@@ -1,9 +1,9 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
-import com.gitee.whzzone.admin.common.base.pojo.dto.EntityDto;
-import com.gitee.whzzone.admin.common.serializer.LongSerializer;
-import com.gitee.whzzone.admin.common.validation.group.CreateGroup;
-import com.gitee.whzzone.admin.common.validation.group.UpdateGroup;
+import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
+import com.gitee.whzzone.common.serializer.LongSerializer;
+import com.gitee.whzzone.common.group.CreateGroup;
+import com.gitee.whzzone.common.group.UpdateGroup;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

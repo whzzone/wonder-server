@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.business.controller;
 
-import com.gitee.whzzone.admin.common.base.controller.EntityController;
+import com.gitee.whzzone.common.base.controller.EntityController;
 import com.gitee.whzzone.admin.business.pojo.dto.OrderDto;
 import com.gitee.whzzone.admin.business.entity.Order;
 import com.gitee.whzzone.admin.business.pojo.query.OrderQuery;

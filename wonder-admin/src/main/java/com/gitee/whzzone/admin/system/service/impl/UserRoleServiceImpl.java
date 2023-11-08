@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
+import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.system.mapper.UserRoleMapper;
 import com.gitee.whzzone.admin.system.pojo.dto.UserRoleDto;
 import com.gitee.whzzone.admin.system.entity.UserRole;

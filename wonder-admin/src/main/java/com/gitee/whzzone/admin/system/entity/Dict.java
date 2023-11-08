@@ -2,7 +2,7 @@ package com.gitee.whzzone.admin.system.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -18,7 +18,7 @@ import lombok.ToString;
 @ToString
 @TableName("sys_dict")
 @ApiModel(value = "Dict对象", description = "系统字典")
-public class Dict extends BaseEntity<Dict> {
+public class Dict extends BaseEntity {
 
     @ApiModelProperty("字典名称")
     @TableField("dict_name")

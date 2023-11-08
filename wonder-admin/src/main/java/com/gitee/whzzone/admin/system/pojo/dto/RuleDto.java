@@ -1,10 +1,10 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gitee.whzzone.admin.common.base.pojo.dto.EntityDto;
-import com.gitee.whzzone.admin.common.serializer.LongSerializer;
-import com.gitee.whzzone.admin.common.validation.group.CreateGroup;
-import com.gitee.whzzone.admin.common.validation.group.UpdateGroup;
+import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
+import com.gitee.whzzone.common.serializer.LongSerializer;
+import com.gitee.whzzone.common.group.CreateGroup;
+import com.gitee.whzzone.common.group.UpdateGroup;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -47,8 +47,8 @@ public class RuleDto extends EntityDto {
     @ApiModelProperty("值1")
     private String value1;
 
-    @ApiModelProperty("值2")
-    private String value2;
+/*    @ApiModelProperty("值2")
+    private String value2;*/
 
     @ApiModelProperty("全限定类名")
     private String className;
@@ -64,4 +64,7 @@ public class RuleDto extends EntityDto {
 
     @ApiModelProperty("参数")
     private List<ParamDto> paramList;
+
+    @ApiModelProperty("方法执行返回结果")
+    private Object result;
 }

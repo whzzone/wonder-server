@@ -7,7 +7,7 @@ import ${pkg};
 </#list>
 <#if swagger>
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+<#--import io.swagger.annotations.ApiModelProperty;-->
 </#if>
 <#if entityLombokModel>
 import lombok.Getter;

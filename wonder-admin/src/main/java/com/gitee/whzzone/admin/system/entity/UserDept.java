@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
 import lombok.Data;
 
 /**
@@ -10,7 +10,7 @@ import lombok.Data;
 
 @Data
 @TableName("sys_user_dept")
-public class UserDept extends BaseEntity<UserDept> {
+public class UserDept extends BaseEntity {
 
     private Long userId;
 

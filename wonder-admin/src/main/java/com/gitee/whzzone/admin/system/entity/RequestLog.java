@@ -2,7 +2,7 @@ package com.gitee.whzzone.admin.system.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -18,7 +18,7 @@ import lombok.ToString;
 @ToString
 @TableName("sys_request_log")
 @ApiModel(value = "RequestLog对象", description = "请求日志")
-public class RequestLog extends BaseEntity<RequestLog> {
+public class RequestLog extends BaseEntity {
 
     @ApiModelProperty("响应码")
     @TableField("`code`")

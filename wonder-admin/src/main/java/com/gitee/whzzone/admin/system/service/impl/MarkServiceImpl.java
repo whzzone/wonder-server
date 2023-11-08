@@ -1,12 +1,13 @@
 package com.gitee.whzzone.admin.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gitee.whzzone.admin.common.PageData;
-import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
+import com.gitee.whzzone.common.PageData;
+import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.system.entity.Mark;
 import com.gitee.whzzone.admin.system.entity.RoleMark;
 import com.gitee.whzzone.admin.system.entity.Rule;
@@ -21,7 +22,6 @@ import com.gitee.whzzone.admin.system.service.RoleService;
 import com.gitee.whzzone.admin.system.service.RuleService;
 import com.gitee.whzzone.admin.util.SecurityUtil;
 import com.gitee.whzzone.common.enums.ProvideTypeEnum;
-import com.gitee.whzzone.common.exception.NoDataException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -29,7 +29,9 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Create by whz at 2023/7/13
@@ -51,7 +53,7 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDto
     private RoleService roleService;
 
     @Override
-    public Rule getByName(String name) {
+    public List<Rule> getByName(String name) {
         LambdaQueryWrapper<Mark> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Mark::getName, name);
         Mark mark = getOne(queryWrapper);
@@ -63,104 +65,105 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDto
             throw new RuntimeException("角色不存在");
 
         // 角色 与 标记 的关联
-        RoleMark roleMark = roleMarkService.getByRoleIdAndMarkId(roleId, mark.getId());
-        if (roleMark == null)
-            throw new NoDataException("角色 与 标记 的关联为空，无访问权限");
+        List<RoleMark> roleMarkList = roleMarkService.getByRoleIdAndMarkId(roleId, mark.getId());
+        if (CollectionUtil.isEmpty(roleMarkList))
+            return null;
 
-        Rule rule = ruleService.getById(roleMark.getRuleId());
-        if (rule == null)
-            throw new RuntimeException("不存在具体配置, Rule 为空");
+        List<Long> ruleIds = roleMarkList.stream().map(RoleMark::getRuleId).collect(Collectors.toList());
 
-        return rule;
+        return ruleService.getByIds(ruleIds);
     }
 
-    @Override
-    public DataScopeInfo execRuleByEntity(Rule entity) {
-        return execRuleHandler(entity);
-    }
+    private DataScopeInfo execRuleHandler(List<Rule> rules) {
+        if (CollectionUtil.isEmpty(rules))
+            return null;
 
-    private DataScopeInfo execRuleHandler(Rule rule) {
-        if (rule == null)
-            throw new RuntimeException("数据规则不存在");
-        RuleDto dto = new RuleDto();
-        BeanUtil.copyProperties(rule, dto);
-        DataScopeInfo info = new DataScopeInfo();
-        info.setDto(dto);
+        List<RuleDto> ruleList = new ArrayList<>();
 
-        if (rule.getProvideType().equals(ProvideTypeEnum.VALUE.getCode())) {
-            info.setDto(dto);
-            return info;
-        } else if (rule.getProvideType().equals(ProvideTypeEnum.METHOD.getCode())) {
-            try {
-                Class<?>[] paramsTypes = null;
-                Object[] argValues = null;
+        for (Rule rule : rules) {
+            RuleDto dto = new RuleDto();
+            BeanUtil.copyProperties(rule, dto);
 
-                if (StrUtil.isNotBlank(rule.getFormalParam()) && StrUtil.isNotBlank(rule.getActualParam())) {
-                    // 获取形参数组
-                    String[] formalArray = rule.getFormalParam().split(";");
-                    // 获取实参数组
-                    String[] actualArray = rule.getActualParam().split(";");
+            if (rule.getProvideType().equals(ProvideTypeEnum.VALUE.getCode())) {
+                ruleList.add(dto);
 
-                    if (formalArray.length != actualArray.length)
-                        throw new RuntimeException("形参数量与实参数量不符合");
+            } else if (rule.getProvideType().equals(ProvideTypeEnum.METHOD.getCode())) {
+                try {
+                    Class<?>[] paramsTypes = null;
+                    Object[] argValues = null;
 
-                    // 转换形参为Class数组
-                    paramsTypes = new Class<?>[formalArray.length];
-                    for (int i = 0; i < formalArray.length; i++) {
-                        paramsTypes[i] = Class.forName(formalArray[i].trim());
+                    if (StrUtil.isNotBlank(rule.getFormalParam()) && StrUtil.isNotBlank(rule.getActualParam())) {
+                        // 获取形参数组
+                        String[] formalArray = rule.getFormalParam().split(";");
+                        // 获取实参数组
+                        String[] actualArray = rule.getActualParam().split(";");
+
+                        if (formalArray.length != actualArray.length)
+                            throw new RuntimeException("形参数量与实参数量不符合");
+
+                        // 转换形参为Class数组
+                        paramsTypes = new Class<?>[formalArray.length];
+                        for (int i = 0; i < formalArray.length; i++) {
+                            paramsTypes[i] = Class.forName(formalArray[i].trim());
+                        }
+
+                        // 转换实参为Object数组
+                        argValues = new Object[actualArray.length];
+                        for (int i = 0; i < actualArray.length; i++) {
+                            argValues[i] = JSONObject.parseObject(actualArray[i], paramsTypes[i]);
+                        }
                     }
 
-                    // 转换实参为Object数组
-                    argValues = new Object[actualArray.length];
-                    for (int i = 0; i < actualArray.length; i++) {
-                        argValues[i] = JSONObject.parseObject(actualArray[i], paramsTypes[i]);
+                    Class<?> clazz = Class.forName(rule.getClassName());
+                    Object result;
+
+                    Method targetMethod = clazz.getDeclaredMethod(rule.getMethodName(), paramsTypes);
+                    if (Modifier.isStatic(targetMethod.getModifiers())) {
+                        // 设置静态方法可访问
+                        targetMethod.setAccessible(true);
+                        // 执行静态方法
+                        result = targetMethod.invoke(null, argValues);
+                    } else {
+                        try {
+                            // 尝试从容器中获取实例
+                            Object instance = context.getBean(Class.forName(rule.getClassName()));
+                            Class<?> beanClazz = instance.getClass();
+                            Method beanClazzMethod = beanClazz.getDeclaredMethod(rule.getMethodName(), paramsTypes);
+
+                            // 执行方法
+                            result = beanClazzMethod.invoke(instance, argValues);
+
+                        } catch (NoSuchBeanDefinitionException e) {
+                            // 创建类实例
+                            Object obj = clazz.newInstance();
+                            // 执行方法
+                            result = targetMethod.invoke(obj, argValues);
+                        }
                     }
+
+                    dto.setResult(result);
+                    ruleList.add(dto);
+
+                } catch (NoSuchMethodException e) {
+                    throw new RuntimeException("配置了不存在的方法");
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException("配置了不存在的类");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("其他错误：" + e.getMessage());
                 }
 
-                Class<?> clazz = Class.forName(rule.getClassName());
-
-                Method targetMethod = clazz.getDeclaredMethod(rule.getMethodName(), paramsTypes);
-                if (Modifier.isStatic(targetMethod.getModifiers())) {
-                    // 设置静态方法可访问
-                    targetMethod.setAccessible(true);
-                    // 执行静态方法
-                    info.setIdList((List<Long>) targetMethod.invoke(null, argValues));
-                    return info;
-                } else {
-                    try {
-                        // 尝试从容器中获取实例
-                        Object instance = context.getBean(Class.forName(rule.getClassName()));
-                        Class<?> beanClazz = instance.getClass();
-                        Method beanClazzMethod = beanClazz.getDeclaredMethod(rule.getMethodName(), paramsTypes);
-
-                        // 执行方法
-                        info.setIdList((List<Long>) beanClazzMethod.invoke(instance, argValues)); // TODO (List<Long>) 这了如果封装成一个类可能更灵活：包含了各种信息在里面
-                        return info;
-                    }catch (NoSuchBeanDefinitionException e){
-
-                        // 创建类实例
-                        Object obj = clazz.newInstance();
-                        // 执行方法
-                        info.setIdList((List<Long>) targetMethod.invoke(obj, argValues));
-                        return info;
-                    }
-                }
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException("配置了不存在的方法");
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException("配置了不存在的类");
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException("其他错误：" + e.getMessage());
-            }
-
-        } else throw new RuntimeException("错误的提供类型");
+            } else
+                throw new RuntimeException("错误的提供类型");
+        }
+        DataScopeInfo dataScopeInfo = new DataScopeInfo();
+        dataScopeInfo.setRuleList(ruleList);
+        return dataScopeInfo;
     }
 
     @Override
     public DataScopeInfo execRuleByName(String name) {
-        Rule rule = getByName(name);
-        return execRuleHandler(rule);
+        return execRuleHandler(getByName(name));
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.gitee.whzzone.admin.common.base.service.impl.EntityServiceImpl;
+import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.system.mapper.RoleMarkMapper;
 import com.gitee.whzzone.admin.system.pojo.dto.RoleMarkDto;
 import com.gitee.whzzone.admin.system.entity.RoleMark;
@@ -25,10 +25,10 @@ public class RoleMarkServiceImpl extends EntityServiceImpl<RoleMarkMapper, RoleM
     }
 
     @Override
-    public RoleMark getByRoleIdAndMarkId(Long roleId, Long markId) {
+    public List<RoleMark> getByRoleIdAndMarkId(Long roleId, Long markId) {
         LambdaQueryWrapper<RoleMark> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(RoleMark::getRoleId, roleId);
         queryWrapper.eq(RoleMark::getMarkId, markId);
-        return getOne(queryWrapper);
+        return list(queryWrapper);
     }
 }

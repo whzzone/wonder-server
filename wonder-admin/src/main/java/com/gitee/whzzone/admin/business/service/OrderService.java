@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.business.service;
 
-import com.gitee.whzzone.admin.common.base.service.EntityService;
+import com.gitee.whzzone.common.base.service.EntityService;
 import com.gitee.whzzone.admin.business.pojo.dto.OrderDto;
 import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
 import com.gitee.whzzone.admin.business.entity.Order;
