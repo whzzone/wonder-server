@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.gitee.whzzone.common.PageData;
 import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
 import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
-import com.gitee.whzzone.common.base.pojo.quey.EntityQuery;
+import com.gitee.whzzone.common.base.pojo.query.EntityQuery;
 import com.gitee.whzzone.common.base.queryhandler.BaseQueryHandler;
 
 import java.io.Serializable;
@@ -21,7 +21,7 @@ public interface EntityService<T extends BaseEntity, D extends EntityDto, Q exte
 
     T save(D d);
 
-    boolean updateById(D d);
+    T updateById(D d);
 
     @Override
     T getById(Serializable id);
@@ -52,7 +52,7 @@ public interface EntityService<T extends BaseEntity, D extends EntityDto, Q exte
 
     boolean isExist(Long id);
 
-    D beforeSaveOrUpdateHandler(D d);
+    D beforeSaveOrUpdateHandler(D dto);
 
     D beforeSaveHandler(D d);
 

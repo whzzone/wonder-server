@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.pojo.query;
 
-import com.gitee.whzzone.common.base.pojo.quey.EntityQuery;
+import com.gitee.whzzone.common.base.pojo.query.EntityQuery;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 

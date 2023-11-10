@@ -1,4 +1,4 @@
-package com.gitee.whzzone.common.base.pojo.quey;
+package com.gitee.whzzone.common.base.pojo.query;
 
 import com.gitee.whzzone.common.base.pojo.sort.Sort;
 import com.gitee.whzzone.web.QueryPage;

@@ -16,7 +16,7 @@ import com.gitee.whzzone.common.annotation.SelectColumn;
 import com.gitee.whzzone.common.annotation.UpdateField;
 import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
 import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
-import com.gitee.whzzone.common.base.pojo.quey.EntityQuery;
+import com.gitee.whzzone.common.base.pojo.query.EntityQuery;
 import com.gitee.whzzone.common.base.pojo.sort.Sort;
 import com.gitee.whzzone.common.base.queryhandler.BaseQueryHandler;
 import com.gitee.whzzone.common.base.service.EntityService;
@@ -62,7 +62,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateById(D d) {
+    public T updateById(D d) {
         try {
             d = beforeSaveOrUpdateHandler(d);
             d = beforeUpdateHandler(d);
@@ -71,7 +71,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             Class<? super D> superclass = dClass.getSuperclass();
             Field fieldId = superclass.getDeclaredField("id");
             fieldId.setAccessible(true);
-            Integer id = (Integer) fieldId.get(d);
+            Long id = (Long) fieldId.get(d);
             T t = getById(id);
             if (t == null) {
                 throw new RuntimeException(StrUtil.format("【{}】不存在", id));
@@ -79,10 +79,10 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
             BeanUtil.copyProperties(d, t, getIgnoreUpdateField(d));
             boolean b = super.updateById(t);
-            if (b) {
-                afterUpdateHandler(t);
+            if (!b) {
+                throw new RuntimeException("操作失败");
             }
-            return b;
+            return afterUpdateHandler(t);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
@@ -252,8 +252,8 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     }
 
     @Override
-    public D beforeSaveOrUpdateHandler(D d) {
-        return d;
+    public D beforeSaveOrUpdateHandler(D dto) {
+        return dto;
     }
 
     @Override

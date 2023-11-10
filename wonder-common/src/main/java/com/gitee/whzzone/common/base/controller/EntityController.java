@@ -4,7 +4,7 @@ import com.gitee.whzzone.common.PageData;
 import com.gitee.whzzone.common.annotation.RequestLogger;
 import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
 import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
-import com.gitee.whzzone.common.base.pojo.quey.EntityQuery;
+import com.gitee.whzzone.common.base.pojo.query.EntityQuery;
 import com.gitee.whzzone.common.base.service.EntityService;
 import com.gitee.whzzone.common.group.CreateGroup;
 import com.gitee.whzzone.common.group.UpdateGroup;
@@ -53,7 +53,7 @@ public abstract class EntityController<T extends BaseEntity, S extends EntitySer
     @RequestLogger
     @ApiOperation("更新")
     @PostMapping("update")
-    public Result<Boolean> update(@Validated(UpdateGroup.class) @RequestBody D d){
+    public Result<T> update(@Validated(UpdateGroup.class) @RequestBody D d){
         return Result.ok("操作成功", service.updateById(d));
     }
 

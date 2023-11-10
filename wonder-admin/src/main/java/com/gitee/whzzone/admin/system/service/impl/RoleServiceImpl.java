@@ -85,7 +85,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
 
     @Transactional
     @Override
-    public boolean updateById(RoleDto dto) {
+    public Role updateById(RoleDto dto) {
         Role entity = getById(dto.getId());
         Assert.notNull(entity, "{} 不存在", dto.getName());
 
@@ -95,7 +95,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
         // 添加角色与权限的关联
         roleMenuService.addRelation(entity.getId(), dto.getMenuIds());
 
-        return true;
+        return entity;
     }
 
     @Override

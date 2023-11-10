@@ -57,13 +57,12 @@ public class DeptServiceImpl extends EntityServiceImpl<DeptMapper, Dept, DeptDto
         return super.save(dto);
     }
 
-    @Transactional
     @Override
-    public boolean updateById(DeptDto dto) {
+    public DeptDto beforeSaveOrUpdateHandler(DeptDto dto) {
         if (dto.getParentId() != null && !dto.getParentId().equals(0L) && !isExist(dto.getParentId())) {
             throw new RuntimeException("父级不存在");
         }
-        return super.updateById(dto);
+        return dto;
     }
 
     @Override
