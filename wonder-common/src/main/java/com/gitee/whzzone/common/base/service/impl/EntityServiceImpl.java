@@ -479,18 +479,22 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
             Field field1 = itemFieldList[0];
             Field field2 = itemFieldList[1];
-            // 判断是否都是 Date 类型且值相等
-            if (field1.get(q) instanceof Date && field2.get(q) instanceof Date
-                    && field1.get(q).equals(field2.get(q))) {
-                queryWrapper.apply("DATE(" + columnName + ") = DATE({0})", field1.get(q));
-                continue;
-            }
 
-            //  filed1、filed1需为实现了Comparable接口的类型
-            if (ThenerUtil.compareFields(field1, field2, q)) {//filed1 > filed2
-                queryWrapper.between(columnName, field1.get(q), field2.get(q));
+            if (field1.get(q) instanceof Date) {
+                if (ThenerUtil.compareFields(field1, field2, q)) {
+                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%d') >= date_format({0},'%y%m%d')", field1.get(q));
+                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%d') <= date_format({0},'%y%m%d')", field2.get(q));
+                } else {
+                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%d') <= date_format({0},'%y%m%d')", field1.get(q));
+                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%d') >= date_format({0},'%y%m%d')", field2.get(q));
+                }
             } else {
-                queryWrapper.between(columnName, field2.get(q), field1.get(q));
+                //其他类型，数字、字符等等实现了Comparable接口的类型
+                if (!ThenerUtil.compareFields(field1, field2, q)) {
+                    queryWrapper.between(columnName, field1.get(q), field2.get(q));
+                } else {
+                    queryWrapper.between(columnName, field2.get(q), field1.get(q));
+                }
             }
 
         }
