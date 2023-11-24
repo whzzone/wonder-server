@@ -480,11 +480,11 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
             if (field1.get(query) instanceof Date) {
                 if (ThenerUtil.compareFields(field1, field2, query)) {
-                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%dto') >= date_format({0},'%y%m%dto')", field1.get(query));
-                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%dto') <= date_format({0},'%y%m%dto')", field2.get(query));
+                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%d') >= date_format({0},'%y%m%d')", field1.get(query));
+                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%d') <= date_format({0},'%y%m%d')", field2.get(query));
                 } else {
-                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%dto') <= date_format({0},'%y%m%dto')", field1.get(query));
-                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%dto') >= date_format({0},'%y%m%dto')", field2.get(query));
+                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%d') <= date_format({0},'%y%m%d')", field1.get(query));
+                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%d') >= date_format({0},'%y%m%d')", field2.get(query));
                 }
             } else {
                 //其他类型，数字、字符等等实现了Comparable接口的类型
