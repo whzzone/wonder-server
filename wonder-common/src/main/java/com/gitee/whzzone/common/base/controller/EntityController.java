@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 /**
+ * 基础的控制器
  * @author Create by whz at 2023/7/8
  */
-
 public abstract class EntityController<T extends BaseEntity, S extends EntityService<T, D, Q>, D extends EntityDto, Q extends EntityQuery> {
 
     @Autowired
@@ -32,8 +32,8 @@ public abstract class EntityController<T extends BaseEntity, S extends EntitySer
     @ApiOperation("获取")
     @GetMapping("/get/{id}")
     public Result<D> get(@PathVariable Long id){
-        T t = service.getById(id);
-        return Result.ok("操作成功", service.afterQueryHandler(t));
+        T entity = service.getById(id);
+        return Result.ok("操作成功", service.afterQueryHandler(entity));
     }
 
     @RequestLogger
@@ -46,29 +46,29 @@ public abstract class EntityController<T extends BaseEntity, S extends EntitySer
     @RequestLogger
     @ApiOperation("保存")
     @PostMapping("save")
-    public Result<T> save(@Validated(CreateGroup.class) @RequestBody D d){
-        return Result.ok("操作成功", service.save(d));
+    public Result<T> save(@Validated(CreateGroup.class) @RequestBody D dto){
+        return Result.ok("操作成功", service.save(dto));
     }
 
     @RequestLogger
     @ApiOperation("更新")
     @PostMapping("update")
-    public Result<T> update(@Validated(UpdateGroup.class) @RequestBody D d){
-        return Result.ok("操作成功", service.updateById(d));
+    public Result<T> update(@Validated(UpdateGroup.class) @RequestBody D dto){
+        return Result.ok("操作成功", service.updateById(dto));
     }
 
     @RequestLogger
     @ApiOperation("分页")
     @PostMapping("page")
-    public Result<PageData<D>> page(@RequestBody Q q){
-        return Result.ok("操作成功", service.page(q));
+    public Result<PageData<D>> page(@RequestBody Q query){
+        return Result.ok("操作成功", service.page(query));
     }
 
     @RequestLogger
     @ApiOperation("列表")
     @PostMapping("list")
-    public Result<List<D>> list(@RequestBody Q q){
-        return Result.ok("操作成功", service.list(q));
+    public Result<List<D>> list(@RequestBody Q query){
+        return Result.ok("操作成功", service.list(query));
     }
 
 }

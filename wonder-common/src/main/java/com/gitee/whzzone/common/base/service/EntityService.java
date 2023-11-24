@@ -13,64 +13,172 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * 基础的服务接口
  * @author : whz
  * @date : 2023/5/22 16:27
  */
-
 public interface EntityService<T extends BaseEntity, D extends EntityDto, Q extends EntityQuery> extends IService<T> {
 
-    T save(D d);
+    /**
+     * 插入
+     * @param dto
+     */
+    T save(D dto);
 
-    T updateById(D d);
+    /**
+     * 更新
+     * @param dto
+     */
+    T updateById(D dto);
 
+    /**
+     * 根据ID查询
+     * @param id 主键ID
+     */
     @Override
     T getById(Serializable id);
 
+    /**
+     * 根据实体ID删除
+     * @param entity 实体
+     */
     @Override
     boolean removeById(T entity);
 
+    /**
+     * 根据ID删除
+     * @param id 主键ID
+     */
     @Override
     boolean removeById(Serializable id);
 
-    T afterSaveHandler(T t);
+    /**
+     * 插入后置方法
+     * @param entity 实体
+     */
+    T afterSaveHandler(T entity);
 
-    T afterUpdateHandler(T t);
+    /**
+     * 更新后置方法
+     * @param entity 实体
+     */
+    T afterUpdateHandler(T entity);
 
-    D afterQueryHandler(T t);
+    /**
+     * 查询后置方法
+     * @param entity 实体
+     */
+    D afterQueryHandler(T entity);
 
-    D afterQueryHandler(T t, BaseQueryHandler<T, D> queryHandler);
+    /**
+     * 查询后置方法
+     * @param entity 实体
+     * @param queryHandler 处理器
+     */
+    D afterQueryHandler(T entity, BaseQueryHandler<T, D> queryHandler);
 
-    D afterQueryHandler(T t, Class<? extends BaseQueryHandler<T, D>> queryHandlerClass);
+    /**
+     * 查询后置方法
+     * @param entity 实体
+     * @param queryHandlerClass 处理器类
+     */
+    D afterQueryHandler(T entity, Class<? extends BaseQueryHandler<T, D>> queryHandlerClass);
 
+    /**
+     * 实体list查询后置方法
+     * @param list 实体list
+     */
     List<D> afterQueryHandler(List<T> list);
 
+    /**
+     * 实体list查询后置方法
+     * @param list 实体list
+     * @param queryHandler 处理器
+     */
     List<D> afterQueryHandler(List<T> list, BaseQueryHandler<T, D> queryHandler);
 
+    /**
+     * 实体list查询后置方法
+     * @param list 实体list
+     * @param queryHandlerClass 处理器类
+     */
     List<D> afterQueryHandler(List<T> list, Class<? extends BaseQueryHandler<T, D>> queryHandlerClass);
 
-    void afterDeleteHandler(T t);
+    /**
+     * 删除后置方法
+     * @param entity 被删除的实体
+     */
+    void afterDeleteHandler(T entity);
 
+    /**
+     * 是否存在ID记录
+     * @param id 主键ID
+     */
     boolean isExist(Long id);
 
+    /**
+     * 插入、更新前置方法，优先级大于beforeSaveHandler和beforeUpdateHandler
+     * @param dto
+     */
     D beforeSaveOrUpdateHandler(D dto);
 
-    D beforeSaveHandler(D d);
+    /**
+     * 插入前置方法
+     * @param dto
+     */
+    D beforeSaveHandler(D dto);
 
-    D beforeUpdateHandler(D d);
+    /**
+     * 更新前置方法
+     * @param dto
+     */
+    D beforeUpdateHandler(D dto);
 
-    PageData<D> page(Q q);
+    /**
+     * 分页查询
+     * @param query 查询参数
+     */
+    PageData<D> page(Q query);
 
-    PageData<D> page(Q q, BaseQueryHandler<T, D> queryHandler);
+    /**
+     * 分页查询
+     * @param query 查询参数
+     * @param queryHandler 查询后置处理器
+     */
+    PageData<D> page(Q query, BaseQueryHandler<T, D> queryHandler);
 
-    PageData<D> page(Q q, Class<? extends BaseQueryHandler<T, D>> queryHandlerClass);
+    /**
+     * 分页查询
+     * @param query 分页参数
+     * @param queryHandlerClass 查询后置处理器类
+     */
+    PageData<D> page(Q query, Class<? extends BaseQueryHandler<T, D>> queryHandlerClass);
 
-    List<D> list(Q q);
+    /**
+     * 列表查询
+     * @param query 查询参数
+     */
+    List<D> list(Q query);
 
-    List<D> list(Q q, BaseQueryHandler<T, D> queryHandler);
+    /**
+     * 列表查询
+     * @param query 查询参数
+     * @param queryHandler 查询后置处理器
+     */
+    List<D> list(Q query, BaseQueryHandler<T, D> queryHandler);
 
-    List<D> list(Q q, Class<? extends BaseQueryHandler<T, D>> queryHandlerClass);
+    /**
+     * 列表查询
+     * @param query 查询参数
+     * @param queryHandlerClass 查询后置处理器类
+     */
+    List<D> list(Q query, Class<? extends BaseQueryHandler<T, D>> queryHandlerClass);
 
-    QueryWrapper<T> handleQueryWrapper(Q q);
+    /**
+     * 根据查询参数返回QueryWrapper
+     * @param query 查询参数
+     */
+    QueryWrapper<T> handleQueryWrapper(Q query);
 
     default Class<T> getTClass() {
         return (Class<T>) ReflectionKit.getSuperClassGenericType(this.getClass(), EntityService.class, 0);
