@@ -90,9 +90,9 @@
     |    | number;color | AND;OR             | 100;黑色 | GE;EQ      |        |
     
     这条记录代表着需要拼接SQL语句：xxx AND number >= 100 OR color = '黑色' 
-2. [ ] 系统字典
+2. [x] 系统字典
 3. [x] 系统日志
-4. [ ] 接口访问频率限制
+4. [x] 接口访问频率限制
 
 ---
 
@@ -102,15 +102,15 @@
 3. [ ] 新增菜单是`按钮`时，后端在处理时设置`inFrame = true`，因为按钮也可以表示打开一个新的tab页，（是不是一定是框架内打开，待考虑）
 4. [x] 代码生成，包括`controller`、`service`、`mapper`...
 5. [x] `EntityQuery`查询时，怎么知道某个字段的匹配方法是什么？ eq? like? ne? 方案1：自定义注解@Equal、@Like、@In，然后反射读取做对应处理
-6. [ ] 分页，列表查询，除了`EntityQuery`，还有另外一种方案：通过自定义注解`@Query`标记`Dto`对象中可以查询的字段，`page`接口、`list`接口读取这个注解就可以了
+6. [x] 分页，列表查询，除了`EntityQuery`，还有另外一种方案：通过自定义注解`@Query`标记`Dto`对象中可以查询的字段，`page`接口、`list`接口读取这个注解就可以了
 7. [ ] `between`的值可以用特定符号分开 1,9。in同理
 8. [x] 对于使用了`@Query`直接且`expression`为`BETWEEN`时的由运行时校验改成编译时校验，可提高执行速度。目前时运行时校验，其实只要在编译时校验一次够了。
     ```java
-    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN, left = true)
+    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN)
     @ApiModelProperty("开始时间")
-    private Date startTime;
+    private Date startDate;
 
-    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN, left = false)
+    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN)
     @ApiModelProperty("结束时间")
-    private Date endTime;
+    private Date endDate;
     ```
