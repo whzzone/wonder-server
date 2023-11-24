@@ -2,6 +2,12 @@
 
 ### admin/123456
 
+> 启动报错：java: 服务配置文件不正确, 或构造处理程序对象javax.annotation.processing.Processor: Provider com.gitee.whzzone.processor.QueryProcessor not found时抛出异常错误
+>
+> 解决办法：在wonder-server模块依次执行mvn clean、mvn install即可
+> 
+> 对wonder-processor代码修改后都要执行以上方法
+
 #### 前端 https://gitee.com/whzzone/wonder-web
 
 #### 后端 https://gitee.com/whzzone/wonder-server
