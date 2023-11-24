@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -442,7 +443,8 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
                         break;
                 }
             }
-            handleBetween(queryWrapper,betweenFieldMap,q);
+
+            handleBetween(queryWrapper, betweenFieldMap, q);
 
             return queryWrapper;
         } catch (Exception e) {
@@ -468,34 +470,29 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
     private void handleBetween(QueryWrapper<T> queryWrapper, Map<String, Field[]> betweenFieldMap, Q q) throws IllegalAccessException {
         Set<String> keySet = betweenFieldMap.keySet();
-        for (String columnName  : keySet) {
+        for (String columnName : keySet) {
             // 已在编译时做了相关校验，在此无须做重复且耗时的校验
-            Field[] itemFieldList = betweenFieldMap.get(columnName );
+            Field[] itemFieldList = betweenFieldMap.get(columnName);
             if (itemFieldList.length != 2) {
                 throw new IllegalArgumentException("查询参数数量对应异常");
             }
 
             Field field1 = itemFieldList[0];
             Field field2 = itemFieldList[1];
-
-
-            //日期类型
-            if (field1.get(q) instanceof Date) {
-                //field1 < field2
-                if (ThenerUtil.compareFields(field1, field2, q)){
-                    queryWrapper.apply("date_format(" + columnName  + ",'%y%m%d') >= date_format({0},'%y%m%d')", field1.get(q));
-                    queryWrapper.apply("date_format(" + columnName  + ",'%y%m%d') <= date_format({0},'%y%m%d')", field2.get(q));
-                }else {
-                    queryWrapper.apply("date_format(" + columnName  + ",'%y%m%d') <= date_format({0},'%y%m%d')", field1.get(q));
-                    queryWrapper.apply("date_format(" + columnName  + ",'%y%m%d') >= date_format({0},'%y%m%d')", field2.get(q));
-                }
-            } else {//其他类型，数字、字符等等实现了Comparable接口的类型
-                if (!ThenerUtil.compareFields(field1, field2, q)){
-                    queryWrapper.between(columnName ,field1.get(q),field2.get(q));
-                }else {
-                    queryWrapper.between(columnName ,field2.get(q),field1.get(q));
-                }
+            // 判断是否都是 Date 类型且值相等
+            if (field1.get(q) instanceof Date && field2.get(q) instanceof Date
+                    && field1.get(q).equals(field2.get(q))) {
+                queryWrapper.apply("DATE(" + columnName + ") = DATE({0})", field1.get(q));
+                continue;
             }
+
+            //  filed1、filed1需为实现了Comparable接口的类型
+            if (ThenerUtil.compareFields(field1, field2, q)) {//filed1 > filed2
+                queryWrapper.between(columnName, field1.get(q), field2.get(q));
+            } else {
+                queryWrapper.between(columnName, field2.get(q), field1.get(q));
+            }
+
         }
     }
 

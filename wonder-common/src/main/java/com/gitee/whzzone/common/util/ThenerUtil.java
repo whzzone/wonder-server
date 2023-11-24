@@ -12,7 +12,8 @@ public class ThenerUtil {
             return false;
         }
 
-        return fieldValue1.compareTo(fieldValue2) > 0;
+        //fieldValue2 > fieldValue1 返回true 反之则反
+        return fieldValue2.compareTo(fieldValue1) > 0;
     }
 
     public static<T extends Comparable<T>> boolean compareFields(Field field1, Field field2, Object obj) {
