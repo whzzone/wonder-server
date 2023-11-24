@@ -192,7 +192,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
 
     @Transactional
     @Override
-    public boolean updateById(UserDto dto) {
+    public User updateById(UserDto dto) {
         User user = getById(dto.getId());
 
         if (user == null)
@@ -205,8 +205,8 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
         userDeptService.addRelation(dto.getId(), dto.getDeptIdList());
 
         BeanUtil.copyProperties(dto, user, "password");
-
-        return updateById(user);
+        updateById(user);
+        return user;
     }
 
     @Transactional

@@ -5,7 +5,7 @@ package ${package.Other}.${entity};
 import ${pkg};
     </#if>
 </#list>
-import com.gitee.whzzone.admin.common.base.pojo.dto.EntityDto;
+import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
 <#if swagger>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

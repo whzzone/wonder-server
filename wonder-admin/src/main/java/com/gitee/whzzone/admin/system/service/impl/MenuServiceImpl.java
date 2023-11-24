@@ -177,10 +177,10 @@ public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto
     }
 
     @Override
-    public boolean updateById(MenuDto dto) {
+    public MenuDto beforeSaveOrUpdateHandler(MenuDto dto) {
         if (dto.getParentId() == null){
             dto.setParentId(0L);
         }
-        return super.updateById(dto);
+        return dto;
     }
 }

@@ -19,10 +19,8 @@ public @interface Query {
     String column() default "";
 
     /**
-     * 匹配方式，默认为等于
+     * 匹配方式，默认为精确查询查询 {@link ExpressionEnum}
      */
     ExpressionEnum expression() default ExpressionEnum.EQ;
-
-    boolean left() default true;
 
 }

@@ -1,10 +1,8 @@
 package com.gitee.whzzone.admin.system.pojo.query;
 
-import com.gitee.whzzone.common.base.pojo.quey.EntityQuery;
 import com.gitee.whzzone.common.annotation.Query;
-import com.gitee.whzzone.common.annotation.QueryOrder;
-import com.gitee.whzzone.common.annotation.QuerySort;
 import com.gitee.whzzone.common.annotation.SelectColumn;
+import com.gitee.whzzone.common.base.pojo.query.EntityQuery;
 import com.gitee.whzzone.common.enums.ExpressionEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -41,20 +39,12 @@ public class RequestLogQuery extends EntityQuery {
     @ApiModelProperty("请求类型")
     private String type;
 
-    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN, left = true)
+    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN)
     @ApiModelProperty("开始时间")
     private Date startTime;
 
-    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN, left = false)
+    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN)
     @ApiModelProperty("结束时间")
     private Date endTime;
-
-    @QuerySort
-    @ApiModelProperty("排序字段")
-    private String sortColumn;
-
-    @QueryOrder
-    @ApiModelProperty("排序方式-asc/desc")
-    private String sortOrder;
 
 }

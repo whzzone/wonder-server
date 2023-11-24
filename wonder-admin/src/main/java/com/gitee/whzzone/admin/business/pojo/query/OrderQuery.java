@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.business.pojo.query;
 
 import com.gitee.whzzone.common.annotation.Query;
-import com.gitee.whzzone.common.base.pojo.quey.EntityQuery;
+import com.gitee.whzzone.common.base.pojo.query.EntityQuery;
 import com.gitee.whzzone.common.enums.ExpressionEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -30,12 +30,12 @@ public class OrderQuery extends EntityQuery {
     @ApiModelProperty("订单状态：0-待付款，1-已取消，2-已付款，3-已完成")
     private Integer orderStatus;
 
-    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN, left = true)
-    @ApiModelProperty("开始时间")
-    private Date startTime;
+    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN)
+    @ApiModelProperty("开始日期")
+    private Date startDate;
 
-    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN, left = false)
-    @ApiModelProperty("结束时间")
-    private Date endTime;
+    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN)
+    @ApiModelProperty("结束日期")
+    private Date endDate;
 
 }

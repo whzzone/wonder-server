@@ -8,6 +8,7 @@ import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
@@ -52,21 +53,22 @@ public class QueryProcessor extends AbstractProcessor {
                 }
 
                 String className = ((TypeElement) fieldElement.getEnclosingElement()).getQualifiedName().toString();
+                //TODO 20231122 待处理BETWEEN的类型 Integer 和 Date 不能比较
+                TypeMirror type = fieldElement.asType();
+                messager.printMessage(Diagnostic.Kind.WARNING, type.toString());
+
                 String key = className + "#" + column;
                 if (isBetween && columnCountMap.containsKey(key)) {
                     int count = columnCountMap.get(key) + 1;
                     if (count > 2) {
                         messager.printMessage(Diagnostic.Kind.ERROR,
                                 "@Query注解'expression'为'BETWEEN'时，'column'相同的必须成对使用：" + fieldElement.getSimpleName() + "，未为成对的column：" + column, fieldElement);
-                        continue;
                     } else {
                         columnCountMap.put(key, count);
                     }
                 } else {
                     columnCountMap.put(key, 1);
                 }
-
-                boolean left = queryAnnotation.left();
 
                 // 查找相同column但左右不同的属性
                 boolean foundMatch = false;
@@ -75,8 +77,10 @@ public class QueryProcessor extends AbstractProcessor {
                         continue;
                     }
                     Query otherQueryAnnotation = otherFieldElement.getAnnotation(Query.class);
-                    if (otherQueryAnnotation != null && otherQueryAnnotation.column().equals(column)
-                            && otherQueryAnnotation.expression() == ExpressionEnum.BETWEEN && otherQueryAnnotation.left() != left) {
+                    if (otherQueryAnnotation != null
+                            && otherQueryAnnotation.column().equals(column)
+                            && otherQueryAnnotation.expression() == ExpressionEnum.BETWEEN
+                    ) {
                         foundMatch = true;
                         break;
                     }
@@ -85,7 +89,7 @@ public class QueryProcessor extends AbstractProcessor {
                 // 如果无法找到匹配的属性，则报错
                 if (isBetween && !foundMatch) {
                     messager.printMessage(Diagnostic.Kind.ERROR,
-                            "@Query注解'expression'为'BETWEEN'时，'column'必须成对存在，且'left'不能同时为'FALSE'或'TRUE': " + column, fieldElement);
+                            "@Query注解'expression'为'BETWEEN'时，'column'必须成对存在：" + column, fieldElement);
                 }
             }
         }

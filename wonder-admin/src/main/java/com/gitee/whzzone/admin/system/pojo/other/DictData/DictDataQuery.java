@@ -1,10 +1,9 @@
 package com.gitee.whzzone.admin.system.pojo.other.DictData;
 
-import com.gitee.whzzone.common.base.pojo.quey.EntityQuery;
 import com.gitee.whzzone.common.annotation.Query;
-import com.gitee.whzzone.common.annotation.QueryOrder;
-import com.gitee.whzzone.common.annotation.QuerySort;
 import com.gitee.whzzone.common.annotation.SelectColumn;
+import com.gitee.whzzone.common.base.pojo.query.EntityQuery;
+import com.gitee.whzzone.common.base.pojo.sort.Sort;
 import com.gitee.whzzone.common.enums.ExpressionEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,7 +11,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
 * 系统字典数据
@@ -41,20 +42,15 @@ public class DictDataQuery extends EntityQuery {
     @ApiModelProperty("字典值")
     private String dictValue;
 
-    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN, left = true)
+    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN)
     @ApiModelProperty("开始时间")
     private Date startTime;
 
-    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN, left = false)
+    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN)
     @ApiModelProperty("结束时间")
     private Date endTime;
 
-    @QuerySort("sort")
-    @ApiModelProperty("排序字段")
-    private String sortColumn;
-
-    @QueryOrder("asc")
-    @ApiModelProperty("排序方式，asc/desc")
-    private String sortOrder;
+    @ApiModelProperty("排序")
+    private List<Sort> sorts = Arrays.asList(new Sort("sort", true));
 
 }
