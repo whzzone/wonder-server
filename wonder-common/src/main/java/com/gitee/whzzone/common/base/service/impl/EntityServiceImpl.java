@@ -2,6 +2,7 @@ package com.gitee.whzzone.common.base.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -20,6 +21,7 @@ import com.gitee.whzzone.common.base.pojo.query.EntityQuery;
 import com.gitee.whzzone.common.base.pojo.sort.Sort;
 import com.gitee.whzzone.common.base.queryhandler.BaseQueryHandler;
 import com.gitee.whzzone.common.base.service.EntityService;
+import com.gitee.whzzone.common.util.ThenerUtil;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.*;
 
 /**
@@ -386,7 +389,10 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
                 if (Objects.isNull(value) || String.valueOf(value).equals("null") || value.equals("")) {
                     continue;
                 }
-
+                // 判断属性是否为静态变量
+                if (Modifier.isFinal(field.getModifiers())) {
+                    continue;
+                }
                 // 是否存在注解@Query
                 Query query = field.getDeclaredAnnotation(Query.class);
                 if (query == null) {
@@ -430,48 +436,13 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
                         queryWrapper.isNotNull(columnName);
                         break;
                     case BETWEEN:
-                        if (betweenFieldMap.containsKey(columnName)) {
-                            Field[] f = betweenFieldMap.get(columnName);
-                            Field[] tempList = new Field[2];
-                            tempList[0] = f[0];
-                            tempList[1] = field;
-                            betweenFieldMap.put(columnName, tempList);
-                        } else {
-                            betweenFieldMap.put(columnName, new Field[]{field});
-                        }
+                        betweenFieldMap.putIfAbsent(columnName, new Field[2]);
+                        Field[] tempList = betweenFieldMap.get(columnName);
+                        tempList[tempList[0] == null ? 0 : 1] = field;
                         break;
                 }
             }
-
-            Set<String> keySet = betweenFieldMap.keySet();
-            for (String key : keySet) {
-                // 已在编译时做了相关校验，在此无须做重复且耗时的校验
-                Field[] itemFieldList = betweenFieldMap.get(key);
-                if (itemFieldList.length != 2) {
-                    throw new IllegalArgumentException("查询参数数量对应异常");
-                }
-
-                Field field1 = itemFieldList[0];
-                Field field2 = itemFieldList[1];
-
-                Query query1 = field1.getDeclaredAnnotation(Query.class);
-
-                if (field1.get(q) instanceof Date) {
-                    if (query1.left()) {
-                        queryWrapper.apply("date_format(" + key + ",'%y%m%d') >= date_format({0},'%y%m%d')", field1.get(q));
-                        queryWrapper.apply("date_format(" + key + ",'%y%m%d') <= date_format({0},'%y%m%d')", field2.get(q));
-                    } else {
-                        queryWrapper.apply("date_format(" + key + ",'%y%m%d') <= date_format({0},'%y%m%d')", field1.get(q));
-                        queryWrapper.apply("date_format(" + key + ",'%y%m%d') >= date_format({0},'%y%m%d')", field2.get(q));
-                    }
-                } else {
-                    if (query1.left()) {
-                        queryWrapper.between(key, field1.get(q), field2.get(q));
-                    } else {
-                        queryWrapper.between(key, field2.get(q), field1.get(q));
-                    }
-                }
-            }
+            handleBetween(queryWrapper,betweenFieldMap,q);
 
             return queryWrapper;
         } catch (Exception e) {
@@ -491,6 +462,39 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
                 queryWrapper.orderByAsc(StrUtil.toUnderlineCase(sort.getField()));
             } else {
                 queryWrapper.orderByDesc(StrUtil.toUnderlineCase(sort.getField()));
+            }
+        }
+    }
+
+    private void handleBetween(QueryWrapper<T> queryWrapper, Map<String, Field[]> betweenFieldMap, Q q) throws IllegalAccessException {
+        Set<String> keySet = betweenFieldMap.keySet();
+        for (String columnName  : keySet) {
+            // 已在编译时做了相关校验，在此无须做重复且耗时的校验
+            Field[] itemFieldList = betweenFieldMap.get(columnName );
+            if (itemFieldList.length != 2) {
+                throw new IllegalArgumentException("查询参数数量对应异常");
+            }
+
+            Field field1 = itemFieldList[0];
+            Field field2 = itemFieldList[1];
+
+
+            //日期类型
+            if (field1.get(q) instanceof Date) {
+                //field1 < field2
+                if (ThenerUtil.compareFields(field1, field2, q)){
+                    queryWrapper.apply("date_format(" + columnName  + ",'%y%m%d') >= date_format({0},'%y%m%d')", field1.get(q));
+                    queryWrapper.apply("date_format(" + columnName  + ",'%y%m%d') <= date_format({0},'%y%m%d')", field2.get(q));
+                }else {
+                    queryWrapper.apply("date_format(" + columnName  + ",'%y%m%d') <= date_format({0},'%y%m%d')", field1.get(q));
+                    queryWrapper.apply("date_format(" + columnName  + ",'%y%m%d') >= date_format({0},'%y%m%d')", field2.get(q));
+                }
+            } else {//其他类型，数字、字符等等实现了Comparable接口的类型
+                if (!ThenerUtil.compareFields(field1, field2, q)){
+                    queryWrapper.between(columnName ,field1.get(q),field2.get(q));
+                }else {
+                    queryWrapper.between(columnName ,field2.get(q),field1.get(q));
+                }
             }
         }
     }
