@@ -5,6 +5,7 @@ import java.lang.annotation.*;
 /**
  * @author Create by whz at 2023/8/7
  */
+@Deprecated
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

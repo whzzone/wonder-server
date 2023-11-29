@@ -27,6 +27,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -49,7 +50,9 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             Class<T> dClass = getTClass();
             T entity = dClass.getDeclaredConstructor().newInstance();
 
-            BeanUtil.copyProperties(dto, entity, getIgnoreSaveField(dto));
+            // 只复制存在@SaveField注解的属性
+            BeanUtil.copyProperties(dto, entity, getIgnoreField(dto, SaveField.class));
+
             boolean save = save(entity);
             if (!save) {
                 throw new RuntimeException("操作失败");
@@ -79,7 +82,9 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
                 throw new RuntimeException(StrUtil.format("【{}】不存在", id));
             }
 
-            BeanUtil.copyProperties(dto, entity, getIgnoreUpdateField(dto));
+            // 只复制存在@UpdateField注解的属性
+            BeanUtil.copyProperties(dto, entity, getIgnoreField(dto, UpdateField.class));
+
             boolean b = super.updateById(entity);
             if (!b) {
                 throw new RuntimeException("操作失败");
@@ -91,27 +96,12 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
         }
     }
 
-
-    private String[] getIgnoreSaveField(D dto) {
-
+    private String[] getIgnoreField(D dto, Class<? extends Annotation> annotation) {
         List<String> list = new ArrayList<>();
 
         Field[] fields = dto.getClass().getDeclaredFields();
         for (Field field : fields) {
-            if (!field.isAnnotationPresent(SaveField.class)) {
-                list.add(field.getName());
-            }
-        }
-        return list.toArray(new String[0]);
-    }
-
-    private String[] getIgnoreUpdateField(D dto) {
-
-        List<String> list = new ArrayList<>();
-
-        Field[] fields = dto.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            if (!field.isAnnotationPresent(UpdateField.class)) {
+            if (!field.isAnnotationPresent(annotation)) {
                 list.add(field.getName());
             }
         }
@@ -364,18 +354,21 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     }
 
     @Override
-    public QueryWrapper<T> handleQueryWrapper(Q query) {
+    public QueryWrapper<T> handleQueryWrapper(Q query, QueryWrapper<T> queryWrapper) {
         try {
             Class<? extends EntityQuery> qClass = query.getClass();
 
             Field[] fields = qClass.getDeclaredFields();
 
-            QueryWrapper<T> queryWrapper = new QueryWrapper<>();
+            if (Objects.isNull(queryWrapper)) {
+                queryWrapper = new QueryWrapper<>();
+            }
 
             Map<String, Field[]> betweenFieldMap = new HashMap<>();
 
             // 处理@SelectColumn
-            handleSelectColumn(queryWrapper, qClass);
+            //TODO 2023-11-29 15:57 弃用@SelectColumn
+//            handleSelectColumn(queryWrapper, qClass);
 
             handleSort(queryWrapper, query);
 
@@ -449,6 +442,11 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    @Override
+    public QueryWrapper<T> handleQueryWrapper(Q query) {
+        return handleQueryWrapper(query,null);
     }
 
     private void handleSort(QueryWrapper<T> queryWrapper, Q query) {

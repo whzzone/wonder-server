@@ -177,6 +177,13 @@ public interface EntityService<T extends BaseEntity, D extends EntityDto, Q exte
     /**
      * 根据查询参数返回QueryWrapper
      * @param query 查询参数
+     * @param queryWrapper QueryWrapper
+     */
+    QueryWrapper<T> handleQueryWrapper(Q query, QueryWrapper<T> queryWrapper);
+
+    /**
+     * 根据查询参数返回QueryWrapper
+     * @param query 查询参数
      */
     QueryWrapper<T> handleQueryWrapper(Q query);
 
