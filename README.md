@@ -8,7 +8,7 @@
 > 
 > 对wonder-processor代码修改后都要执行以上方法
 
-#### 前端 https://gitee.com/whzzone/wonder-web
+#### 前端 https://gitee.com/whzzone/wonder-web 仅仅用来可视化测试
 
 #### 后端 https://gitee.com/whzzone/wonder-server
 
@@ -60,7 +60,8 @@ public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, Orde
     ~~- 方案一：在@DataScope注解中新增一个字段`tableName`，用来标识该条规则作用于哪个表，为空就是作用于所有表。例如`@DataScope(value="sn1", tableName="order")`将作用于`order`表。（这样的话，`sn1`的存在是不是多余了，直接查询用户优先级最高的角色有没有关联`order`这张表的规则限制。）~~
 
 3. 如果想限制同一张表的多个字段怎么办？比如某条规则限制`order`表查询付款金额大于100元 && 已经完成的订单时怎么办？
-    - 方案一：优先考虑提供类型为`值`的情况是否满足当前需求。如需要限制两个及以上字段时，使用提供类型为`方法`来处理，此时配置记录中字段`column_name`为`id`，配置对应的无参或有参方法，返回`idList`去`IN`，就能满足。例如问题中可一执行一个方法返回 付款金额大于100元 && 已经完成的订单 的`idList`去`order`表拼接`id IN( idList )` 就能满足
+    - 方案一：优先考虑提供类型为`值`的情况是否满足当前需求。~~如需要限制两个及以上字段时，使用提供类型为`方法`来处理，此时配置记录中字段`column_name`为`id`，配置对应的无参或有参方法，返回`idList`去`IN`，就能满足。例如问题中可一执行一个方法返回 付款金额大于100元 && 已经完成的订单 的`idList`去`order`表拼接`id IN( idList )` 就能满足~~
+    - 方案二：已实现多规则拼接，支持`OR`、`AND`
 
 ---
 
