@@ -1,9 +1,8 @@
 package com.gitee.whzzone.admin.system.controller;
 
 import com.gitee.whzzone.admin.common.security.LoginUser;
-import com.gitee.whzzone.admin.system.mapper.RoleMapper;
-import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
 import com.gitee.whzzone.admin.system.entity.Role;
+import com.gitee.whzzone.admin.system.mapper.RoleMapper;
 import com.gitee.whzzone.admin.system.service.TestService;
 import com.gitee.whzzone.admin.util.SecurityUtil;
 import com.gitee.whzzone.web.Result;
@@ -35,20 +34,6 @@ public class TestController {
     public Result dataScopeTest(){
         List<Role> roles = roleMapper.selectAllTest();
         return Result.ok(roles);
-    }
-
-    @ApiOperation("带参测试")
-    @GetMapping("withParam")
-    public Result<DataScopeInfo> withParam(){
-        DataScopeInfo info = testService.injectTest("带参测试", new DataScopeInfo());
-        return Result.ok(info);
-    }
-
-    @ApiOperation("@DataScope 标记了错误类型的参数")
-    @GetMapping("errorOfObject")
-    public Result errorOfObject(){
-        String info = testService.injectTest2("@DataScope 标记了错误类型", "");
-        return Result.ok(info);
     }
 
     @ApiOperation("获取登录用户的信息")

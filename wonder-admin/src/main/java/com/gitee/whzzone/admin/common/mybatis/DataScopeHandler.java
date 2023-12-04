@@ -50,7 +50,12 @@ public class DataScopeHandler implements DataPermissionHandler {
     public Expression getSqlSegment(Expression oldWhere, String mappedStatementId) {
         DataScopeAspect.DataScopeParam dataScopeParam = DataScopeAspect.getDataScopeParam();
         // 没有规则就不限制
-        if (dataScopeParam == null || dataScopeParam.getDataScopeInfo() == null || CollectionUtil.isEmpty(dataScopeParam.getDataScopeInfo().getRuleList()) || SecurityUtil.isAdmin()) {
+        if (dataScopeParam == null
+                || dataScopeParam.getDataScopeInfo() == null
+                || CollectionUtil.isEmpty(dataScopeParam.getDataScopeInfo().getRuleList())
+                || SecurityUtil.isAdmin()
+        )
+        {
             return oldWhere;
         }
 

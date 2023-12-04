@@ -38,12 +38,20 @@ public class RequestLoggerAspect {
     @Value("server.servlet.context-path")
     private String contextPath;
 
+    @Value("${security.request.enable-log}")
+    private Boolean enableLog;
+
     @Pointcut("@annotation(com.gitee.whzzone.common.annotation.RequestLogger)")
     public void pointcut() {
     }
 
     @Around("pointcut()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+
+        if (!enableLog) {
+            return joinPoint.proceed();
+        }
+
         //请求开始时间戳
         long begin = System.currentTimeMillis();
 

@@ -1,21 +1,23 @@
 package com.gitee.whzzone.admin.common.aspect;
 
-import com.gitee.whzzone.common.annotation.DataScope;
 import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
+import com.gitee.whzzone.admin.system.pojo.dto.RuleDto;
 import com.gitee.whzzone.admin.system.service.MarkService;
 import com.gitee.whzzone.admin.util.SecurityUtil;
+import com.gitee.whzzone.common.annotation.DataScope;
 import com.gitee.whzzone.common.exception.NoDataException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
@@ -44,12 +46,11 @@ public class DataScopeAspect {
     @After("methodPointCut()")
     public void clearThreadLocal() {
         threadLocal.remove();
-        log.debug("threadLocal.remove()");
+        log.debug("----------------数据权限信息清除----------------");
     }
 
     @Before("methodPointCut()")
     public void doBefore(JoinPoint point) {
-
         Signature signature = point.getSignature();
         MethodSignature methodSignature = (MethodSignature) signature;
         Method method = methodSignature.getMethod();
@@ -67,71 +68,26 @@ public class DataScopeAspect {
                 dataScopeParam.setDataScopeInfo(dataScopeInfo);
 
                 threadLocal.set(dataScopeParam);
+
+                log.debug("----------------设置数据权限信息----------------");
+                if (dataScopeInfo.getRuleList() != null && dataScopeInfo.getRuleList().size() > 0) {
+                    for (RuleDto rule : dataScopeInfo.getRuleList()) {
+                        log.debug("- ruleId：{}", rule.getId());
+                    }
+                }
+
             }
         } catch (NoDataException e) {
             throw new NoDataException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("数据权限 method 切面错误：" + e.getMessage());
+            throw new RuntimeException("数据权限切面错误：" + e.getMessage());
         }
-
     }
 
     @Data
     public static class DataScopeParam {
         private DataScopeInfo dataScopeInfo;
-    }
-
-    // 形参切点
-    @Pointcut("execution(* *(.., @com.gitee.whzzone.common.annotation.DataScope (*), ..))")
-    public void parameterPointCut() {
-    }
-
-    @Around("parameterPointCut()")
-    public Object doAround(ProceedingJoinPoint point) {
-        try {
-            Object[] args = point.getArgs();
-            MethodSignature methodSignature = (MethodSignature) point.getSignature();
-            Annotation[][] parameterAnnotations = methodSignature.getMethod().getParameterAnnotations();
-            // 遍历方法的参数注解和参数类型
-            for (int i = 0; i < parameterAnnotations.length; i++) {
-                Annotation[] annotations = parameterAnnotations[i];
-                Class<?> parameterType = methodSignature.getParameterTypes()[i];
-
-                int index = -1;
-
-                for (int k = 0; k < annotations.length; k++) {
-                    if (annotations[k] instanceof DataScope) {
-                        index = k;
-                        break;
-                    }
-                }
-
-                if (index >= 0) {
-                    if (parameterType != DataScopeInfo.class) {
-                        throw new RuntimeException("使用@DataScope的参数类型必须是：DataScopeInfo.class 类型");
-                    }
-                    DataScope dataScope = (DataScope) annotations[index];
-                    String scopeName = dataScope.value();
-                    DataScopeInfo dataScopeInfo = dataScopeService.execRuleByName(scopeName);
-                    args[i] = dataScopeInfo;
-                }
-
-            }
-
-            // 继续执行目标方法
-            return point.proceed(args);
-
-        } catch (NoDataException e) {
-            throw new NoDataException();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("数据权限 形参 切面错误：" + e.getMessage());
-        } catch (Throwable e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-
     }
 
 }

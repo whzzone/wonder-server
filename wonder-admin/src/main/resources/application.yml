@@ -33,6 +33,10 @@ security:
     live-unit: HOURS
     refresh-time: 10
     refresh-unit: MINUTES
+
+  request:
+    enable-log: false
+
 wx:
   miniapp:
     configs:
