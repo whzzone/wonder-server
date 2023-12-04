@@ -19,52 +19,35 @@
 缺点：如果是控制比较复杂的查询，需要在项目代码中预先写好相关的方法来提供使用。执行时间慢那么一点，但也只是对有限制的接口来说，还是可以接受的。
 
 #### 当前数据权限思路
-
-1. 注解使用在方法上： 执行SQL前进行拦截，查询该账号拥有的角色List，是否关联有的数据规则，解析拼接SQL。没有关联则返回无数据。
-    ```java
+@DataScope`注解使用在方法上： 执行SQL前进行拦截，查询该账号拥有的角色List，是否关联有的数据规则，解析拼接SQL。没有关联则返回无数据。
+    
+```java
+// mapper 建议使用在mapper方法接口上
+@Mapper 
+public interface OrderMapper extends BaseMapper<Order> {
+    
     @DataScope("order-list")
+    @Override
+    List<Order> selectList(@Param(Constants.WRAPPER) Wrapper<Order> queryWrapper);
+    
+}
+
+
+// service 用在service层方法上时，要注意调用的方法是否是本类的方法
+// 如果是，会导致代理失败，数据权限失效
+@Service
+public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, OrderDto, OrderQuery> implements OrderService {
+    
     @Override
     public List<OrderDto> list(OrderQuery query) {
         LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverName()), Order::getReceiverName, query.getReceiverName());
-        ...
-        List<Order> list = list(queryWrapper);
-        return afterQueryHandler(list);
+        // ...其他条件
+        return afterQueryHandler(list(queryWrapper), new BOrderQueryHandler());
     }
-    ```
-2. 注解使用在形参上：AOP解析权限赋值到形参上，开发者自行处理。（适用于Mapper接口的形参，在xml中拼接）
-    ```java
-    @Override
-    public List<OrderDto> list(OrderQuery query, @DataScope("order-list") DataScopeInfo dataScopeInfo) {
-        QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
-        // 或者自行处理
-        CommonUtil.handleQueryWrapper(queryWrapper, dataScopeInfo);
-        queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverName()), "receiver_name", query.getReceiverName());
-        ...
-        List<Order> list = list(queryWrapper);
-        return afterQueryHandler(list);
-    }
-   ```
-3. 提供`service`方法：由开发者根据方法返回值自行处理。（可传递到xml中拼接）
-    ```java
-    // 这样比方法2多出注入一步
-    @Autowired
-    private MarkService dataScopeService;
     
-    @Override
-    public List<OrderDto> list(OrderQuery query) {
-
-        DataScopeInfo dataScopeInfo = dataScopeService.execRuleByName("order-list");
-        
-        QueryWrapper<Order> queryWrapper = new QueryWrapper<>();
-        // 或者自行处理
-        CommonUtil.handleQueryWrapper(queryWrapper, dataScopeInfo);
-        queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverName()), "receiver_name", query.getReceiverName());
-        ...
-        List<Order> list = list(queryWrapper);
-        return afterQueryHandler(list);
-    }
-    ```
+}
+```
 ---
 
 #### 问题
