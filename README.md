@@ -98,6 +98,7 @@ public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, Orde
       `id` bigint NOT NULL,
       `name` varchar(20) DEFAULT NULL COMMENT '名称',
       `number` int DEFAULT NULL COMMENT '数量',
+      `status` int DEFAULT NULL COMMENT '状态 0-维护中，1-正常，2-借出',
       `price` decimal(8,2) DEFAULT NULL COMMENT '单价',
       `create_time` datetime DEFAULT NULL COMMENT '创建时间',
       `create_by` bigint DEFAULT NULL COMMENT '创建人',
@@ -153,16 +154,16 @@ public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, Orde
 
 - `@Query` 该注解标识该支持字段查询。`column`-对应的数据库字段，如果为空则取属性名转下划线作为查询字段名。`expression`标识该字段的查询方式，目前支持精确、模糊、范围、大于、小于等等查询。注意，当`expression = ExpressionEnum.BETWEEN`即范围查询时，`column`不能为空，且`column`的值必须成对存在，否则无法启动。如下配置表示在`create_time`字段进行范围查询
     ```java
-    // 精确查询 等同于 @Query(column = "order_status", expression = ExpressionEnum.EQ)
+    // 精确查询 等同于 @Query(column = "status", expression = ExpressionEnum.EQ)
     @Query
-    @ApiModelProperty("订单状态：0-待付款，1-已取消，2-已付款，3-已完成")
-    private Integer orderStatus;
+    @ApiModelProperty("状态 0-维护中，1-正常，2-借出")
+    private Integer status;
     ```
     ```java
-    // 模糊查询 等同于 @Query(column = "receiver_name", expression = ExpressionEnum.LIKE)
+    // 模糊查询 等同于 @Query(column = "name", expression = ExpressionEnum.LIKE)
     @Query(expression = ExpressionEnum.LIKE)
-    @ApiModelProperty("收货人姓名")
-    private String receiverName;
+    @ApiModelProperty("书名")
+    private String name;
     ```
     ```java
     // 范围查询 create_time
@@ -197,7 +198,7 @@ public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, Orde
 
 1. 进入`beforeSaveOrUpdateHandler(dto)`方法，可以对'增改'接口参数进行统一处理
 2. '增'接口进入`beforeSaveHandler(dto)`，'改'接口进入`beforeUpdateHandler(dto)`，分别对参数进行处理
-3. 复制带有`XxxDto中带有`@SaveField` 或者`@UpdateField`的属性给实体
+3. 复制带有`XxxDto`中带有`@SaveField` 或者`@UpdateField`的属性给实体
 4. 执行更新`updateById(entity)`或插入`save(entity)`操作
 5. 执行`afterSaveHandler(entity)`方法，可在此进行添加或更新的后置处理
 
