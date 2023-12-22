@@ -1,7 +1,7 @@
 package ${package.Other}.${entity};
 
 <#list table.importPackages as pkg>
-    <#if pkg != "com.baomidou.mybatisplus.annotation.TableField" && pkg != "com.baomidou.mybatisplus.annotation.TableName" &&  pkg != "com.gitee.whzzone.admin.common.base.pojo.entity.BaseEntity">
+    <#if pkg != "com.baomidou.mybatisplus.annotation.TableField" && pkg != "com.baomidou.mybatisplus.annotation.TableName" &&  pkg != "com.gitee.whzzone.common.base.pojo.entity.BaseEntity">
 import ${pkg};
     </#if>
 </#list>
