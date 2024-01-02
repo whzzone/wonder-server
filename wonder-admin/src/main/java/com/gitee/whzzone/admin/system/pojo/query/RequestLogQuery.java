@@ -1,9 +1,8 @@
 package com.gitee.whzzone.admin.system.pojo.query;
 
-import com.gitee.whzzone.common.annotation.Query;
-import com.gitee.whzzone.common.annotation.SelectColumn;
-import com.gitee.whzzone.common.base.pojo.query.EntityQuery;
+import com.gitee.whzzone.annotation.Query;
 import com.gitee.whzzone.common.enums.ExpressionEnum;
+import com.gitee.whzzone.web.pojo.query.EntityQuery;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -19,7 +18,6 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-@SelectColumn({"id", "`code`", "`desc`", "createTime"})
 @ApiModel(value = "RequestLogQuery对象", description = "请求日志")
 public class RequestLogQuery extends EntityQuery {
 

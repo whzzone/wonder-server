@@ -5,8 +5,8 @@ import com.gitee.whzzone.admin.system.entity.RequestLog;
 import com.gitee.whzzone.admin.system.service.RequestLogService;
 import com.gitee.whzzone.admin.util.IpUtil;
 import com.gitee.whzzone.admin.util.SecurityUtil;
-import com.gitee.whzzone.common.annotation.RequestLogger;
-import com.gitee.whzzone.web.Result;
+import com.gitee.whzzone.annotation.ApiLogger;
+import com.gitee.whzzone.web.pojo.other.Result;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -41,7 +41,7 @@ public class RequestLoggerAspect {
     @Value("${security.request.enable-log}")
     private Boolean enableLog;
 
-    @Pointcut("@annotation(com.gitee.whzzone.common.annotation.RequestLogger)")
+    @Pointcut("@annotation(com.gitee.whzzone.annotation.ApiLogger)")
     public void pointcut() {
     }
 
@@ -61,10 +61,10 @@ public class RequestLoggerAspect {
         Signature signature = joinPoint.getSignature();
         MethodSignature methodSignature = (MethodSignature) signature;
         Method method = methodSignature.getMethod();
-        RequestLogger requestLogger = method.getAnnotation(RequestLogger.class);
+        ApiLogger apiLogger = method.getAnnotation(ApiLogger.class);
 
         // RequestLogger注解的接口描述信息
-        String desc = requestLogger.value();
+        String desc = apiLogger.value();
 
         if (desc.isEmpty()) {
             // 没有就取@ApiOperation的描述信息，避免重复写描述

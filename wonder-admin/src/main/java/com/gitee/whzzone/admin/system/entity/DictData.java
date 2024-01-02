@@ -2,7 +2,7 @@ package com.gitee.whzzone.admin.system.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.web.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -22,11 +22,11 @@ public class DictData extends BaseEntity {
 
     @ApiModelProperty("字典id")
     @TableField("dict_id")
-    private Long dictId;
+    private Integer dictId;
 
     @ApiModelProperty("父级id")
     @TableField("parent_id")
-    private Long parentId;
+    private Integer parentId;
 
     @ApiModelProperty("字典标签")
     @TableField("dict_label")

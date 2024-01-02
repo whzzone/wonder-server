@@ -1,13 +1,13 @@
 package com.gitee.whzzone.admin.system.controller;
 
-import com.gitee.whzzone.common.base.controller.EntityController;
+import com.gitee.whzzone.admin.system.entity.Menu;
 import com.gitee.whzzone.admin.system.pojo.dto.MenuDto;
 import com.gitee.whzzone.admin.system.pojo.dto.MenuTreeDto;
-import com.gitee.whzzone.admin.system.entity.Menu;
 import com.gitee.whzzone.admin.system.pojo.query.MenuQuery;
 import com.gitee.whzzone.admin.system.service.MenuService;
 import com.gitee.whzzone.admin.util.SecurityUtil;
-import com.gitee.whzzone.web.Result;
+import com.gitee.whzzone.web.controller.EntityController;
+import com.gitee.whzzone.web.pojo.other.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

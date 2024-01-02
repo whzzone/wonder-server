@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.web.entity.BaseEntity;
 import lombok.Data;
 
 /**
@@ -11,7 +11,7 @@ import lombok.Data;
 @TableName("sys_dept")
 public class Dept extends BaseEntity {
 
-    private Long parentId;
+    private Integer parentId;
 
     private String name;
 

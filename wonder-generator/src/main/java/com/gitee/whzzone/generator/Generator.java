@@ -10,10 +10,10 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.keywords.MySqlKeyWordsHandler;
-import com.gitee.whzzone.common.base.controller.EntityController;
-import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
-import com.gitee.whzzone.common.base.service.EntityService;
-import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
+import com.gitee.whzzone.web.controller.EntityController;
+import com.gitee.whzzone.web.entity.BaseEntity;
+import com.gitee.whzzone.web.service.EntityService;
+import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
 
 import java.util.Collections;
 import java.util.HashMap;

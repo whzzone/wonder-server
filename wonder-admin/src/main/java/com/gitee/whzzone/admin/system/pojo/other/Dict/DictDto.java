@@ -1,8 +1,8 @@
 package com.gitee.whzzone.admin.system.pojo.other.Dict;
 
-import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
-import com.gitee.whzzone.common.group.CreateGroup;
-import com.gitee.whzzone.common.group.UpdateGroup;
+import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.validation.groups.InsertGroup;
+import com.gitee.whzzone.web.validation.groups.UpdateGroup;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -22,15 +22,15 @@ import javax.validation.constraints.NotNull;
 @ApiModel(value = "DictDto对象", description = "系统字典")
 public class DictDto extends EntityDto {
 
-    @NotBlank(message = "字典名称不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @NotBlank(message = "字典名称不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     @ApiModelProperty(value = "字典名称",required = true)
     private String dictName;
 
-    @NotBlank(message = "字典编码不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @NotBlank(message = "字典编码不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     @ApiModelProperty(value = "字典编码（唯一）", required = true)
     private String dictCode;
 
-    @NotNull(message = "字典类型不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @NotNull(message = "字典类型不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     @ApiModelProperty(value = "字典类型，0-列表，1-树", required = true)
     private Integer dictType;
 

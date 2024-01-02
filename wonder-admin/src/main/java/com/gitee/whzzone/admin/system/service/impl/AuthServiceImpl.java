@@ -23,7 +23,7 @@ import com.gitee.whzzone.admin.system.service.UserService;
 import com.gitee.whzzone.admin.util.*;
 import com.gitee.whzzone.common.util.CacheKey;
 import com.gitee.whzzone.common.util.RandomUtil;
-import com.gitee.whzzone.web.Result;
+import com.gitee.whzzone.web.pojo.other.Result;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,8 +145,8 @@ public class AuthServiceImpl implements AuthService {
             res.setToken(token);
             res.setExpire(cacheTimeUnit.toSeconds(cacheTime));
 
-            List<Long> deptIds = userService.getDeptIds(user.getId());
-            List<Long> roleIds = userService.getRoleIds(user.getId());
+            List<Integer> deptIds = userService.getDeptIds(user.getId());
+            List<Integer> roleIds = userService.getRoleIds(user.getId());
 
             res.setDeptIds(deptIds);
             res.setRoleIds(roleIds);
@@ -216,7 +216,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void logout() {
-        Long id = SecurityUtil.getLoginUser().getId();
+        Integer id = SecurityUtil.getLoginUser().getId();
         String userKey = StrUtil.format(CacheKey.USER_ID_INFO, id);
         String userIdTokenKey = StrUtil.format(CacheKey.USER_ID_TOKEN, id);
         if (redisCache.hasKey(userIdTokenKey)) {

@@ -2,7 +2,7 @@ package com.gitee.whzzone.admin.system.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.web.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

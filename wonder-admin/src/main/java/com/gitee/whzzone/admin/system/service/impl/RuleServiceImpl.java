@@ -3,14 +3,14 @@ package com.gitee.whzzone.admin.system.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
-import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.system.entity.Rule;
 import com.gitee.whzzone.admin.system.mapper.RuleMapper;
 import com.gitee.whzzone.admin.system.pojo.dto.RuleDto;
 import com.gitee.whzzone.admin.system.pojo.query.RuleQuery;
 import com.gitee.whzzone.admin.system.service.RoleMarkService;
 import com.gitee.whzzone.admin.system.service.RuleService;
+import com.gitee.whzzone.web.entity.BaseEntity;
+import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class RuleServiceImpl extends EntityServiceImpl<RuleMapper, Rule, RuleDto
     private RoleMarkService roleMarkService;
 
     @Override
-    public List<RuleDto> getByMarkId(Long markId) {
+    public List<RuleDto> getByMarkId(Integer markId) {
         LambdaQueryWrapper<Rule> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Rule::getMarkId, markId);
         List<Rule> list = list(queryWrapper);
@@ -38,7 +38,7 @@ public class RuleServiceImpl extends EntityServiceImpl<RuleMapper, Rule, RuleDto
     }
 
     @Override
-    public RuleDto getByRoleIdAndMarkId(Long roleId, Long markId) {
+    public RuleDto getByRoleIdAndMarkId(Integer roleId, Integer markId) {
         /*List<RoleMark> roleMarkList = roleMarkService.getByRoleIdAndMarkId(roleId, markId);
         if (roleMark != null){
             Long ruleId = roleMark.getRuleId();
@@ -48,7 +48,7 @@ public class RuleServiceImpl extends EntityServiceImpl<RuleMapper, Rule, RuleDto
     }
 
     @Override
-    public List<Rule> getByIds(List<Long> ruleIds) {
+    public List<Rule> getByIds(List<Integer> ruleIds) {
         if (CollectionUtil.isEmpty(ruleIds)) {
             return null;
         }

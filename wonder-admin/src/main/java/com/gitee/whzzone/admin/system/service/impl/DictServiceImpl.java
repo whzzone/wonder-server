@@ -1,12 +1,12 @@
 package com.gitee.whzzone.admin.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.system.entity.Dict;
 import com.gitee.whzzone.admin.system.mapper.DictMapper;
 import com.gitee.whzzone.admin.system.pojo.other.Dict.DictDto;
 import com.gitee.whzzone.admin.system.pojo.other.Dict.DictQuery;
 import com.gitee.whzzone.admin.system.service.DictService;
+import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,7 +25,7 @@ public class DictServiceImpl extends EntityServiceImpl<DictMapper, Dict, DictDto
     }
 
     @Override
-    public boolean existSameDictCode(Long id, String dictCode) {
+    public boolean existSameDictCode(Integer id, String dictCode) {
         LambdaQueryWrapper<Dict> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Dict::getDictCode, dictCode);
         queryWrapper.ne(id != null, Dict::getId, id);

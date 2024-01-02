@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.web.entity.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,8 +16,8 @@ import lombok.ToString;
 @TableName("sys_role_menu")
 public class RoleMenu extends BaseEntity {
 
-    private Long roleId;
+    private Integer roleId;
 
-    private Long menuId;
+    private Integer menuId;
 
 }

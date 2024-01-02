@@ -1,11 +1,11 @@
 package com.gitee.whzzone.admin.system.service.impl;
 
-import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
+import com.gitee.whzzone.admin.system.entity.RequestLog;
 import com.gitee.whzzone.admin.system.mapper.RequestLogMapper;
 import com.gitee.whzzone.admin.system.pojo.dto.RequestLogDto;
-import com.gitee.whzzone.admin.system.entity.RequestLog;
 import com.gitee.whzzone.admin.system.pojo.query.RequestLogQuery;
 import com.gitee.whzzone.admin.system.service.RequestLogService;
+import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;

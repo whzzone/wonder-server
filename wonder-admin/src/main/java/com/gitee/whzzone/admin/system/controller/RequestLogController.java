@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.controller;
 
-import com.gitee.whzzone.common.base.controller.EntityController;
+import com.gitee.whzzone.web.controller.EntityController;
 import com.gitee.whzzone.admin.system.pojo.dto.RequestLogDto;
 import com.gitee.whzzone.admin.system.entity.RequestLog;
 import com.gitee.whzzone.admin.system.pojo.query.RequestLogQuery;

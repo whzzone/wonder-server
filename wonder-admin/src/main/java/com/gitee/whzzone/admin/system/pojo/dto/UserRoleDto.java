@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
-import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.pojo.dto.EntityDto;
 import lombok.Data;
 
 /**

@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.pojo.query;
 
-import com.gitee.whzzone.common.base.pojo.query.EntityQuery;
+import com.gitee.whzzone.web.pojo.query.EntityQuery;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -21,6 +21,6 @@ public class UserQuery extends EntityQuery {
     private String phone;
 
     @ApiModelProperty("部门id")
-    private Long deptId;
+    private Integer deptId;
 
 }

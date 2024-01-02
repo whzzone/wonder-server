@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
-import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.pojo.dto.EntityDto;
 import lombok.Data;
 
 /**
@@ -10,8 +10,8 @@ import lombok.Data;
 @Data
 public class RoleMenuDto extends EntityDto {
 
-    private Long roleId;
+    private Integer roleId;
 
-    private Long menuId;
+    private Integer menuId;
 
 }

@@ -1,8 +1,6 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
-import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
-import com.gitee.whzzone.common.serializer.LongSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.gitee.whzzone.web.pojo.dto.EntityDto;
 import lombok.Data;
 
 import java.util.List;
@@ -13,10 +11,8 @@ import java.util.List;
  */
 @Data
 public class MenuTreeDto extends EntityDto {
-    @JsonSerialize(using = LongSerializer.class)
-    private Long id;
-    @JsonSerialize(using = LongSerializer.class)
-    private Long parentId;
+    private Integer id;
+    private Integer parentId;
     private String parentName;
     private String name;
     private String permission;

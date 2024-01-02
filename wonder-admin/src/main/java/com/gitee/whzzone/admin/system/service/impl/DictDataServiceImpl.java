@@ -2,7 +2,6 @@ package com.gitee.whzzone.admin.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.system.entity.Dict;
 import com.gitee.whzzone.admin.system.entity.DictData;
 import com.gitee.whzzone.admin.system.mapper.DictDataMapper;
@@ -10,6 +9,7 @@ import com.gitee.whzzone.admin.system.pojo.other.DictData.DictDataDto;
 import com.gitee.whzzone.admin.system.pojo.other.DictData.DictDataQuery;
 import com.gitee.whzzone.admin.system.service.DictDataService;
 import com.gitee.whzzone.admin.system.service.DictService;
+import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +39,7 @@ public class DictDataServiceImpl extends EntityServiceImpl<DictDataMapper, DictD
     }
 
     @Override
-    public boolean existSameDictValue(Long id, Long dictId, String dictValue) {
+    public boolean existSameDictValue(Integer id, Integer dictId, String dictValue) {
         LambdaQueryWrapper<DictData> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(DictData::getDictValue, dictValue);
         queryWrapper.eq(DictData::getDictId, dictId);
@@ -59,7 +59,7 @@ public class DictDataServiceImpl extends EntityServiceImpl<DictDataMapper, DictD
         return BeanUtil.copyToList(dictDataList, DictDataDto.class);
     }
 
-    public List<DictData> findByDictId(Long dictId){
+    public List<DictData> findByDictId(Integer dictId){
         LambdaQueryWrapper<DictData> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(DictData::getDictId, dictId);
         return list(queryWrapper);

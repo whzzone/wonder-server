@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.web.entity.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,7 +17,7 @@ public class Rule extends BaseEntity {
 
     private String remark;
 
-    private Long markId;
+    private Integer markId;
 
     private String tableAlias;
 

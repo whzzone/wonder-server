@@ -16,7 +16,7 @@ public class ResetPWDDto {
 
     @ApiModelProperty(value = "用户id", required = true)
     @NotNull(message = "用户id不能为空")
-    private Long id;
+    private Integer id;
 
     @ApiModelProperty(value = "新密码", required = true)
     @Size(min = 6, max = 16, message ="密码必须6-16之间")

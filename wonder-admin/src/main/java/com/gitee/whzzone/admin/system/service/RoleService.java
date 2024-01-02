@@ -1,10 +1,10 @@
 package com.gitee.whzzone.admin.system.service;
 
-import com.gitee.whzzone.common.base.service.EntityService;
-import com.gitee.whzzone.common.PageData;
-import com.gitee.whzzone.admin.system.pojo.dto.RoleDto;
 import com.gitee.whzzone.admin.system.entity.Role;
+import com.gitee.whzzone.admin.system.pojo.dto.RoleDto;
 import com.gitee.whzzone.admin.system.pojo.query.RoleQuery;
+import com.gitee.whzzone.web.pojo.other.PageData;
+import com.gitee.whzzone.web.service.EntityService;
 
 import java.util.List;
 
@@ -16,25 +16,25 @@ public interface RoleService extends EntityService<Role, RoleDto, RoleQuery> {
 
     PageData<RoleDto> page(RoleQuery query);
 
-    boolean isAllExist(List<Long> roleIds);
+    boolean isAllExist(List<Integer> roleIds);
 
     List<RoleDto> list(RoleQuery query);
 
-    boolean existSameCode(Long roleId, String code);
+    boolean existSameCode(Integer roleId, String code);
 
-    boolean existSameName(Long roleId, String name);
+    boolean existSameName(Integer roleId, String name);
 
-    void addRelation(Long userId, List<Long> roleIds);
+    void addRelation(Integer userId, List<Integer> roleIds);
 
-    void removeRelation(Long userId);
+    void removeRelation(Integer userId);
 
-    List<Long> getRoleIdsByUserId(Long userId);
+    List<Integer> getRoleIdsByUserId(Integer userId);
 
-    void enabledSwitch(Long id);
+    void enabledSwitch(Integer id);
 
-    List<RoleDto> getDtoListIn(List<Long> roleIds);
+    List<RoleDto> getDtoListIn(List<Integer> roleIds);
 
-    void bindingRule(Long roleId, Long ruleId);
+    void bindingRule(Integer roleId, Integer ruleId);
 
-    void unBindingRule(Long roleId, Long ruleId);
+    void unBindingRule(Integer roleId, Integer ruleId);
 }

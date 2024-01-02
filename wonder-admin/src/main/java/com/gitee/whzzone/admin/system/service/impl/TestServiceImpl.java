@@ -1,7 +1,5 @@
 package com.gitee.whzzone.admin.system.service.impl;
 
-import com.gitee.whzzone.common.annotation.DataScope;
-import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
 import com.gitee.whzzone.admin.system.service.TestService;
 import org.springframework.stereotype.Service;
 

@@ -1,11 +1,11 @@
 package com.gitee.whzzone.admin.business.controller;
 
-import com.gitee.whzzone.common.base.controller.EntityController;
-import com.gitee.whzzone.admin.business.pojo.dto.OrderDto;
 import com.gitee.whzzone.admin.business.entity.Order;
+import com.gitee.whzzone.admin.business.pojo.dto.OrderDto;
 import com.gitee.whzzone.admin.business.pojo.query.OrderQuery;
 import com.gitee.whzzone.admin.business.service.OrderService;
-import com.gitee.whzzone.web.Result;
+import com.gitee.whzzone.web.controller.EntityController;
+import com.gitee.whzzone.web.pojo.other.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

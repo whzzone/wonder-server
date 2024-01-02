@@ -4,7 +4,7 @@ import com.gitee.whzzone.admin.common.security.LoginUser;
 import com.gitee.whzzone.admin.system.pojo.auth.EmailLoginDto;
 import com.gitee.whzzone.admin.system.pojo.auth.UsernameLoginDto;
 import com.gitee.whzzone.admin.system.pojo.auth.WxLoginDto;
-import com.gitee.whzzone.web.Result;
+import com.gitee.whzzone.web.pojo.other.Result;
 
 import java.util.Map;
 

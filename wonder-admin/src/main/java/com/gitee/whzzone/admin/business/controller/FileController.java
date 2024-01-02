@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.business.controller;
 
 import cn.hutool.crypto.digest.DigestUtil;
-import com.gitee.whzzone.web.Result;
+import com.gitee.whzzone.web.pojo.other.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.pojo.query;
 
-import com.gitee.whzzone.common.base.pojo.query.EntityQuery;
+import com.gitee.whzzone.web.pojo.query.EntityQuery;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -15,7 +15,7 @@ public class DeptQuery extends EntityQuery {
     private String name;
 
     @ApiModelProperty("父级id")
-    private Long parentId;
+    private Integer parentId;
 
     @ApiModelProperty("是否启用")
     private Boolean enabled;

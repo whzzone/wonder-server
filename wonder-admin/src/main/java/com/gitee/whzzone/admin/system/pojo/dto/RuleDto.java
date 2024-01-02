@@ -1,10 +1,8 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
-import com.gitee.whzzone.common.serializer.LongSerializer;
-import com.gitee.whzzone.common.group.CreateGroup;
-import com.gitee.whzzone.common.group.UpdateGroup;
+import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.validation.groups.InsertGroup;
+import com.gitee.whzzone.web.validation.groups.UpdateGroup;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -17,10 +15,9 @@ import java.util.List;
 @Data
 public class RuleDto extends EntityDto {
 
-    @NotNull(message = "markId不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @NotNull(message = "markId不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     @ApiModelProperty(value = "markId", required = true)
-    @JsonSerialize(using = LongSerializer.class)
-    private Long markId;
+    private Integer markId;
 
     @ApiModelProperty("备注")
     private String remark;
@@ -28,19 +25,19 @@ public class RuleDto extends EntityDto {
     @ApiModelProperty("表别名")
     private String tableAlias;
 
-    @NotNull(message = "字段名不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @NotNull(message = "字段名不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     @ApiModelProperty(value = "字段名", required = true)
     private String columnName;
 
-    @NotNull(message = "拼接类型不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @NotNull(message = "拼接类型不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     @ApiModelProperty(value = "拼接类型 OR AND", required = true)
     private String spliceType;
 
-    @NotNull(message = "表达式 EQ NE LE GT...", groups = {CreateGroup.class, UpdateGroup.class})
+    @NotNull(message = "表达式 EQ NE LE GT...", groups = {InsertGroup.class, UpdateGroup.class})
     @ApiModelProperty(value = "表达式 EQ NE LE GT...", required = true)
     private String expression;
 
-    @NotNull(message = "提供类型", groups = {CreateGroup.class, UpdateGroup.class})
+    @NotNull(message = "提供类型", groups = {InsertGroup.class, UpdateGroup.class})
     @ApiModelProperty(value = "提供类型", required = true)
     private Integer provideType;
 

@@ -4,13 +4,13 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
-import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
+import com.gitee.whzzone.admin.system.entity.Dept;
 import com.gitee.whzzone.admin.system.mapper.DeptMapper;
 import com.gitee.whzzone.admin.system.pojo.dto.DeptDto;
-import com.gitee.whzzone.admin.system.entity.Dept;
 import com.gitee.whzzone.admin.system.pojo.query.DeptQuery;
 import com.gitee.whzzone.admin.system.service.DeptService;
+import com.gitee.whzzone.web.entity.BaseEntity;
+import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +44,7 @@ public class DeptServiceImpl extends EntityServiceImpl<DeptMapper, Dept, DeptDto
     @Override
     public Dept save(DeptDto dto) {
         if (dto.getParentId() == null) {
-            dto.setParentId(0L);
+            dto.setParentId(0);
         } else if (!isExist(dto.getParentId()))
             throw new RuntimeException("父级不存在");
 
@@ -66,7 +66,7 @@ public class DeptServiceImpl extends EntityServiceImpl<DeptMapper, Dept, DeptDto
     }
 
     @Override
-    public boolean hasChildren(Long id) {
+    public boolean hasChildren(Integer id) {
         return count(new LambdaQueryWrapper<Dept>().eq(Dept::getParentId, id)) > 0;
     }
 
@@ -76,7 +76,7 @@ public class DeptServiceImpl extends EntityServiceImpl<DeptMapper, Dept, DeptDto
 
         dto.setHasChildren(hasChildren(dto.getId()));
 
-        if (!dto.getParentId().equals(0L)) {
+        if (!dto.getParentId().equals(0)) {
             Dept parent = getById(dto.getParentId());
             if (parent != null) {
                 dto.setParentName(parent.getName());
@@ -126,7 +126,7 @@ public class DeptServiceImpl extends EntityServiceImpl<DeptMapper, Dept, DeptDto
     }
 
     @Override
-    public void enabledSwitch(Long id) {
+    public void enabledSwitch(Integer id) {
         Dept entity = getById(id);
         if (entity == null) {
             throw new RuntimeException("部门不存在");
@@ -136,12 +136,12 @@ public class DeptServiceImpl extends EntityServiceImpl<DeptMapper, Dept, DeptDto
     }
 
     @Override
-    public List<Long> getThisAndChildIds(Long id) {
+    public List<Integer> getThisAndChildIds(Integer id) {
         return deptMapper.getThisAndChildIds(id);
     }
 
     @Override
-    public List<Dept> findInIds(List<Long> deptIds) {
+    public List<Dept> findInIds(List<Integer> deptIds) {
         if (CollectionUtil.isEmpty(deptIds))
             return null;
 
@@ -151,15 +151,15 @@ public class DeptServiceImpl extends EntityServiceImpl<DeptMapper, Dept, DeptDto
     }
 
     @Override
-    public boolean existAll(List<Long> deptIds) {
-        HashSet<Long> ids = new HashSet<>(deptIds);
+    public boolean existAll(List<Integer> deptIds) {
+        HashSet<Integer> ids = new HashSet<>(deptIds);
         LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.in(BaseEntity::getId, ids);
         return count(queryWrapper) == ids.size();
     }
 
     @Override
-    public List<DeptDto> getDtoListIn(List<Long> ids) {
+    public List<DeptDto> getDtoListIn(List<Integer> ids) {
         LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.in(BaseEntity::getId, ids);
         List<Dept> list = list(queryWrapper);

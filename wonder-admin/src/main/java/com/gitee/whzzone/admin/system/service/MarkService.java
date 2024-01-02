@@ -1,12 +1,12 @@
 package com.gitee.whzzone.admin.system.service;
 
-import com.gitee.whzzone.common.base.service.EntityService;
-import com.gitee.whzzone.common.PageData;
-import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
-import com.gitee.whzzone.admin.system.pojo.dto.MarkDto;
 import com.gitee.whzzone.admin.system.entity.Mark;
 import com.gitee.whzzone.admin.system.entity.Rule;
+import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
+import com.gitee.whzzone.admin.system.pojo.dto.MarkDto;
 import com.gitee.whzzone.admin.system.pojo.query.MarkQuery;
+import com.gitee.whzzone.web.pojo.other.PageData;
+import com.gitee.whzzone.web.service.EntityService;
 
 import java.util.List;
 
@@ -19,15 +19,15 @@ public interface MarkService extends EntityService<Mark, MarkDto, MarkQuery> {
 
     DataScopeInfo execRuleByName(String name);
 
-    boolean existSameName(Long id, String scopeName);
+    boolean existSameName(Integer id, String scopeName);
 
     PageData<MarkDto> page(MarkQuery query);
 
-    void enabledSwitch(Long id);
+    void enabledSwitch(Integer id);
 
     List<MarkDto> list(MarkQuery query);
 
-    void removeAllByRoleIdAndMarkId(Long roleId, Long markId);
+    void removeAllByRoleIdAndMarkId(Integer roleId, Integer markId);
 
-    boolean addRelation(Long roleId, Long markId, Long ruleId);
+    boolean addRelation(Integer roleId, Integer markId, Integer ruleId);
 }

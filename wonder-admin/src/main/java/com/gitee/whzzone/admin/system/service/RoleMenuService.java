@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.service;
 
-import com.gitee.whzzone.common.base.service.EntityService;
+import com.gitee.whzzone.web.service.EntityService;
 import com.gitee.whzzone.admin.system.pojo.dto.RoleMenuDto;
 import com.gitee.whzzone.admin.system.entity.RoleMenu;
 import com.gitee.whzzone.admin.system.pojo.query.RoleMenuQuery;
@@ -13,8 +13,8 @@ import java.util.List;
  */
 public interface RoleMenuService extends EntityService<RoleMenu, RoleMenuDto, RoleMenuQuery> {
 
-    void addRelation(Long roleId, List<Long> menuIds);
+    void addRelation(Integer roleId, List<Integer> menuIds);
 
-    void removeRelation(Long roleId);
+    void removeRelation(Integer roleId);
 
 }

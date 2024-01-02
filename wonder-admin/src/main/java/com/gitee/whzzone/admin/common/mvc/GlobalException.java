@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.common.mvc;
 
 import com.gitee.whzzone.common.exception.NoDataException;
-import com.gitee.whzzone.web.Result;
+import com.gitee.whzzone.web.pojo.other.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;

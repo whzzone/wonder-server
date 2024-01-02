@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
-import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.pojo.dto.EntityDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class RequestLogDto extends EntityDto {
     private Integer code;
 
     @ApiModelProperty("请求人")
-    private Long userId;
+    private Integer userId;
 
     @ApiModelProperty("请求url")
     private String url;

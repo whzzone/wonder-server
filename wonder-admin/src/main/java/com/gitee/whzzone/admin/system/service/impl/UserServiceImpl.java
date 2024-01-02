@@ -7,15 +7,15 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
-import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.system.entity.*;
 import com.gitee.whzzone.admin.system.mapper.UserMapper;
-import com.gitee.whzzone.common.PageData;
 import com.gitee.whzzone.admin.system.pojo.dto.ResetPWDDto;
 import com.gitee.whzzone.admin.system.pojo.dto.UserDto;
 import com.gitee.whzzone.admin.system.pojo.query.UserQuery;
 import com.gitee.whzzone.admin.system.service.*;
+import com.gitee.whzzone.web.entity.BaseEntity;
+import com.gitee.whzzone.web.pojo.other.PageData;
+import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -109,7 +109,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
         List<Dept> deptList = getUserDeptInfo(dto.getId());
         if (CollectionUtil.isNotEmpty(deptList)){
             dto.setDeptList(deptList);
-            List<Long> ids = deptList.stream().map(BaseEntity::getId).collect(Collectors.toList());
+            List<Integer> ids = deptList.stream().map(BaseEntity::getId).collect(Collectors.toList());
             dto.setDeptIdList(ids);
         }
 
@@ -119,18 +119,18 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
     }
 
     @Override
-    public List<Dept> getUserDeptInfo(Long userId) {
+    public List<Dept> getUserDeptInfo(Integer userId) {
         List<UserDept> userDeptList = userDeptService.getByUserId(userId);
         if (CollectionUtil.isEmpty(userDeptList))
             return new ArrayList<>();
 
-        List<Long> deptIds = userDeptList.stream().map(UserDept::getDeptId).collect(Collectors.toList());
+        List<Integer> deptIds = userDeptList.stream().map(UserDept::getDeptId).collect(Collectors.toList());
 
         return deptService.findInIds(deptIds);
     }
 
     @Override
-    public Role getUserRoleInfo(Long userId) {
+    public Role getUserRoleInfo(Integer userId) {
         // 查询部门
         LambdaQueryWrapper<UserRole> udQueryWrapper = new LambdaQueryWrapper<>();
         udQueryWrapper.eq(UserRole::getUserId, userId);
@@ -146,11 +146,11 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
     public PageData<UserDto> page(UserQuery query) {
         Page<User> page = new Page<>(query.getCurPage(), query.getPageSize());
 
-        List<Long> userIds = new ArrayList<>();
+        List<Integer> userIds = new ArrayList<>();
 
         // 如果deptId不为空
         if (query.getDeptId() != null) {
-            List<Long> thisAndChildIds = deptService.getThisAndChildIds(query.getDeptId());
+            List<Integer> thisAndChildIds = deptService.getThisAndChildIds(query.getDeptId());
             if (CollectionUtil.isEmpty(thisAndChildIds)) {
                 return new PageData<>();
             }
@@ -181,7 +181,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
     }
 
     @Override
-    public void enabledSwitch(Long id) {
+    public void enabledSwitch(Integer id) {
         User entity = getById(id);
         if (entity == null) {
             throw new RuntimeException("用户不存在");
@@ -239,7 +239,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
     }
 
     @Override
-    public boolean existSameUsername(Long userId, String username) {
+    public boolean existSameUsername(Integer userId, String username) {
         Assert.notEmpty(username);
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getUsername, username);
@@ -248,7 +248,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
     }
 
     @Override
-    public boolean existSamePhone(Long userId, String phone) {
+    public boolean existSamePhone(Integer userId, String phone) {
         Assert.notEmpty(phone);
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getPhone, phone);
@@ -257,7 +257,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
     }
 
     @Override
-    public boolean existSameEmail(Long userId, String email) {
+    public boolean existSameEmail(Integer userId, String email) {
         if (StrUtil.isBlank(email))
             return false;
 
@@ -284,7 +284,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
     }
 
     @Override
-    public List<Long> getDeptIds(Long userId) {
+    public List<Integer> getDeptIds(Integer userId) {
         if (userId == null)
             return null;
 
@@ -296,7 +296,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
     }
 
     @Override
-    public List<Long> getRoleIds(Long userId) {
+    public List<Integer> getRoleIds(Integer userId) {
         if (userId == null)
             return null;
 

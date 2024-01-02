@@ -1,10 +1,9 @@
 package com.gitee.whzzone.admin.system.pojo.other.Dict;
 
-import com.gitee.whzzone.common.annotation.Query;
-import com.gitee.whzzone.common.annotation.SelectColumn;
-import com.gitee.whzzone.common.base.pojo.query.EntityQuery;
-import com.gitee.whzzone.common.base.pojo.sort.Sort;
+import com.gitee.whzzone.annotation.Query;
 import com.gitee.whzzone.common.enums.ExpressionEnum;
+import com.gitee.whzzone.web.pojo.query.EntityQuery;
+import com.gitee.whzzone.web.pojo.sort.Sort;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -22,7 +21,6 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@SelectColumn({"id", "create_time", "create_by", "update_time", "update_by", "deleted", "dict_name", "dict_code", "dict_type", "sort", "remark"})
 @ApiModel(value = "DictQuery对象", description = "系统字典")
 public class DictQuery extends EntityQuery {
 

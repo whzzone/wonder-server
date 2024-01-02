@@ -1,8 +1,8 @@
 package com.gitee.whzzone.admin.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.gitee.whzzone.common.annotation.DataScope;
 import com.gitee.whzzone.admin.system.entity.Role;
+import com.gitee.whzzone.annotation.DataScope;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

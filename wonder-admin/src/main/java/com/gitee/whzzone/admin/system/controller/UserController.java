@@ -1,13 +1,13 @@
 package com.gitee.whzzone.admin.system.controller;
 
-import com.gitee.whzzone.common.base.controller.EntityController;
-import com.gitee.whzzone.common.PageData;
+import com.gitee.whzzone.admin.system.entity.User;
 import com.gitee.whzzone.admin.system.pojo.dto.ResetPWDDto;
 import com.gitee.whzzone.admin.system.pojo.dto.UserDto;
-import com.gitee.whzzone.admin.system.entity.User;
 import com.gitee.whzzone.admin.system.pojo.query.UserQuery;
 import com.gitee.whzzone.admin.system.service.UserService;
-import com.gitee.whzzone.web.Result;
+import com.gitee.whzzone.web.controller.EntityController;
+import com.gitee.whzzone.web.pojo.other.PageData;
+import com.gitee.whzzone.web.pojo.other.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class UserController extends EntityController<User, UserService, UserDto,
 
     @ApiOperation("改变启用状态")
     @GetMapping("/enabledSwitch/{id}")
-    public Result enabledSwitch(@PathVariable Long id) {
+    public Result enabledSwitch(@PathVariable Integer id) {
         userService.enabledSwitch(id);
         return Result.ok();
     }

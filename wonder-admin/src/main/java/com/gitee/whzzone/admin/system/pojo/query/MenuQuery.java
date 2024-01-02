@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.pojo.query;
 
-import com.gitee.whzzone.common.base.pojo.query.EntityQuery;
+import com.gitee.whzzone.web.pojo.query.EntityQuery;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -15,7 +15,7 @@ public class MenuQuery extends EntityQuery {
     private String name;
 
     @ApiModelProperty("父id")
-    private Long parentId;
+    private Integer parentId;
 
     @ApiModelProperty("菜单类型")
     private Integer menuType;

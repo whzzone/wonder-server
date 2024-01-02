@@ -1,10 +1,8 @@
 package com.gitee.whzzone.admin.util;
 
 import com.gitee.whzzone.admin.common.security.LoginUser;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author : whz
@@ -26,25 +24,18 @@ public class SecurityUtil {
     public static boolean isAdmin(){
         return false;
     }
-
-    public static List<Long> loginUserId(){
-        Long id = getLoginUser().getId();
-        List<Long> ids = new ArrayList<>();
-        ids.add(id);
-        return ids;
-    }
-
+    
     /**
      * 获取当前请求的角色id
      */
-    public static Long getCurrentRoleId() {
+    public static Integer getCurrentRoleId() {
         return getLoginUser().getCurrentRoleId();
     }
 
     /**
      * 获取当前请求的部门id
      */
-    public static Long getCurrentDeptId() {
+    public static Integer getCurrentDeptId() {
         return getLoginUser().getCurrentDeptId();
     }
 }

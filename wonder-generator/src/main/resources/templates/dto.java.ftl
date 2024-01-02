@@ -5,7 +5,8 @@ package ${package.Other}.${entity};
 import ${pkg};
     </#if>
 </#list>
-import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
+import com.gitee.whzzone.annotation.EntityField;
+import com.gitee.whzzone.web.pojo.dto.EntityDto;
 <#if swagger>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -40,6 +41,7 @@ public class ${entity}Dto extends EntityDto {
     <#if field != "id" && field != "createTime" && field != "createBy" && field != "updateTime" && field != "updateBy" && field != "deleted">
 
     @ApiModelProperty("${field.comment}")
+    @EntityField
     private ${field.propertyType} ${field.propertyName};
     </#if>
 </#list>

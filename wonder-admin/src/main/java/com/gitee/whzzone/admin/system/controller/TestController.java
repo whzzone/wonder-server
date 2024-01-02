@@ -5,7 +5,7 @@ import com.gitee.whzzone.admin.system.entity.Role;
 import com.gitee.whzzone.admin.system.mapper.RoleMapper;
 import com.gitee.whzzone.admin.system.service.TestService;
 import com.gitee.whzzone.admin.util.SecurityUtil;
-import com.gitee.whzzone.web.Result;
+import com.gitee.whzzone.web.pojo.other.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

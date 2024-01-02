@@ -1,10 +1,9 @@
 package com.gitee.whzzone.admin.business.pojo.dto;
 
-import com.gitee.whzzone.common.annotation.SaveField;
-import com.gitee.whzzone.common.annotation.UpdateField;
-import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
-import com.gitee.whzzone.common.group.CreateGroup;
-import com.gitee.whzzone.common.group.UpdateGroup;
+import com.gitee.whzzone.annotation.EntityField;
+import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.validation.groups.InsertGroup;
+import com.gitee.whzzone.web.validation.groups.UpdateGroup;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -17,22 +16,18 @@ import java.math.BigDecimal;
 @Data
 public class OrderDto extends EntityDto {
 
-    @SaveField(required = true)
-    @UpdateField(required = true)
-    @NotBlank(message = "收货人不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @EntityField
+    @NotBlank(message = "收货人不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     @ApiModelProperty("收货人姓名")
     private String receiverName;
 
-    @UpdateField
+    @EntityField(insert = false)
     @ApiModelProperty("收货人手机号码")
     private String receiverPhone;
 
-    @UpdateField
     @ApiModelProperty("收货地址")
     private String receiverAddress;
 
-//    @SaveField
-//    @UpdateField
     @ApiModelProperty("订单金额")
     private BigDecimal orderAmount;
 

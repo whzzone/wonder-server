@@ -1,10 +1,8 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
-import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
-import com.gitee.whzzone.common.serializer.LongSerializer;
-import com.gitee.whzzone.common.group.CreateGroup;
-import com.gitee.whzzone.common.group.UpdateGroup;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.validation.groups.InsertGroup;
+import com.gitee.whzzone.web.validation.groups.UpdateGroup;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -18,13 +16,12 @@ import javax.validation.constraints.NotNull;
 @Data
 public class MenuDto extends EntityDto {
 
-    @JsonSerialize(using = LongSerializer.class)
     @ApiModelProperty(value = "parentId")
-    private Long parentId;
+    private Integer parentId;
 
     private String parentName;
 
-    @NotBlank(message = "name不能为空", groups = {UpdateGroup.class, CreateGroup.class})
+    @NotBlank(message = "name不能为空", groups = {UpdateGroup.class, InsertGroup.class})
     @ApiModelProperty(value = "name", required = true)
     private String name;
 
@@ -49,7 +46,7 @@ public class MenuDto extends EntityDto {
     @ApiModelProperty(value = "排序")
     private Integer sort;
 
-    @NotNull(message = "menuType不能为空", groups = {UpdateGroup.class, CreateGroup.class})
+    @NotNull(message = "menuType不能为空", groups = {UpdateGroup.class, InsertGroup.class})
     @ApiModelProperty(value = "菜单类型", required = true)
     private Integer menuType;
 

@@ -6,8 +6,6 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gitee.whzzone.common.PageData;
-import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
 import com.gitee.whzzone.admin.system.entity.Mark;
 import com.gitee.whzzone.admin.system.entity.RoleMark;
 import com.gitee.whzzone.admin.system.entity.Rule;
@@ -22,6 +20,8 @@ import com.gitee.whzzone.admin.system.service.RoleService;
 import com.gitee.whzzone.admin.system.service.RuleService;
 import com.gitee.whzzone.admin.util.SecurityUtil;
 import com.gitee.whzzone.common.enums.ProvideTypeEnum;
+import com.gitee.whzzone.web.pojo.other.PageData;
+import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -60,7 +60,7 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDto
         if (mark == null)
             throw new RuntimeException("不存在：" + name);
 
-        Long roleId = SecurityUtil.getCurrentRoleId();
+        Integer roleId = SecurityUtil.getCurrentRoleId();
         if (!roleService.isExist(roleId))
             throw new RuntimeException("角色不存在");
 
@@ -69,7 +69,7 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDto
         if (CollectionUtil.isEmpty(roleMarkList))
             return null;
 
-        List<Long> ruleIds = roleMarkList.stream().map(RoleMark::getRuleId).collect(Collectors.toList());
+        List<Integer> ruleIds = roleMarkList.stream().map(RoleMark::getRuleId).collect(Collectors.toList());
 
         return ruleService.getByIds(ruleIds);
     }
@@ -174,7 +174,7 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDto
     }
 
     @Override
-    public boolean existSameName(Long id, String scopeName) {
+    public boolean existSameName(Integer id, String scopeName) {
         LambdaQueryWrapper<Mark> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Mark::getName, scopeName);
         queryWrapper.ne(id != null, Mark::getId, id);
@@ -196,7 +196,7 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDto
     }
 
     @Override
-    public void enabledSwitch(Long id) {
+    public void enabledSwitch(Integer id) {
         Mark entity = getById(id);
         if (entity == null) {
             throw new RuntimeException("不存在");
@@ -214,7 +214,7 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDto
     }
 
     @Override
-    public void removeAllByRoleIdAndMarkId(Long roleId, Long markId) {
+    public void removeAllByRoleIdAndMarkId(Integer roleId, Integer markId) {
         if (roleId == null)
             throw new RuntimeException("roleId不能为空");
         if (markId == null)
@@ -227,7 +227,7 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDto
     }
 
     @Override
-    public boolean addRelation(Long roleId, Long markId, Long ruleId) {
+    public boolean addRelation(Integer roleId, Integer markId, Integer ruleId) {
         if (roleId == null)
             throw new RuntimeException("roleId不能为空");
 

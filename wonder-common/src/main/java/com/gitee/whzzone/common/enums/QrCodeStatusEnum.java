@@ -1,13 +1,8 @@
 package com.gitee.whzzone.common.enums;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 /**
  * @author Create by whz at 2023/8/8
  */
-@Getter
-@AllArgsConstructor
 public enum QrCodeStatusEnum {
 
     INVALID(-1, "无效的"),
@@ -16,4 +11,17 @@ public enum QrCodeStatusEnum {
 
     private final Integer code;
     private final String name;
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    QrCodeStatusEnum(Integer code, String name) {
+        this.code = code;
+        this.name = name;
+    }
 }

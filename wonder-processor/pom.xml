@@ -19,8 +19,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.gitee.whzzone</groupId>
-            <artifactId>wonder-common</artifactId>
+            <groupId>com.gitee.whzzone.annotation</groupId>
+            <artifactId>wonder-annotation</artifactId>
             <version>1.0</version>
         </dependency>
 
@@ -28,38 +28,5 @@
             <groupId>com.google.auto.service</groupId>
             <artifactId>auto-service</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <version>1.6.2</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
-
-    <build>
-        <pluginManagement>
-            <plugins>
-<!--                <plugin>-->
-<!--                    <groupId>org.springframework.boot</groupId>-->
-<!--                    <artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--                    <version>${spring-boot.version}</version>-->
-<!--                </plugin>-->
-
-<!--                <plugin>-->
-<!--                    <groupId>org.apache.maven.plugins</groupId>-->
-<!--                    <artifactId>maven-compiler-plugin</artifactId>-->
-<!--                    <version>3.8.1</version>-->
-<!--                    <configuration>-->
-<!--                        <compilerArgument>-->
-<!--                            -proc:none-->
-<!--                        </compilerArgument>-->
-<!--                        <source>1.8</source>-->
-<!--                        <target>1.8</target>-->
-<!--                    </configuration>-->
-<!--                </plugin>-->
-            </plugins>
-        </pluginManagement>
-    </build>
-
 </project>

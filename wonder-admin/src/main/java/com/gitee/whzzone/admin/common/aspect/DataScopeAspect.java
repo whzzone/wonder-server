@@ -4,7 +4,7 @@ import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
 import com.gitee.whzzone.admin.system.pojo.dto.RuleDto;
 import com.gitee.whzzone.admin.system.service.MarkService;
 import com.gitee.whzzone.admin.util.SecurityUtil;
-import com.gitee.whzzone.common.annotation.DataScope;
+import com.gitee.whzzone.annotation.DataScope;
 import com.gitee.whzzone.common.exception.NoDataException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,7 @@ public class DataScopeAspect {
     }
 
     // 方法切点
-    @Pointcut("@annotation(com.gitee.whzzone.common.annotation.DataScope)")
+    @Pointcut("@annotation(com.gitee.whzzone.annotation.DataScope)")
     public void methodPointCut() {
     }
 

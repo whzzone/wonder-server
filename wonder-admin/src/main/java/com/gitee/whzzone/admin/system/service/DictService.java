@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.service;
 
 import com.gitee.whzzone.admin.system.entity.Dict;
-import com.gitee.whzzone.common.base.service.EntityService;
+import com.gitee.whzzone.web.service.EntityService;
 import com.gitee.whzzone.admin.system.pojo.other.Dict.DictQuery;
 import com.gitee.whzzone.admin.system.pojo.other.Dict.DictDto;
 
@@ -11,7 +11,7 @@ import com.gitee.whzzone.admin.system.pojo.other.Dict.DictDto;
 */
 public interface DictService extends EntityService<Dict, DictDto, DictQuery> {
 
-    boolean existSameDictCode(Long id, String dictCode);
+    boolean existSameDictCode(Integer id, String dictCode);
 
     Dict findByDictCode(String dictCode);
 }

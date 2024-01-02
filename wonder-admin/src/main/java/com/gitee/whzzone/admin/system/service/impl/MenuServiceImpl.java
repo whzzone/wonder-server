@@ -4,15 +4,15 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
+import com.gitee.whzzone.admin.system.entity.Menu;
+import com.gitee.whzzone.admin.system.entity.RoleMenu;
 import com.gitee.whzzone.admin.system.mapper.MenuMapper;
 import com.gitee.whzzone.admin.system.pojo.dto.MenuDto;
 import com.gitee.whzzone.admin.system.pojo.dto.MenuTreeDto;
-import com.gitee.whzzone.admin.system.entity.Menu;
-import com.gitee.whzzone.admin.system.entity.RoleMenu;
 import com.gitee.whzzone.admin.system.pojo.query.MenuQuery;
 import com.gitee.whzzone.admin.system.service.MenuService;
 import com.gitee.whzzone.admin.system.service.RoleMenuService;
+import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +35,7 @@ public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto
     private RoleMenuService roleMenuService;
 
     @Override
-    public List<String> findPermitByUserId(Long userId) {
+    public List<String> findPermitByUserId(Integer userId) {
         return menuMapper.findPermitByUserId(userId);
     }
 
@@ -67,7 +67,7 @@ public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto
     @Override
     public List<MenuDto> list(MenuQuery query) {
         if (query.getParentId() == null)
-            query.setParentId(0L);
+            query.setParentId(0);
 
         LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Menu::getParentId, query.getParentId());
@@ -85,7 +85,7 @@ public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto
     }
 
     @Override
-    public List<MenuDto> findByUserId(Long userId) {
+    public List<MenuDto> findByUserId(Integer userId) {
         List<Menu> byUserId = menuMapper.findByUserId(userId);
         return BeanUtil.copyToList(byUserId, MenuDto.class );
     }
@@ -105,7 +105,7 @@ public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto
     }
 
     @Override
-    public List<Long> getIdListByRoleId(Long roleId) {
+    public List<Integer> getIdListByRoleId(Integer roleId) {
         if (roleId == null)
             return new ArrayList<>();
 
@@ -125,7 +125,7 @@ public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto
      * @param permission 权限标识
      */
     @Override
-    public boolean existSamePermission(Long id, String permission){
+    public boolean existSamePermission(Integer id, String permission){
         if (StrUtil.isBlank(permission))
             return false;
 
@@ -136,7 +136,7 @@ public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto
     }
 
     @Override
-    public boolean existSameRouteName(Long id, String routeName){
+    public boolean existSameRouteName(Integer id, String routeName){
         if (StrUtil.isBlank(routeName))
             return false;
 
@@ -171,7 +171,7 @@ public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto
     @Override
     public Menu save(MenuDto dto) {
         if (dto.getParentId() == null){
-            dto.setParentId(0L);
+            dto.setParentId(0);
         }
         return super.save(dto);
     }
@@ -179,7 +179,7 @@ public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto
     @Override
     public MenuDto beforeSaveOrUpdateHandler(MenuDto dto) {
         if (dto.getParentId() == null){
-            dto.setParentId(0L);
+            dto.setParentId(0);
         }
         return dto;
     }

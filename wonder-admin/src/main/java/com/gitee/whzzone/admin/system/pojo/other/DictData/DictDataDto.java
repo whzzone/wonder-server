@@ -1,10 +1,8 @@
 package com.gitee.whzzone.admin.system.pojo.other.DictData;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
-import com.gitee.whzzone.common.serializer.LongSerializer;
-import com.gitee.whzzone.common.group.CreateGroup;
-import com.gitee.whzzone.common.group.UpdateGroup;
+import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.validation.groups.InsertGroup;
+import com.gitee.whzzone.web.validation.groups.UpdateGroup;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -24,20 +22,18 @@ import javax.validation.constraints.NotNull;
 @ApiModel(value = "DictDataDto对象", description = "系统字典数据")
 public class DictDataDto extends EntityDto {
 
-    @NotNull(message = "字典id不能为空", groups = {CreateGroup.class, UpdateGroup.class})
-    @JsonSerialize(using = LongSerializer.class)
+    @NotNull(message = "字典id不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     @ApiModelProperty(value = "字典id", required = true)
-    private Long dictId;
+    private Integer dictId;
 
-    @JsonSerialize(using = LongSerializer.class)
     @ApiModelProperty("父级id")
-    private Long parentId;
+    private Integer parentId;
 
-    @NotBlank(message = "字典标签不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @NotBlank(message = "字典标签不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     @ApiModelProperty("字典标签")
     private String dictLabel;
 
-    @NotBlank(message = "字典值不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @NotBlank(message = "字典值不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     @ApiModelProperty("字典值")
     private String dictValue;
 

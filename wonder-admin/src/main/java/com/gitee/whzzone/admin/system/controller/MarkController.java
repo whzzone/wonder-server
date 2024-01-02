@@ -1,12 +1,12 @@
 package com.gitee.whzzone.admin.system.controller;
 
-import com.gitee.whzzone.common.base.controller.EntityController;
-import com.gitee.whzzone.common.PageData;
-import com.gitee.whzzone.admin.system.pojo.dto.MarkDto;
 import com.gitee.whzzone.admin.system.entity.Mark;
+import com.gitee.whzzone.admin.system.pojo.dto.MarkDto;
 import com.gitee.whzzone.admin.system.pojo.query.MarkQuery;
 import com.gitee.whzzone.admin.system.service.MarkService;
-import com.gitee.whzzone.web.Result;
+import com.gitee.whzzone.web.controller.EntityController;
+import com.gitee.whzzone.web.pojo.other.PageData;
+import com.gitee.whzzone.web.pojo.other.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ public class MarkController extends EntityController<Mark, MarkService, MarkDto,
 
     @ApiOperation("改变启用状态")
     @GetMapping("/enabledSwitch/{id}")
-    public Result enabledSwitch(@PathVariable Long id) {
+    public Result enabledSwitch(@PathVariable Integer id) {
         markService.enabledSwitch(id);
         return Result.ok();
     }

@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.service;
 
-import com.gitee.whzzone.common.base.service.EntityService;
+import com.gitee.whzzone.web.service.EntityService;
 import com.gitee.whzzone.admin.system.entity.DictData;
 import com.gitee.whzzone.admin.system.pojo.other.DictData.DictDataDto;
 import com.gitee.whzzone.admin.system.pojo.other.DictData.DictDataQuery;
@@ -13,7 +13,7 @@ import java.util.List;
 */
 public interface DictDataService extends EntityService<DictData, DictDataDto, DictDataQuery> {
 
-    boolean existSameDictValue(Long id, Long dictId, String dictValue);
+    boolean existSameDictValue(Integer id, Integer dictId, String dictValue);
 
     List<DictDataDto> findByDictCode(String dictCode);
 }

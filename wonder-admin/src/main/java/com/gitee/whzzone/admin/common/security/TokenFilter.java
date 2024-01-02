@@ -8,9 +8,9 @@ import cn.hutool.json.JSONUtil;
 import com.gitee.whzzone.admin.system.entity.User;
 import com.gitee.whzzone.admin.system.service.MenuService;
 import com.gitee.whzzone.admin.system.service.UserService;
-import com.gitee.whzzone.common.util.CacheKey;
 import com.gitee.whzzone.admin.util.RedisCache;
-import com.gitee.whzzone.web.Result;
+import com.gitee.whzzone.common.util.CacheKey;
+import com.gitee.whzzone.web.pojo.other.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -81,8 +81,8 @@ public class TokenFilter extends OncePerRequestFilter {
             }
 
             String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-            Long roleId = StringUtils.hasText(request.getHeader("RoleId")) ? Long.valueOf(request.getHeader("RoleId")) : null;
-            Long deptId = StringUtils.hasText(request.getHeader("DeptId")) ? Long.valueOf(request.getHeader("DeptId")) : null;
+            Integer roleId = StringUtils.hasText(request.getHeader("RoleId")) ? Integer.valueOf(request.getHeader("RoleId")) : null;
+            Integer deptId = StringUtils.hasText(request.getHeader("DeptId")) ? Integer.valueOf(request.getHeader("DeptId")) : null;
 
             if (StrUtil.isBlank(token))
                 throw new  RuntimeException("未携带token访问");
@@ -93,7 +93,7 @@ public class TokenFilter extends OncePerRequestFilter {
             if (Boolean.FALSE.equals(hasKey))
                 throw new RuntimeException("失效的token");
 
-            Long userId = (Long) redisCache.get(tokenKey);
+            Integer userId = (Integer) redisCache.get(tokenKey);
 
             User user = userService.getById(userId);
 
@@ -106,12 +106,12 @@ public class TokenFilter extends OncePerRequestFilter {
                 redisCache.expire(tokenKey, cacheTime, cacheTimeUnit);
             }
 
-            List<Long> deptIds = userService.getDeptIds(userId);
+            List<Integer> deptIds = userService.getDeptIds(userId);
             if (CollectionUtils.isEmpty(deptIds)){
                 throw new RuntimeException("没有关联的部门ids为空");
             }
 
-            List<Long> roleIds = userService.getRoleIds(userId);
+            List<Integer> roleIds = userService.getRoleIds(userId);
             if (CollectionUtils.isEmpty(roleIds)){
                 throw new RuntimeException("没有关联的角色ids为空");
             }

@@ -1,12 +1,12 @@
 package com.gitee.whzzone.admin.system.controller;
 
-import com.gitee.whzzone.common.base.controller.EntityController;
 import com.gitee.whzzone.admin.system.entity.DictData;
 import com.gitee.whzzone.admin.system.pojo.other.DictData.DictDataDto;
 import com.gitee.whzzone.admin.system.pojo.other.DictData.DictDataQuery;
 import com.gitee.whzzone.admin.system.service.DictDataService;
-import com.gitee.whzzone.common.annotation.RequestLogger;
-import com.gitee.whzzone.web.Result;
+import com.gitee.whzzone.annotation.ApiLogger;
+import com.gitee.whzzone.web.controller.EntityController;
+import com.gitee.whzzone.web.pojo.other.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class DictDataController extends EntityController<DictData, DictDataServi
     @Autowired
     private DictDataService dictDataService;
 
-    @RequestLogger
+    @ApiLogger
     @ApiOperation("根据dictCode查询字典数据")
     @GetMapping("/dictCode/{dictCode}")
     public Result<List<DictDataDto>> findByDictCode(@PathVariable String dictCode) {

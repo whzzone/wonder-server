@@ -15,7 +15,7 @@ import java.util.Set;
  * @author Create by whz at 2023/8/5
  */
 //@AutoService(Processor.class)
-@SupportedAnnotationTypes("com.gitee.whzzone.common.annotation.SaveField")
+@SupportedAnnotationTypes("com.gitee.whzzone.annotation.EntityField")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class SwaggerFieldProcessor extends AbstractProcessor {
 
@@ -31,7 +31,7 @@ public class SwaggerFieldProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        messager.printMessage(Diagnostic.Kind.NOTE, "------开始处理 @SaveField 注解------");
+        messager.printMessage(Diagnostic.Kind.NOTE, "------开始处理 @InsertField 注解------");
         for (TypeElement annotation : annotations) {
             Set<? extends Element> annotatedElements = roundEnv.getElementsAnnotatedWith(annotation);
             for (Element element : annotatedElements) {

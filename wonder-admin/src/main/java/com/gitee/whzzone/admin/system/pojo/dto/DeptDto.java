@@ -1,10 +1,8 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
-import com.gitee.whzzone.common.serializer.LongSerializer;
-import com.gitee.whzzone.common.group.CreateGroup;
-import com.gitee.whzzone.common.group.UpdateGroup;
+import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.validation.groups.InsertGroup;
+import com.gitee.whzzone.web.validation.groups.UpdateGroup;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -19,14 +17,13 @@ import java.util.List;
 @Data
 public class DeptDto extends EntityDto {
 
-    @JsonSerialize(using = LongSerializer.class)
     @ApiModelProperty("父级id")
-    private Long parentId;
+    private Integer parentId;
 
     @ApiModelProperty("父级名称")
     private String parentName;
 
-    @NotBlank(message = "名称不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @NotBlank(message = "名称不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     @ApiModelProperty("名称")
     private String name;
 

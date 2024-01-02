@@ -1,13 +1,13 @@
 package com.gitee.whzzone.admin.system.controller;
 
+import com.gitee.whzzone.admin.system.entity.Dict;
+import com.gitee.whzzone.admin.system.pojo.other.Dict.DictDto;
+import com.gitee.whzzone.admin.system.pojo.other.Dict.DictQuery;
+import com.gitee.whzzone.admin.system.service.DictService;
+import com.gitee.whzzone.web.controller.EntityController;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.gitee.whzzone.common.base.controller.EntityController;
-import com.gitee.whzzone.admin.system.entity.Dict;
-import com.gitee.whzzone.admin.system.pojo.other.Dict.DictQuery;
-import com.gitee.whzzone.admin.system.pojo.other.Dict.DictDto;
-import com.gitee.whzzone.admin.system.service.DictService;
-import io.swagger.annotations.Api;
 
 /**
 * 系统字典 控制器

@@ -6,18 +6,18 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gitee.whzzone.admin.system.service.*;
-import com.gitee.whzzone.common.annotation.DataScope;
-import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
-import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
-import com.gitee.whzzone.admin.system.mapper.RoleMapper;
-import com.gitee.whzzone.common.PageData;
-import com.gitee.whzzone.admin.system.pojo.dto.RoleDto;
 import com.gitee.whzzone.admin.system.entity.Role;
 import com.gitee.whzzone.admin.system.entity.Rule;
 import com.gitee.whzzone.admin.system.entity.UserRole;
+import com.gitee.whzzone.admin.system.mapper.RoleMapper;
+import com.gitee.whzzone.admin.system.pojo.dto.RoleDto;
 import com.gitee.whzzone.admin.system.pojo.query.RoleQuery;
+import com.gitee.whzzone.admin.system.service.*;
 import com.gitee.whzzone.admin.util.SecurityUtil;
+import com.gitee.whzzone.annotation.DataScope;
+import com.gitee.whzzone.web.entity.BaseEntity;
+import com.gitee.whzzone.web.pojo.other.PageData;
+import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,7 +65,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
     }
 
     @Override
-    public boolean isAllExist(List<Long> roleIds) {
+    public boolean isAllExist(List<Integer> roleIds) {
         if (CollectionUtil.isEmpty(roleIds))
             throw new RuntimeException("roleIds为空");
 
@@ -113,7 +113,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
     }
 
     @Override
-    public boolean existSameCode(Long roleId, String code){
+    public boolean existSameCode(Integer roleId, String code){
         Assert.notEmpty(code, "code 为空");
         LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Role::getCode, code);
@@ -122,7 +122,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
     }
 
     @Override
-    public boolean existSameName(Long roleId, String name){
+    public boolean existSameName(Integer roleId, String name){
         Assert.notEmpty(name, "name 为空");
         LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Role::getName, name);
@@ -131,7 +131,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
     }
 
     @Override
-    public void addRelation(Long userId, List<Long> roleIds) {
+    public void addRelation(Integer userId, List<Integer> roleIds) {
         Assert.notNull(userId);
         Assert.notEmpty(roleIds);
 
@@ -145,7 +145,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
         List<UserRole> entityList = new ArrayList<>();
 
         // 再添加关联
-        for (Long roleId : roleIds) {
+        for (Integer roleId : roleIds) {
             UserRole userRole = new UserRole();
             userRole.setUserId(userId);
             userRole.setRoleId(roleId);
@@ -158,7 +158,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
     }
 
     @Override
-    public void removeRelation(Long userId){
+    public void removeRelation(Integer userId){
         Assert.notNull(userId);
         LambdaQueryWrapper<UserRole> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserRole::getUserId, userId);
@@ -166,7 +166,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
     }
 
     @Override
-    public List<Long> getRoleIdsByUserId(Long userId) {
+    public List<Integer> getRoleIdsByUserId(Integer userId) {
         Assert.notNull(userId);
         LambdaQueryWrapper<UserRole> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserRole::getUserId, userId);
@@ -179,7 +179,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
     @Override
     public RoleDto afterQueryHandler(Role entity) {
         RoleDto dto = super.afterQueryHandler(entity);
-        List<Long> menuIdList = menuService.getIdListByRoleId(dto.getId());
+        List<Integer> menuIdList = menuService.getIdListByRoleId(dto.getId());
         dto.setMenuIds(menuIdList);
         return dto;
     }
@@ -193,7 +193,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
     }
 
     @Override
-    public void enabledSwitch(Long id) {
+    public void enabledSwitch(Integer id) {
         Role entity = getById(id);
         if (entity == null){
             throw new RuntimeException("角色不存在");
@@ -203,7 +203,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
     }
 
     @Override
-    public List<RoleDto> getDtoListIn(List<Long> ids) {
+    public List<RoleDto> getDtoListIn(List<Integer> ids) {
         LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.in(BaseEntity::getId, ids);
         List<Role> list = list(queryWrapper);
@@ -212,7 +212,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
 
     @Transactional
     @Override
-    public void bindingRule(Long roleId, Long ruleId) {
+    public void bindingRule(Integer roleId, Integer ruleId) {
         if (!isExist(roleId))
             throw new RuntimeException("不存在角色：" + roleId);
 
@@ -220,7 +220,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
         if (rule == null)
             throw new RuntimeException("不存在规则：" + ruleId);
 
-        Long markId = rule.getMarkId();
+        Integer markId = rule.getMarkId();
 
         markService.removeAllByRoleIdAndMarkId(roleId, markId);
 
@@ -230,7 +230,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
     }
 
     @Override
-    public void unBindingRule(Long roleId, Long ruleId) {
+    public void unBindingRule(Integer roleId, Integer ruleId) {
         if (!isExist(roleId))
             throw new RuntimeException("不存在角色：" + roleId);
 
@@ -238,7 +238,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
         if (rule == null)
             throw new RuntimeException("不存在规则：" + ruleId);
 
-        Long markId = rule.getMarkId();
+        Integer markId = rule.getMarkId();
         markService.removeAllByRoleIdAndMarkId(roleId, markId);
     }
 }

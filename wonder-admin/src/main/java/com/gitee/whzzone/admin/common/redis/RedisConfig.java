@@ -3,6 +3,7 @@ package com.gitee.whzzone.admin.common.redis;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,9 @@ import java.time.Duration;
 @Configuration
 public class RedisConfig {
 
+    @Autowired
+    private RedisKeySerializer redisKeySerializer;
+
     //配置redisTemplate
     @Bean
     @SuppressWarnings("all")
@@ -31,7 +35,7 @@ public class RedisConfig {
 
         // String的序列化
 //        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-        RedisKeySerializer redisKeySerializer = new RedisKeySerializer();
+//        RedisKeySerializer redisKeySerializer = new RedisKeySerializer(); // 换成注入模式
 
         //key和hash的key都采用String的序列化方式
         template.setKeySerializer(redisKeySerializer);

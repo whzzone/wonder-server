@@ -1,12 +1,12 @@
 package com.gitee.whzzone.admin.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
+import com.gitee.whzzone.admin.system.entity.UserRole;
 import com.gitee.whzzone.admin.system.mapper.UserRoleMapper;
 import com.gitee.whzzone.admin.system.pojo.dto.UserRoleDto;
-import com.gitee.whzzone.admin.system.entity.UserRole;
 import com.gitee.whzzone.admin.system.pojo.query.UserRoleQuery;
 import com.gitee.whzzone.admin.system.service.UserRoleService;
+import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
 public class UserRoleServiceImpl extends EntityServiceImpl<UserRoleMapper, UserRole, UserRoleDto, UserRoleQuery> implements UserRoleService {
 
     @Override
-    public List<UserRole> getByUserId(Long userId) {
+    public List<UserRole> getByUserId(Integer userId) {
         if (userId == null)
             return null;
 

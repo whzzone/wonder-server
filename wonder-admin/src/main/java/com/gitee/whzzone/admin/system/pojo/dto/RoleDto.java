@@ -1,10 +1,8 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
-import com.gitee.whzzone.common.serializer.ListLongSerializer;
-import com.gitee.whzzone.common.group.CreateGroup;
-import com.gitee.whzzone.common.group.UpdateGroup;
+import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.validation.groups.InsertGroup;
+import com.gitee.whzzone.web.validation.groups.UpdateGroup;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -15,19 +13,18 @@ import java.util.List;
 public class RoleDto extends EntityDto {
 
     @ApiModelProperty("名称")
-    @NotBlank(message = "名称不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @NotBlank(message = "名称不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     private String name;
 
     @ApiModelProperty("描述")
     private String description;
 
     @ApiModelProperty("编码")
-    @NotBlank(message = "编码不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @NotBlank(message = "编码不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     private String code;
 
     @ApiModelProperty("菜单ids")
-    @JsonSerialize(using = ListLongSerializer.class)
-    private List<Long> menuIds;
+    private List<Integer> menuIds;
 
     @ApiModelProperty("是否启用")
     private Boolean enabled;

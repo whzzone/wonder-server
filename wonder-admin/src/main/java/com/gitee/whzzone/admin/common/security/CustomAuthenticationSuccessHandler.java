@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.common.security;
 
 import cn.hutool.json.JSONUtil;
-import com.gitee.whzzone.web.Result;
+import com.gitee.whzzone.web.pojo.other.Result;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;

@@ -1,8 +1,6 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
-import com.gitee.whzzone.common.serializer.LongSerializer;
+import com.gitee.whzzone.web.pojo.dto.EntityDto;
 import lombok.Data;
 
 /**
@@ -11,13 +9,10 @@ import lombok.Data;
 @Data
 public class RoleMarkDto extends EntityDto {
 
-    @JsonSerialize(using = LongSerializer.class)
-    private Long roleId;
+    private Integer roleId;
 
-    @JsonSerialize(using = LongSerializer.class)
-    private Long markId;
+    private Integer markId;
 
-    @JsonSerialize(using = LongSerializer.class)
-    private Long ruleId;
+    private Integer ruleId;
 
 }

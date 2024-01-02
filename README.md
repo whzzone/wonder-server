@@ -176,16 +176,18 @@ public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, Orde
     private Date endDate;
     ```
 
-- `@SaveField` 该注解标识该属性为可添加字段。默认提供的添加接口只提取带有该注解的属性。
-- `@UpdateField` 该注解标识该属性为可编辑字段。默认提供的编辑接口只提取带有该注解的属性。
+- `@EntityField` 该注解标识该字段的对数据库的操作。如下配置, 表示该字段可以新增，但不可编辑字段。
+    ```java
+    @EntityField(insert = true, update = false)
+    @ApiModelProperty("收货人姓名")
+    private String receiverName;
+    ```
 
 #### 参数校验组
 
 - `CreateGroup.class` 默认提供的添加接口会校验该分组
 - `UpdateGroup.clas` 默认提供的编辑接口会校验该分组
     ```java
-    @SaveField
-    @UpdateField
     @NotBlank(message = "收货人不能为空", groups = {CreateGroup.class, UpdateGroup.class})
     @ApiModelProperty("收货人姓名")
     private String receiverName;
@@ -198,7 +200,7 @@ public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, Orde
 
 1. 进入`beforeSaveOrUpdateHandler(dto)`方法，可以对'增改'接口参数进行统一处理
 2. '增'接口进入`beforeSaveHandler(dto)`，'改'接口进入`beforeUpdateHandler(dto)`，分别对参数进行处理
-3. 复制带有`XxxDto`中带有`@SaveField` 或者`@UpdateField`的属性给实体
+3. 复制带有`XxxDto`中带有`@EntityField`属性给实体
 4. 执行更新`updateById(entity)`或插入`save(entity)`操作
 5. 执行`afterSaveHandler(entity)`方法，可在此进行添加或更新的后置处理
 

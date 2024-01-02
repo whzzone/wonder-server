@@ -9,8 +9,8 @@ import com.gitee.whzzone.admin.business.pojo.dto.OrderDto;
 import com.gitee.whzzone.admin.business.pojo.query.OrderQuery;
 import com.gitee.whzzone.admin.business.queryhandler.order.BOrderQueryHandler;
 import com.gitee.whzzone.admin.business.service.OrderService;
-import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
-import com.gitee.whzzone.common.base.service.impl.EntityServiceImpl;
+import com.gitee.whzzone.web.entity.BaseEntity;
+import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -39,7 +39,7 @@ public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, Orde
     }
 
     @Override
-    public List<Long> limitAmountBetween(BigDecimal begin, BigDecimal end) {
+    public List<Integer> limitAmountBetween(BigDecimal begin, BigDecimal end) {
         LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.between(Order::getOrderAmount, begin, end);
         List<Order> list = list(queryWrapper);

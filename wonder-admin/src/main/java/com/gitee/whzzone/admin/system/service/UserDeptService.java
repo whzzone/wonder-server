@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.service;
 
-import com.gitee.whzzone.common.base.service.EntityService;
+import com.gitee.whzzone.web.service.EntityService;
 import com.gitee.whzzone.admin.system.pojo.dto.UserDeptDto;
 import com.gitee.whzzone.admin.system.entity.UserDept;
 import com.gitee.whzzone.admin.system.pojo.query.UserDeptQuery;
@@ -12,12 +12,12 @@ import java.util.List;
  */
 public interface UserDeptService extends EntityService<UserDept, UserDeptDto, UserDeptQuery> {
 
-    void addRelation(Long userId, Long deptId);
+    void addRelation(Integer userId, Integer deptId);
 
-    void addRelation(Long userId, List<Long> deptIds);
+    void addRelation(Integer userId, List<Integer> deptIds);
 
-    void removeRelation(Long userId);
+    void removeRelation(Integer userId);
 
-    List<UserDept> getByUserId(Long userId);
+    List<UserDept> getByUserId(Integer userId);
 
 }

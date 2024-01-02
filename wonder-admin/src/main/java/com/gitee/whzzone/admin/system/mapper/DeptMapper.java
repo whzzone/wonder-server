@@ -13,6 +13,6 @@ import java.util.List;
 @Mapper
 public interface DeptMapper extends BaseMapper<Dept> {
 
-    List<Long> getThisAndChildIds(Long id);
+    List<Integer> getThisAndChildIds(Integer id);
 
 }

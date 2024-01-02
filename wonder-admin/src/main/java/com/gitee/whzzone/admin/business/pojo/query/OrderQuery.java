@@ -1,8 +1,8 @@
 package com.gitee.whzzone.admin.business.pojo.query;
 
-import com.gitee.whzzone.common.annotation.Query;
-import com.gitee.whzzone.common.base.pojo.query.EntityQuery;
+import com.gitee.whzzone.annotation.Query;
 import com.gitee.whzzone.common.enums.ExpressionEnum;
+import com.gitee.whzzone.web.pojo.query.EntityQuery;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 

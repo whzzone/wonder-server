@@ -13,9 +13,9 @@ import java.util.List;
  */
 @Mapper
 public interface MenuMapper extends BaseMapper<Menu> {
-    List<String> findPermitByUserId(Long userId);
+    List<String> findPermitByUserId(Integer userId);
 
-    List<Menu> getRoutes(@Param("userId") Long userId, @Param("code") Integer code);
+    List<Menu> getRoutes(@Param("userId") Integer userId, @Param("code") Integer code);
 
-    List<Menu> findByUserId(Long userId);
+    List<Menu> findByUserId(Integer userId);
 }

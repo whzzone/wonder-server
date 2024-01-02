@@ -12,6 +12,8 @@
         <module>wonder-admin</module>
         <module>wonder-common</module>
         <module>wonder-generator</module>
+        <module>wonder-web</module>
+        <module>wonder-annotation</module>
     </modules>
 
     <properties>

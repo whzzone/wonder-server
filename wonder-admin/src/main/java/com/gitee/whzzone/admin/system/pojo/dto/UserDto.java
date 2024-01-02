@@ -1,12 +1,10 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.gitee.whzzone.common.base.pojo.dto.EntityDto;
-import com.gitee.whzzone.common.serializer.ListLongSerializer;
-import com.gitee.whzzone.common.group.CreateGroup;
-import com.gitee.whzzone.common.group.UpdateGroup;
 import com.gitee.whzzone.admin.system.entity.Dept;
+import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.validation.groups.InsertGroup;
+import com.gitee.whzzone.web.validation.groups.UpdateGroup;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -16,15 +14,15 @@ import java.util.List;
 @Data
 public class UserDto extends EntityDto {
 
-    @NotBlank(message = "username不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @NotBlank(message = "username不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     @Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9]{7,15}$", message = "8-16位字母+数字组合，必须英文开始")
     private String username;
 
-    @NotBlank(message = "phone不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @NotBlank(message = "phone不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     @Pattern(regexp = "^[1-9]\\d{10}$", message = "手机号码格式有误")
     private String phone;
 
-    @NotBlank(message = "nickname不能为空", groups = {CreateGroup.class, UpdateGroup.class})
+    @NotBlank(message = "nickname不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     @Size(min = 1, max = 10, message = "昵称长度：1-10")
     private String nickname;
 
@@ -42,17 +40,15 @@ public class UserDto extends EntityDto {
 
     private Boolean enabled;
 
-    @NotEmpty(message = "部门ids不能为空", groups = {CreateGroup.class, UpdateGroup.class})
-    @JsonSerialize(using = ListLongSerializer.class)
+    @NotEmpty(message = "部门ids不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     @ApiModelProperty("部门id")
-    private List<Long> deptIdList;
+    private List<Integer> deptIdList;
 
     @ApiModelProperty("部门List")
     private List<Dept> deptList;
 
-    @NotEmpty(message = "角色ids不能为空", groups = {CreateGroup.class, UpdateGroup.class})
-    @JsonSerialize(using = ListLongSerializer.class)
+    @NotEmpty(message = "角色ids不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     @ApiModelProperty("角色ids")
-    private List<Long> roleIdList;
+    private List<Integer> roleIdList;
 
 }

@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.gitee.whzzone.common.base.pojo.entity.BaseEntity;
+import com.gitee.whzzone.web.entity.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,10 +15,10 @@ import lombok.ToString;
 @TableName("sys_role_mark")
 public class RoleMark extends BaseEntity {
 
-    private Long roleId;
+    private Integer roleId;
 
-    private Long markId;
+    private Integer markId;
 
-    private Long ruleId;
+    private Integer ruleId;
 
 }
