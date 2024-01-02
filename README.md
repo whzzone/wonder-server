@@ -83,6 +83,15 @@ public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, Orde
 
 因为我懒，不想写增删改查接口，所以写了一套基础的增删改查，主要是由`EntityController`、`EntityService`、`EntityServiceImpl`完成。只要按规范继承了相关类，即可拥有增删改查功能。
 
+maven引入
+```java
+<dependency>
+    <groupId>com.gitee.whzzone.web</groupId>
+    <artifactId>wonder-web</artifactId>
+    <version>1.0</version>
+</dependency>
+```
+
 #### 核心
 
 - `EntityController` 提供6个基础的增删改查接口

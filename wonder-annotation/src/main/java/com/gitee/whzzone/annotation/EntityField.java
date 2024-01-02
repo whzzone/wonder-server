@@ -10,8 +10,14 @@ import java.lang.annotation.*;
 @Documented
 public @interface EntityField {
 
+    /**
+     * 该字段是否允许新增
+     */
     boolean insert() default true;
 
+    /**
+     * 该字段是否允许修改
+     */
     boolean update() default true;
 
 }
