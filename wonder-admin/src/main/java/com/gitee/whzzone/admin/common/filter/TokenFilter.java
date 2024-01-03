@@ -5,7 +5,6 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.gitee.whzzone.admin.common.properties.SecurityProperties;
-import com.gitee.whzzone.admin.common.redis.RedisCache;
 import com.gitee.whzzone.admin.common.security.LoginUser;
 import com.gitee.whzzone.admin.common.service.TokenService;
 import com.gitee.whzzone.admin.system.service.UserService;
@@ -39,9 +38,6 @@ public class TokenFilter extends OncePerRequestFilter {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private RedisCache redisCache;
 
     @Autowired
     private SecurityProperties securityProperties;

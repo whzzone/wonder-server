@@ -38,8 +38,8 @@ security:
 
   token:
     header: Authorization
-    live-time: 24
-    live-unit: HOURS
+    live-time: 30
+    live-unit: MINUTES
     refresh-time: 10
     refresh-unit: MINUTES
     jwt-secret: abcdefghijklmnopqrstuvwxyz

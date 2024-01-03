@@ -1,5 +1,6 @@
 package com.gitee.whzzone.admin.system.service;
 
+import com.gitee.whzzone.admin.common.security.LoginUser;
 import com.gitee.whzzone.admin.system.entity.Dept;
 import com.gitee.whzzone.admin.system.entity.Role;
 import com.gitee.whzzone.admin.system.entity.User;
@@ -43,4 +44,10 @@ public interface UserService extends EntityService<User, UserDto, UserQuery> {
     List<Integer> getDeptIds(Integer userId);
 
     List<Integer> getRoleIds(Integer userId);
+
+    LoginUser getLoginUserInfo(Integer id);
+
+    LoginUser getLoginUserInfo(String username);
+
+    void asyncUpdateCacheUserInfo();
 }

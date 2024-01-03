@@ -7,8 +7,10 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 @Slf4j
+@EnableAsync
 @SpringBootApplication
 @EnableCaching
 @EnableAspectJAutoProxy

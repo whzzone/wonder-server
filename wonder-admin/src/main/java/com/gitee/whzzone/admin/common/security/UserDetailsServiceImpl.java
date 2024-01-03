@@ -1,14 +1,13 @@
 package com.gitee.whzzone.admin.common.security;
 
-import cn.hutool.core.bean.BeanUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.gitee.whzzone.admin.system.entity.User;
 import com.gitee.whzzone.admin.system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 /**
  * @author : whz
@@ -22,14 +21,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(User::getUsername, username);
-        User user = userService.getOne(queryWrapper);
+        LoginUser loginUser = userService.getLoginUserInfo(username);
 
-        userService.beforeLoginCheck(user);
+        // 判断个人情况
+        if (Objects.isNull(loginUser))
+            throw new UsernameNotFoundException("该账号不存在");
+        if (loginUser.getDeleted())
+            throw new RuntimeException("该账号已被删除");
+        if (!loginUser.getEnabled())
+            throw new RuntimeException("该账号已被禁止登录");
 
-        LoginUser loginUser = new LoginUser();
-        BeanUtil.copyProperties(user, loginUser);
+        // 待处理多部门多角色
+
         return loginUser;
     }
 }

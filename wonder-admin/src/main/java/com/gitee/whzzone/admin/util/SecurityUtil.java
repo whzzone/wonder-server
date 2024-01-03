@@ -1,7 +1,6 @@
 package com.gitee.whzzone.admin.util;
 
 import com.gitee.whzzone.admin.common.security.LoginUser;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**

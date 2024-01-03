@@ -8,25 +8,28 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gitee.whzzone.admin.common.properties.SecurityProperties;
+import com.gitee.whzzone.admin.common.redis.RedisCache;
+import com.gitee.whzzone.admin.common.security.LoginUser;
+import com.gitee.whzzone.admin.common.service.TokenService;
 import com.gitee.whzzone.admin.system.entity.*;
 import com.gitee.whzzone.admin.system.mapper.UserMapper;
 import com.gitee.whzzone.admin.system.pojo.dto.ResetPWDDto;
 import com.gitee.whzzone.admin.system.pojo.dto.UserDto;
 import com.gitee.whzzone.admin.system.pojo.query.UserQuery;
 import com.gitee.whzzone.admin.system.service.*;
+import com.gitee.whzzone.common.constant.CommonConstants;
 import com.gitee.whzzone.web.entity.BaseEntity;
 import com.gitee.whzzone.web.pojo.other.PageData;
 import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -54,6 +57,15 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
 
     @Autowired
     private SecurityProperties securityProperties;
+
+    @Autowired
+    private MenuService menuService;
+
+    @Autowired
+    private RedisCache redisCache;
+
+    @Autowired
+    private TokenService tokenService;
 
     @Override
     public User getByEmail(String email) {
@@ -305,5 +317,75 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
             return null;
 
         return userRoleList.stream().map(UserRole::getRoleId).collect(Collectors.toList());
+    }
+
+    @Override
+    public LoginUser getLoginUserInfo(Integer id) {
+        if (id == null){
+            return null;
+        }
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(BaseEntity::getId, id);
+        return getLoginUserInfo(queryWrapper);
+    }
+
+    @Override
+    public LoginUser getLoginUserInfo(String username) {
+        if (StrUtil.isBlank(username)){
+            return null;
+        }
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getUsername, username);
+        return getLoginUserInfo(queryWrapper);
+    }
+
+    private LoginUser getLoginUserInfo(LambdaQueryWrapper<User> queryWrapper) {
+        User user = getOne(queryWrapper);
+
+        if (user == null) {
+            return null;
+        }
+
+        LoginUser loginUser = new LoginUser();
+        BeanUtil.copyProperties(user, loginUser);
+
+        List<Integer> deptIds = getDeptIds(loginUser.getId());
+        List<Integer> roleIds = getRoleIds(loginUser.getId());
+
+        loginUser.setDeptIds(deptIds);
+        loginUser.setRoleIds(roleIds);
+
+        loginUser.setDepts(deptService.getDtoListIn(deptIds));
+        loginUser.setRoles(roleService.getDtoListIn(roleIds));
+
+        loginUser.setPermissions(menuService.findPermitByUserId(loginUser.getId()));
+
+        return loginUser;
+    }
+
+    @Async
+    @Override
+    public void asyncUpdateCacheUserInfo() {
+        Map<Integer, LoginUser> userMap = new HashMap<>();
+
+        Set<String> keys = redisCache.getKeysByPrefix(CommonConstants.TOKEN_CACHE_KEY.replace("{}", ""));
+        for (String key : keys) {
+            try {
+                LoginUser loginUser = (LoginUser) redisCache.get(key);
+                String token = loginUser.getToken();
+
+                Integer userId = loginUser.getId();
+
+                if (userMap.containsKey(userId)) {
+                    loginUser = userMap.get(userId);
+                }else {
+                    loginUser = getLoginUserInfo(userId);
+                    userMap.put(userId, loginUser);
+                }
+
+                loginUser.setToken(token);
+                tokenService.cacheToken(loginUser);
+            }catch (Exception ignore) {}
+        }
     }
 }

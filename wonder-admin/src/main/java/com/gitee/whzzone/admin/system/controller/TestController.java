@@ -4,6 +4,7 @@ import com.gitee.whzzone.admin.common.security.LoginUser;
 import com.gitee.whzzone.admin.system.entity.Role;
 import com.gitee.whzzone.admin.system.mapper.RoleMapper;
 import com.gitee.whzzone.admin.system.service.TestService;
+import com.gitee.whzzone.admin.system.service.UserService;
 import com.gitee.whzzone.admin.util.SecurityUtil;
 import com.gitee.whzzone.web.pojo.other.Result;
 import io.swagger.annotations.Api;
@@ -29,6 +30,9 @@ public class TestController {
     @Autowired
     private TestService testService;
 
+    @Autowired
+    private UserService userService;
+
     @ApiOperation("方法注解")
     @GetMapping("method")
     public Result dataScopeTest(){
@@ -40,5 +44,12 @@ public class TestController {
     @GetMapping("getLoginUser")
     public Result<LoginUser> getLoginUser(){
         return Result.ok(SecurityUtil.getLoginUser());
+    }
+
+    @ApiOperation("异步更新缓存token信息")
+    @GetMapping("asyncUpdateCacheUserInfo")
+    public Result<?> asyncUpdateCacheUserInfo(){
+        userService.asyncUpdateCacheUserInfo();
+        return Result.ok();
     }
 }

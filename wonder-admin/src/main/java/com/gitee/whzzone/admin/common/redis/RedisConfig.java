@@ -3,7 +3,6 @@ package com.gitee.whzzone.admin.common.redis;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,14 +13,12 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
 @Configuration
 public class RedisConfig {
-
-    @Autowired
-    private RedisKeySerializer redisKeySerializer;
 
     //配置redisTemplate
     @Bean
@@ -34,12 +31,11 @@ public class RedisConfig {
         Jackson2JsonRedisSerializer jsonRedisSerializer = getJsonRedisSerializer();
 
         // String的序列化
-//        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-//        RedisKeySerializer redisKeySerializer = new RedisKeySerializer(); // 换成注入模式
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
 
         //key和hash的key都采用String的序列化方式
-        template.setKeySerializer(redisKeySerializer);
-        template.setHashKeySerializer(redisKeySerializer);
+        template.setKeySerializer(stringRedisSerializer);
+        template.setHashKeySerializer(stringRedisSerializer);
 
         //value和hash的value都采用jackson的序列化方式
         template.setValueSerializer(jsonRedisSerializer);

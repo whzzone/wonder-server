@@ -21,9 +21,6 @@ public class LoginUser extends User implements UserDetails {
     @ApiModelProperty("token")
     private String token;
 
-    @ApiModelProperty("token过期时间")
-    private Long expire;
-
     @ApiModelProperty("当前请求选择的角色ID")
     private Integer currentRoleId;
 

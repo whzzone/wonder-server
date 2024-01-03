@@ -1329,4 +1329,13 @@ public class RedisCache {
     public Cursor<ZSetOperations.TypedTuple<Object>> zScan(String key, ScanOptions options) {
         return redisTemplate.opsForZSet().scan(key, options);
     }
+
+    /**
+     * 根据前缀获取keys
+     * @param prefix 前缀
+     * @return keys
+     */
+    public Set<String> getKeysByPrefix(String prefix) {
+        return redisTemplate.keys(prefix + "*");
+    }
 }

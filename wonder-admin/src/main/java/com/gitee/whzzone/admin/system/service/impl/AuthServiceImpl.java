@@ -34,7 +34,6 @@ import org.springframework.stereotype.Service;
 import javax.validation.constraints.Email;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -51,9 +50,6 @@ public class AuthServiceImpl implements AuthService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private RedisCache redisCache;
 
     @Autowired
@@ -61,15 +57,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private TokenService tokenService;
-
-    @Autowired
-    private DeptService deptService;
-
-    @Autowired
-    private RoleService roleService;
-
-    @Autowired
-    private MenuService menuService;
 
     @Autowired
     private SecurityProperties securityProperties;
@@ -119,18 +106,6 @@ public class AuthServiceImpl implements AuthService {
         }
 
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        loginUser.setExpire(securityProperties.getToken().getLiveUnit().toSeconds(securityProperties.getToken().getLiveTime()));
-
-        List<Integer> deptIds = userService.getDeptIds(loginUser.getId());
-        List<Integer> roleIds = userService.getRoleIds(loginUser.getId());
-
-        loginUser.setDeptIds(deptIds);
-        loginUser.setRoleIds(roleIds);
-
-        loginUser.setDepts(deptService.getDtoListIn(deptIds));
-        loginUser.setRoles(roleService.getDtoListIn(roleIds));
-
-        loginUser.setPermissions(menuService.findPermitByUserId(loginUser.getId()));
 
         tokenService.createToken(loginUser);
 

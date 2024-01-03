@@ -10,5 +10,9 @@ public class CommonConstants {
      */
     public static final String TOKEN_CACHE_KEY = "TOKEN:{}";
 
+    /**
+     * 缓存USER的key模板
+     */
+    public static final String USER_CACHE_KEY = "USER:{}";
 
 }

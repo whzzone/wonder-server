@@ -16,7 +16,6 @@ spring:
         max-idle: 8
         min-idle: 0
         max-wait: -1
-    key-prefix: "WONDER:"
 
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
