@@ -1,4 +1,4 @@
-package com.gitee.whzzone.admin.util;
+package com.gitee.whzzone.admin.common.redis;
 
 import org.springframework.data.redis.connection.DataType;
 import org.springframework.data.redis.core.Cursor;

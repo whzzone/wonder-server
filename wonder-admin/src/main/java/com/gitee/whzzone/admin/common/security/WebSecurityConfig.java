@@ -1,7 +1,8 @@
 package com.gitee.whzzone.admin.common.security;
 
+import com.gitee.whzzone.admin.common.filter.TokenFilter;
+import com.gitee.whzzone.admin.common.properties.SecurityProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -22,17 +24,17 @@ import org.springframework.util.AntPathMatcher;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${security.ignore-path}")
-    private String[] ignorePath;
+    @Autowired
+    private SecurityProperties securityProperties;
 
     @Autowired
-    public CustomUserDetailsService customUserDetailsService;
+    public UserDetailsService userDetailsService;
 
     @Autowired
-    public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    public AuthSuccessHandler authSuccessHandler;
 
     @Autowired
-    public CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+    public AuthFailureHandler authFailureHandler;
 
     @Autowired
     private TokenFilter tokenFilter;
@@ -61,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .userDetailsService(customUserDetailsService)
+                .userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder())
                 .and()
                 .authenticationProvider(emailAuthenticationProvider)
@@ -73,11 +75,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .formLogin()
-                .successHandler(customAuthenticationSuccessHandler)  //认证成功处理器
-                .failureHandler(customAuthenticationFailureHandler)  //认证失败处理器
+                .successHandler(authSuccessHandler)  //认证成功处理器
+                .failureHandler(authFailureHandler)  //认证失败处理器
                 .disable()
                 .authorizeRequests()
-                .antMatchers(ignorePath).permitAll()
+                .antMatchers(securityProperties.getIgnorePath().toArray(new String[0])).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .csrf()

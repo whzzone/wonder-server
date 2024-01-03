@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gitee.whzzone.admin.common.properties.SecurityProperties;
 import com.gitee.whzzone.admin.system.entity.*;
 import com.gitee.whzzone.admin.system.mapper.UserMapper;
 import com.gitee.whzzone.admin.system.pojo.dto.ResetPWDDto;
@@ -18,7 +19,6 @@ import com.gitee.whzzone.web.pojo.other.PageData;
 import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,8 +52,8 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Value("${security.default-password}")
-    private String defaultPassword;
+    @Autowired
+    private SecurityProperties securityProperties;
 
     @Override
     public User getByEmail(String email) {
@@ -66,7 +66,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
     public void beforeLoginCheck(User user) {
         // 判断个人情况
         if (Objects.isNull(user))
-            throw new UsernameNotFoundException("用户不存在");
+            throw new UsernameNotFoundException("该账号不存在");
         if (user.getDeleted())
             throw new RuntimeException("该账号已被删除");
         if (!user.getEnabled())
@@ -213,7 +213,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
     @Override
     public User save(UserDto dto) {
         if (StrUtil.isBlank(dto.getPassword())){
-            dto.setPassword(passwordEncoder.encode(defaultPassword));
+            dto.setPassword(passwordEncoder.encode(securityProperties.getDefaultPassword()));
         }else {
             dto.setPassword(passwordEncoder.encode(dto.getPassword()));
         }

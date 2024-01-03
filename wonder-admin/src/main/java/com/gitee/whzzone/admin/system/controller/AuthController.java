@@ -17,7 +17,7 @@ import com.gitee.whzzone.admin.system.pojo.auth.WxLoginDto;
 import com.gitee.whzzone.admin.system.pojo.dto.UserDto;
 import com.gitee.whzzone.admin.system.service.AuthService;
 import com.gitee.whzzone.admin.system.service.UserService;
-import com.gitee.whzzone.admin.util.RedisCache;
+import com.gitee.whzzone.admin.common.redis.RedisCache;
 import com.gitee.whzzone.common.enums.QrCodeStatusEnum;
 import com.gitee.whzzone.common.util.CacheKey;
 import com.gitee.whzzone.common.util.RandomUtil;

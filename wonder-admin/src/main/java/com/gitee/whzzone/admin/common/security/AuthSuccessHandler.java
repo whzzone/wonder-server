@@ -18,7 +18,7 @@ import java.io.PrintWriter;
  * @date : 2023/5/17 11:51
  */
 @Component
-public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

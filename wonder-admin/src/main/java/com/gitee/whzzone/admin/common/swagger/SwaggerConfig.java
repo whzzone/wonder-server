@@ -1,5 +1,6 @@
 package com.gitee.whzzone.admin.common.swagger;
 
+import com.gitee.whzzone.admin.common.properties.SecurityProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -26,8 +27,8 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
-    @Value("${security.ignore-path}")
-    private String[] ignorePaths;
+    @Autowired
+    private SecurityProperties securityProperties;
 
     @Value("${server.servlet.context-path}")
     private String contextPath;
@@ -100,7 +101,7 @@ public class SwaggerConfig {
                         .operationSelector(o -> {
                             // 判断请求路径是否匹配ignore-path中的接口
                             String requestMappingPattern = o.requestMappingPattern();
-                            for (String ignorePath : ignorePaths) {
+                            for (String ignorePath : securityProperties.getIgnorePath()) {
                                 if (antPathMatcher.match(contextPath + ignorePath, requestMappingPattern)) {
                                     // 如果匹配，则创建一个没有任何安全要求的SecurityContext
                                     return false;

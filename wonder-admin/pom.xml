@@ -94,11 +94,6 @@
             <artifactId>weixin-java-miniapp</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.gitee.whzzone</groupId>-->
-<!--            <artifactId>common</artifactId>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
@@ -115,6 +110,7 @@
             <artifactId>wonder-common</artifactId>
             <version>1.0</version>
         </dependency>
+
         <dependency>
             <groupId>com.gitee.whzzone.web</groupId>
             <artifactId>wonder-web</artifactId>

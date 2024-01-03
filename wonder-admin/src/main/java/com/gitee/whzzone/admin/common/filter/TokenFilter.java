@@ -1,27 +1,23 @@
-package com.gitee.whzzone.admin.common.security;
+package com.gitee.whzzone.admin.common.filter;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.gitee.whzzone.admin.system.entity.User;
-import com.gitee.whzzone.admin.system.service.MenuService;
+import com.gitee.whzzone.admin.common.properties.SecurityProperties;
+import com.gitee.whzzone.admin.common.redis.RedisCache;
+import com.gitee.whzzone.admin.common.security.LoginUser;
+import com.gitee.whzzone.admin.common.service.TokenService;
 import com.gitee.whzzone.admin.system.service.UserService;
-import com.gitee.whzzone.admin.util.RedisCache;
-import com.gitee.whzzone.common.util.CacheKey;
 import com.gitee.whzzone.web.pojo.other.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -32,28 +28,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author : whz
  * @date : 2023/5/17 17:46
  */
-@Component
 @Slf4j
+@Component
 public class TokenFilter extends OncePerRequestFilter {
-
-    @Value("${security.token.live-time}")
-    private long cacheTime;
-
-    @Value("${security.token.live-unit}")
-    private TimeUnit cacheTimeUnit;
-
-    @Value("${security.token.refresh-time}")
-    private long refreshTime;
-
-    @Value("${security.token.refresh-unit}")
-    private TimeUnit refreshUnit;
 
     @Autowired
     private UserService userService;
@@ -62,75 +44,51 @@ public class TokenFilter extends OncePerRequestFilter {
     private RedisCache redisCache;
 
     @Autowired
-    private MenuService menuService;
+    private SecurityProperties securityProperties;
 
-    @Value("${security.ignore-path}")
-    private String[] ignorePath;
+    @Autowired
+    private AntPathMatcher antPathMatcher;
+
+    @Autowired
+    private TokenService tokenService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String path = request.getRequestURI().substring(request.getContextPath().length()).replaceAll("[/]+$", "");
-            AntPathMatcher matcher = new AntPathMatcher();
-            for (String ignorePath : ignorePath) {
-                if (matcher.match(ignorePath, path)) {
+            for (String ignorePath : securityProperties.getIgnorePath()) {
+                if (antPathMatcher.match(ignorePath, path)) {
                     // 如果当前请求的 URL 在忽略列表中，则直接放行
                     filterChain.doFilter(request, response);
                     return;
                 }
             }
 
-            String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+            String token = request.getHeader(securityProperties.getToken().getHeader());
             Integer roleId = StringUtils.hasText(request.getHeader("RoleId")) ? Integer.valueOf(request.getHeader("RoleId")) : null;
             Integer deptId = StringUtils.hasText(request.getHeader("DeptId")) ? Integer.valueOf(request.getHeader("DeptId")) : null;
 
             if (StrUtil.isBlank(token))
-                throw new  RuntimeException("未携带token访问");
+                throw new RuntimeException("未携带token访问");
 
-            String tokenKey = StrUtil.format(CacheKey.TOKEN_USERID, token);
+            LoginUser loginUser = tokenService.getLoginUser(token);
 
-            Boolean hasKey = redisCache.hasKey(tokenKey);
-            if (Boolean.FALSE.equals(hasKey))
-                throw new RuntimeException("失效的token");
+            userService.beforeLoginCheck(loginUser);
 
-            Integer userId = (Integer) redisCache.get(tokenKey);
+//            if (redisCache.getExpire(tokenKey) < refreshUnit.toSeconds(refreshTime)) {
+//                redisCache.expire(tokenKey, cacheTime, cacheTimeUnit);
+//            }
 
-            User user = userService.getById(userId);
-
-            if (Objects.isNull(user))
-                throw new RuntimeException("用户不存在");
-
-            userService.beforeLoginCheck(user);
-
-            if (redisCache.getExpire(tokenKey) < refreshUnit.toSeconds(refreshTime)) {
-                redisCache.expire(tokenKey, cacheTime, cacheTimeUnit);
-            }
-
-            List<Integer> deptIds = userService.getDeptIds(userId);
-            if (CollectionUtils.isEmpty(deptIds)){
-                throw new RuntimeException("没有关联的部门ids为空");
-            }
-
-            List<Integer> roleIds = userService.getRoleIds(userId);
-            if (CollectionUtils.isEmpty(roleIds)){
-                throw new RuntimeException("没有关联的角色ids为空");
-            }
-
-            List<String> permitByUserId = menuService.findPermitByUserId(userId);
-            log.debug(permitByUserId.toString());
+            List<Integer> deptIds = loginUser.getDeptIds();
+            List<Integer> roleIds = loginUser.getRoleIds();
 
             List<SimpleGrantedAuthority> list = new ArrayList<>();
-            for (String authority : permitByUserId) {
+            for (String authority : loginUser.getPermissions()) {
                 if (StringUtils.hasText(authority)){
                     SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
                     list.add(simpleGrantedAuthority);
                 }
             }
-
-            LoginUser loginUser = new LoginUser();
-            BeanUtil.copyProperties(user, loginUser);
-            loginUser.setDeptIds(deptIds);
-            loginUser.setRoleIds(roleIds);
 
             // 处理角色
             if (CollectionUtil.isNotEmpty(roleIds)){

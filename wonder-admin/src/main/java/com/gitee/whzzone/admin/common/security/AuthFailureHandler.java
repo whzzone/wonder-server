@@ -18,7 +18,7 @@ import java.io.PrintWriter;
  * @date : 2023/5/17 11:51
  */
 @Component
-public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
+public class AuthFailureHandler implements AuthenticationFailureHandler {
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {

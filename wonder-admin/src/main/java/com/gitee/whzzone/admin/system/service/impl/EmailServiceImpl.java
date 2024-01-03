@@ -3,7 +3,7 @@ package com.gitee.whzzone.admin.system.service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.gitee.whzzone.admin.system.service.EmailService;
 import com.gitee.whzzone.common.util.CacheKey;
-import com.gitee.whzzone.admin.util.RedisCache;
+import com.gitee.whzzone.admin.common.redis.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -5,29 +5,25 @@ import cn.binarywang.wx.miniapp.api.WxMaUserService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.mail.MailUtil;
+import com.gitee.whzzone.admin.common.properties.SecurityProperties;
+import com.gitee.whzzone.admin.common.redis.RedisCache;
 import com.gitee.whzzone.admin.common.security.EmailAuthenticationToken;
 import com.gitee.whzzone.admin.common.security.LoginUser;
-import com.gitee.whzzone.admin.system.pojo.dto.UserDto;
+import com.gitee.whzzone.admin.common.service.TokenService;
 import com.gitee.whzzone.admin.system.pojo.auth.EmailLoginDto;
-import com.gitee.whzzone.admin.system.pojo.auth.LoginSuccessDto;
 import com.gitee.whzzone.admin.system.pojo.auth.UsernameLoginDto;
 import com.gitee.whzzone.admin.system.pojo.auth.WxLoginDto;
-import com.gitee.whzzone.admin.system.entity.User;
-import com.gitee.whzzone.admin.system.service.AuthService;
-import com.gitee.whzzone.admin.system.service.DeptService;
-import com.gitee.whzzone.admin.system.service.RoleService;
-import com.gitee.whzzone.admin.system.service.UserService;
-import com.gitee.whzzone.admin.util.*;
+import com.gitee.whzzone.admin.system.service.*;
+import com.gitee.whzzone.admin.util.CaptchaUtil;
+import com.gitee.whzzone.admin.util.SecurityUtil;
 import com.gitee.whzzone.common.util.CacheKey;
 import com.gitee.whzzone.common.util.RandomUtil;
 import com.gitee.whzzone.web.pojo.other.Result;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,23 +47,20 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    @Value("${security.token.live-time}")
-    private long cacheTime;
-
-    @Value("${security.token.live-unit}")
-    private TimeUnit cacheTimeUnit;
-
-    @Value("${security.login-type.email}")
-    private Boolean emailTypeEnable;
-
-    @Value("${security.login-type.username}")
-    private Boolean usernameTypeEnable;
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RedisCache redisCache;
+
+    @Autowired
+    private WxMaService wxMaService;
+
+    @Autowired
+    private TokenService tokenService;
 
     @Autowired
     private DeptService deptService;
@@ -76,16 +69,10 @@ public class AuthServiceImpl implements AuthService {
     private RoleService roleService;
 
     @Autowired
-    private RedisCache redisCache;
-
-    @Value("${security.token.refresh-time}")
-    private long refreshTime;
-
-    @Value("${security.token.refresh-unit}")
-    private TimeUnit refreshUnit;
+    private MenuService menuService;
 
     @Autowired
-    private WxMaService wxMaService;
+    private SecurityProperties securityProperties;
 
     @Override
     public Map<String, String> getCode() {
@@ -114,58 +101,47 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Result<LoginUser> loginByUsername(UsernameLoginDto dto) {
+        if (!securityProperties.getLoginType().getUsername()) {
+            throw new RuntimeException("未开启账号密码登录");
+        }
+
+        Authentication authentication;
         try {
-            if (!usernameTypeEnable){
-                throw new RuntimeException("未开启账号密码登录");
-            }
-
-//            String key = StrUtil.format("login:code:{}", dto.getUuid());
-//
-//            // 校验验证码
-//            String code = (String) redisCache.get(key);
-//            redisCache.delete(key);
-//            if (!code.equals(dto.getCode())){
-//                throw new RuntimeException("验证码不对");
-//            }
-
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
-            Authentication authentication = authenticationManager.authenticate(authenticationToken);
+            authentication = authenticationManager.authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            User user = userService.getByUsername(dto.getUsername());
-
-            String token = UUID.randomUUID().toString();
-
-            String tokenKey = StrUtil.format(CacheKey.TOKEN_USERID, token);
-
-            redisCache.set(tokenKey, user.getId(), cacheTime, cacheTimeUnit);
-
-            LoginUser res = new LoginUser();
-            BeanUtil.copyProperties(user, res);
-            res.setToken(token);
-            res.setExpire(cacheTimeUnit.toSeconds(cacheTime));
-
-            List<Integer> deptIds = userService.getDeptIds(user.getId());
-            List<Integer> roleIds = userService.getRoleIds(user.getId());
-
-            res.setDeptIds(deptIds);
-            res.setRoleIds(roleIds);
-
-            res.setDeptList(deptService.getDtoListIn(deptIds));
-            res.setRoleList(roleService.getDtoListIn(roleIds));
-
-            return Result.ok("登录成功", res);
-
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("密码错误");
+            throw new BadCredentialsException("账号或密码错误");
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
+        }finally {
+            SecurityContextHolder.clearContext();
         }
+
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        loginUser.setExpire(securityProperties.getToken().getLiveUnit().toSeconds(securityProperties.getToken().getLiveTime()));
+
+        List<Integer> deptIds = userService.getDeptIds(loginUser.getId());
+        List<Integer> roleIds = userService.getRoleIds(loginUser.getId());
+
+        loginUser.setDeptIds(deptIds);
+        loginUser.setRoleIds(roleIds);
+
+        loginUser.setDepts(deptService.getDtoListIn(deptIds));
+        loginUser.setRoles(roleService.getDtoListIn(roleIds));
+
+        loginUser.setPermissions(menuService.findPermitByUserId(loginUser.getId()));
+
+        tokenService.createToken(loginUser);
+
+        tokenService.cacheToken(loginUser);
+
+        return Result.ok("登录成功", loginUser);
     }
 
     @Override
     public Result loginByEmail(EmailLoginDto dto) {
-        if (!emailTypeEnable){
+        if (!securityProperties.getLoginType().getEmail()){
             throw new RuntimeException("未开启邮箱登录");
         }
 
@@ -175,26 +151,7 @@ public class AuthServiceImpl implements AuthService {
         // 认证成功，将用户信息存入SecurityContext
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String key = StrUtil.format(CacheKey.EMAIL_EMAIL_CODE, dto.getEmail());
-
-        redisCache.delete(key);
-
-        User sysUser = userService.getByEmail(dto.getEmail());
-
-        String token = UUID.randomUUID().toString();
-
-        String tokenKey = StrUtil.format(CacheKey.TOKEN_USERID, token);
-        String userKey = StrUtil.format(CacheKey.USER_ID_INFO, sysUser.getId());
-
-        redisCache.set(tokenKey, sysUser.getId(), cacheTime, cacheTimeUnit);
-        redisCache.set(userKey, sysUser);
-        UserDto sysUserDto = new UserDto();
-        BeanUtil.copyProperties(sysUser,sysUserDto);
-        LoginSuccessDto res = new LoginSuccessDto();
-        res.setToken(token);
-        res.setExpire(cacheTimeUnit.toSeconds(cacheTime));
-
-        return Result.ok("登录成功", res);
+        return null;
     }
 
     @Override
