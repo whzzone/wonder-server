@@ -23,7 +23,6 @@ spring:
 
   cache:
     type: redis
-    cache-names: admin
 
 mybatis-plus:
   global-config:

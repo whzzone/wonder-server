@@ -1,40 +1,20 @@
 package com.gitee.whzzone.admin.system.controller;
 
-import cn.binarywang.wx.miniapp.api.WxMaQrcodeService;
 import cn.binarywang.wx.miniapp.api.WxMaService;
-import cn.binarywang.wx.miniapp.api.WxMaUserService;
-import cn.binarywang.wx.miniapp.bean.WxMaCodeLineColor;
-import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
-import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.StrUtil;
+import com.gitee.whzzone.admin.common.redis.RedisCache;
 import com.gitee.whzzone.admin.common.security.LoginUser;
-import com.gitee.whzzone.admin.system.entity.User;
-import com.gitee.whzzone.admin.system.pojo.auth.EmailLoginDto;
-import com.gitee.whzzone.admin.system.pojo.auth.LoginSuccessDto;
 import com.gitee.whzzone.admin.system.pojo.auth.UsernameLoginDto;
-import com.gitee.whzzone.admin.system.pojo.auth.WxLoginDto;
-import com.gitee.whzzone.admin.system.pojo.dto.UserDto;
 import com.gitee.whzzone.admin.system.service.AuthService;
 import com.gitee.whzzone.admin.system.service.UserService;
-import com.gitee.whzzone.admin.common.redis.RedisCache;
-import com.gitee.whzzone.common.enums.QrCodeStatusEnum;
-import com.gitee.whzzone.common.util.CacheKey;
-import com.gitee.whzzone.common.util.RandomUtil;
 import com.gitee.whzzone.web.pojo.other.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -65,7 +45,7 @@ public class AuthController {
     @Value("${security.token.live-unit}")
     private TimeUnit cacheTimeUnit;
 
-    @ApiOperation("账号密码登录-获取验证码")
+/*    @ApiOperation("账号密码登录-获取验证码")
     @GetMapping("/getCode")
     public Result getCode(){
         return Result.ok("操作成功", authService.getCode());
@@ -76,7 +56,7 @@ public class AuthController {
     public Result getLoginCodeByUUID(@PathVariable String uuid){
         String format = "login:code:{}";
         return Result.ok("操作成功", redisCache.get(StrUtil.format(format, uuid)));
-    }
+    }*/
 
     @ApiOperation("账号密码登录")
     @PostMapping("/login/username")
@@ -84,36 +64,21 @@ public class AuthController {
         return authService.loginByUsername(dto);
     }
 
-    @ApiOperation("测试")
-    @GetMapping("test")
-    public Result test() {
-        return Result.ok("111111");
-    }
-
+    @ApiOperation("退出登录")
     @GetMapping({"logout"})
     public Result logout() {
         authService.logout();
         return Result.ok();
     }
 
-    @ApiOperation("邮箱登录")
-    @PostMapping("/login/email")
-    public Result loginByEmail(@Validated @RequestBody EmailLoginDto dto) {
-        return authService.loginByEmail(dto);
-    }
 
-    @PostMapping("/send/{email}")
-    public Result sendEmail(@PathVariable String email) {
-        return authService.sendEmail(email);
-    }
-
-    @ApiOperation("微信登录")
+/*    @ApiOperation("微信登录")
     @PostMapping("/login/weixin")
     public Result loginByWeixin(@Validated @RequestBody WxLoginDto dto) {
         return authService.loginByWeixin(dto);
-    }
+    }*/
 
-    @ApiOperation(value = "生成PC登录小程序二维码")
+    /*@ApiOperation(value = "生成PC登录小程序二维码")
     @GetMapping("/generatorPCLoginQrcode")
     public Result generatorQrcode() throws WxErrorException {
         WxMaQrcodeService qrcodeService = wxMaService.getQrcodeService();
@@ -279,6 +244,6 @@ public class AuthController {
         }
 
         return Result.ok("获取token的结果", token);
-    }
+    }*/
 }
 

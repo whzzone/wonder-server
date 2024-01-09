@@ -6,20 +6,15 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.mail.MailUtil;
-import com.gitee.whzzone.admin.common.properties.SecurityProperties;
 import com.gitee.whzzone.admin.common.redis.RedisCache;
-import com.gitee.whzzone.admin.common.security.EmailAuthenticationToken;
 import com.gitee.whzzone.admin.common.security.LoginUser;
 import com.gitee.whzzone.admin.common.service.TokenService;
-import com.gitee.whzzone.admin.system.pojo.auth.EmailLoginDto;
 import com.gitee.whzzone.admin.system.pojo.auth.UsernameLoginDto;
 import com.gitee.whzzone.admin.system.pojo.auth.WxLoginDto;
-import com.gitee.whzzone.admin.system.service.*;
+import com.gitee.whzzone.admin.system.service.AuthService;
 import com.gitee.whzzone.admin.util.CaptchaUtil;
 import com.gitee.whzzone.admin.util.SecurityUtil;
-import com.gitee.whzzone.common.util.CacheKey;
-import com.gitee.whzzone.common.util.RandomUtil;
+import com.gitee.whzzone.common.constant.CommonConstants;
 import com.gitee.whzzone.web.pojo.other.Result;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -31,7 +26,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.Email;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,9 +51,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private TokenService tokenService;
-
-    @Autowired
-    private SecurityProperties securityProperties;
 
     @Override
     public Map<String, String> getCode() {
@@ -88,10 +79,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Result<LoginUser> loginByUsername(UsernameLoginDto dto) {
-        if (!securityProperties.getLoginType().getUsername()) {
-            throw new RuntimeException("未开启账号密码登录");
-        }
-
         Authentication authentication;
         try {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
@@ -115,49 +102,10 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Result loginByEmail(EmailLoginDto dto) {
-        if (!securityProperties.getLoginType().getEmail()){
-            throw new RuntimeException("未开启邮箱登录");
-        }
-
-        EmailAuthenticationToken authenticationToken = new EmailAuthenticationToken(dto.getEmail(), dto.getCode());
-        Authentication authentication = authenticationManager.authenticate(authenticationToken);
-
-        // 认证成功，将用户信息存入SecurityContext
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        return null;
-    }
-
-    @Override
-    public Result sendEmail(@Email String email) {
-        String code = RandomUtil.getIntCode(6);
-
-        while (redisCache.hasKey(code)) {
-            code = RandomUtil.getIntCode(6);
-        }
-
-        String key = StrUtil.format(CacheKey.EMAIL_EMAIL_CODE, email);
-
-        redisCache.set(key, code, 5, TimeUnit.MINUTES);
-
-        MailUtil.send(email, "登录验证码", "此次登录的验证码是：" + code, false);
-
-        return Result.ok("验证码已发送");
-    }
-
-    @Override
     public void logout() {
-        Integer id = SecurityUtil.getLoginUser().getId();
-        String userKey = StrUtil.format(CacheKey.USER_ID_INFO, id);
-        String userIdTokenKey = StrUtil.format(CacheKey.USER_ID_TOKEN, id);
-        if (redisCache.hasKey(userIdTokenKey)) {
-            String token = (String) redisCache.get(userIdTokenKey);
-            String tokenKey = StrUtil.format(CacheKey.TOKEN_USERID, token);
-            redisCache.delete(tokenKey);
-        }
-        redisCache.delete(userIdTokenKey);
-        redisCache.delete(userKey);
+        LoginUser loginUser = SecurityUtil.getLoginUser();
+        String tokenKey = StrUtil.format(CommonConstants.TOKEN_CACHE_KEY, loginUser.getToken());
+        redisCache.delete(tokenKey);
     }
 
     @Override

@@ -29,12 +29,7 @@ security:
     - /swagger-resources/**
     - /doc.html
     - /favicon.ico
-    - /auth/**
-
-  login-type:
-    email: true
-    username: true
-    phone: true
+    - /auth/login/**
 
   token:
     header: Authorization
@@ -42,7 +37,6 @@ security:
     live-unit: MINUTES
     refresh-time: 10
     refresh-unit: MINUTES
-    jwt-secret: abcdefghijklmnopqrstuvwxyz
 
   request:
     enable-log: false

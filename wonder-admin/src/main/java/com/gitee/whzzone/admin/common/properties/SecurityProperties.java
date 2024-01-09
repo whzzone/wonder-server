@@ -21,8 +21,6 @@ public class SecurityProperties {
 
     private SecurityTokenProperties token = new SecurityTokenProperties();
 
-    private SecurityLoginTypeProperties loginType = new SecurityLoginTypeProperties();
-
     @Data
     public class SecurityTokenProperties {
 
@@ -36,16 +34,6 @@ public class SecurityProperties {
 
         private TimeUnit refreshUnit;
 
-        private String jwtSecret;
-    }
-
-    @Data
-    public class SecurityLoginTypeProperties {
-        private Boolean email;
-
-        private Boolean username;
-
-        private Boolean phone;
     }
 
 }

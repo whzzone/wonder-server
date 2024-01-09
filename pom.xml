@@ -24,7 +24,6 @@
         <fastjson.version>1.2.83</fastjson.version>
         <hutool-all.version>5.8.18</hutool-all.version>
         <swagger2.version>3.0.0</swagger2.version>
-        <javax.mail.version>1.6.2</javax.mail.version>
         <weixin-java-miniapp.version>4.5.0</weixin-java-miniapp.version>
         <common.version>1.1</common.version>
         <knife4j.version>4.1.0</knife4j.version>
@@ -116,12 +115,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-validation</artifactId>
                 <version>${spring-boot.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.sun.mail</groupId>
-                <artifactId>javax.mail</artifactId>
-                <version>${javax.mail.version}</version>
             </dependency>
 
             <dependency>
