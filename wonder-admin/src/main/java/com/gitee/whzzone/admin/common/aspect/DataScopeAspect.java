@@ -5,8 +5,6 @@ import com.gitee.whzzone.admin.system.pojo.dto.RuleDto;
 import com.gitee.whzzone.admin.system.service.MarkService;
 import com.gitee.whzzone.admin.util.SecurityUtil;
 import com.gitee.whzzone.annotation.DataScope;
-import com.gitee.whzzone.common.exception.NoDataException;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
@@ -32,9 +30,10 @@ public class DataScopeAspect {
     private MarkService dataScopeService;
 
     // 通过ThreadLocal记录权限相关的属性值
-    public static ThreadLocal<DataScopeParam> threadLocal = new ThreadLocal<>();
+    private static ThreadLocal<DataScopeInfo> threadLocal = new ThreadLocal<>();
+    private static ThreadLocal<Boolean> methodProcessed = new ThreadLocal<>();
 
-    public static DataScopeParam getDataScopeParam() {
+    public static DataScopeInfo getDataScopeInfo() {
         return threadLocal.get();
     }
 
@@ -45,12 +44,21 @@ public class DataScopeAspect {
 
     @After("methodPointCut()")
     public void clearThreadLocal() {
+        if (methodProcessed.get() != null) {
+            return;
+        }
         threadLocal.remove();
+        methodProcessed.remove();
         log.debug("----------------数据权限信息清除----------------");
     }
 
     @Before("methodPointCut()")
     public void doBefore(JoinPoint point) {
+        if (methodProcessed.get() != null && methodProcessed.get()) {
+            return;
+        } else {
+            methodProcessed.set(true);
+        }
         Signature signature = point.getSignature();
         MethodSignature methodSignature = (MethodSignature) signature;
         Method method = methodSignature.getMethod();
@@ -60,34 +68,24 @@ public class DataScopeAspect {
         try {
             if (dataScope != null && !SecurityUtil.isAdmin()) {
                 String scopeName = dataScope.value();
-
                 DataScopeInfo dataScopeInfo = dataScopeService.execRuleByName(scopeName);
-
-                DataScopeParam dataScopeParam = new DataScopeParam();
-
-                dataScopeParam.setDataScopeInfo(dataScopeInfo);
-
-                threadLocal.set(dataScopeParam);
-
-                log.debug("----------------设置数据权限信息----------------");
-                if (dataScopeInfo.getRuleList() != null && dataScopeInfo.getRuleList().size() > 0) {
-                    for (RuleDto rule : dataScopeInfo.getRuleList()) {
-                        log.debug("- ruleId：{}", rule.getId());
-                    }
-                }
-
+                threadLocal.set(dataScopeInfo);
+                printDebug(dataScopeInfo);
             }
-        } catch (NoDataException e) {
-            throw new NoDataException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("数据权限切面错误：" + e.getMessage());
         }
     }
 
-    @Data
-    public static class DataScopeParam {
-        private DataScopeInfo dataScopeInfo;
+    private void printDebug(DataScopeInfo dataScopeInfo) {
+        if (dataScopeInfo.getRuleList() != null && dataScopeInfo.getRuleList().size() > 0) {
+            log.debug("--------------------------------设置数据权限信息--------------------------------");
+            for (RuleDto rule : dataScopeInfo.getRuleList()) {
+                log.debug("- markId: {}, ruleId：{}, ruleName：{}, expression: {}", rule.getMarkId(), rule.getId(), rule.getRemark(), rule.getExpression());
+            }
+            log.debug("------------------------------------------------------------------------------");
+        }
     }
 
 }

@@ -10,7 +10,6 @@ import com.gitee.whzzone.web.pojo.other.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,33 +27,33 @@ public class RoleController extends EntityController<Role, RoleService, RoleDto,
     private RoleService roleService;
 
     @ApiOperation("列表")
-    @PostMapping("list")
-    public Result<List<RoleDto>> list(@RequestBody RoleQuery query){
+    @GetMapping("list")
+    public Result<List<RoleDto>> list(RoleQuery query){
         return Result.ok("操作成功", roleService.list(query));
     }
 
     @ApiOperation("分页")
-    @PostMapping("page")
-    public Result<PageData<RoleDto>> page(@Validated @RequestBody RoleQuery query){
+    @GetMapping("page")
+    public Result<PageData<RoleDto>> page(RoleQuery query){
         return Result.ok(roleService.page(query));
     }
 
     @ApiOperation("改变启用状态")
-    @GetMapping("/enabledSwitch/{id}")
+    @PutMapping("/enabledSwitch/{id}")
     public Result enabledSwitch(@PathVariable Integer id) {
         roleService.enabledSwitch(id);
         return Result.ok();
     }
 
     @ApiOperation("绑定规则")
-    @GetMapping("/bindingRule")
+    @PutMapping("/bindingRule")
     public Result bindingRule(Integer roleId, Integer ruleId) {
         roleService.bindingRule(roleId, ruleId);
         return Result.ok();
     }
 
     @ApiOperation("取消绑定规则")
-    @GetMapping("/unBindingRule")
+    @PutMapping("/unBindingRule")
     public Result unBindingRule(Integer roleId, Integer ruleId) {
         roleService.unBindingRule(roleId, ruleId);
         return Result.ok();

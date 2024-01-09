@@ -21,7 +21,7 @@ public class SecurityUtil {
     }
 
     public static boolean isAdmin(){
-        return false;
+        return getLoginUser().getId().equals(1);
     }
     
     /**

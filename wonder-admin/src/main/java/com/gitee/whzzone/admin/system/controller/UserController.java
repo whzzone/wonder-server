@@ -29,13 +29,13 @@ public class UserController extends EntityController<User, UserService, UserDto,
     private UserService userService;
 
     @ApiOperation("分页")
-    @PostMapping("page")
-    public Result<PageData<UserDto>> page(@Validated @RequestBody UserQuery query){
+    @GetMapping("page")
+    public Result<PageData<UserDto>> page(UserQuery query){
         return Result.ok(userService.page(query));
     }
 
     @ApiOperation("改变启用状态")
-    @GetMapping("/enabledSwitch/{id}")
+    @PutMapping("/enabledSwitch/{id}")
     public Result enabledSwitch(@PathVariable Integer id) {
         userService.enabledSwitch(id);
         return Result.ok();
@@ -43,7 +43,7 @@ public class UserController extends EntityController<User, UserService, UserDto,
 
     @ApiOperation("重置密码")
     @PreAuthorize("hasAuthority('sys:user:resetPWD')")
-    @PostMapping("resetPWD")
+    @PutMapping("resetPWD")
     public Result resetPWD(@Validated @RequestBody ResetPWDDto dto){
         userService.resetPWD(dto);
         return Result.ok();

@@ -1,6 +1,5 @@
 package com.gitee.whzzone.admin.common.mvc;
 
-import com.gitee.whzzone.common.exception.NoDataException;
 import com.gitee.whzzone.web.pojo.other.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
@@ -66,9 +65,4 @@ public class GlobalException {
         return Result.error("访问不存在的接口：" + path);
     }
 
-    @ExceptionHandler(NoDataException.class)
-    @ResponseBody
-    public Result handleNotFoundException() {
-        return Result.error(Result.NO_DADA, "暂无数据");
-    }
 }

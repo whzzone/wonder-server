@@ -71,10 +71,6 @@ public class TokenFilter extends OncePerRequestFilter {
 
             userService.beforeLoginCheck(loginUser);
 
-//            if (redisCache.getExpire(tokenKey) < refreshUnit.toSeconds(refreshTime)) {
-//                redisCache.expire(tokenKey, cacheTime, cacheTimeUnit);
-//            }
-
             List<Integer> deptIds = loginUser.getDeptIds();
             List<Integer> roleIds = loginUser.getRoleIds();
 
@@ -112,6 +108,9 @@ public class TokenFilter extends OncePerRequestFilter {
                 }
             }
 
+            // 续签token
+            tokenService.renewToken(token);
+
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, list);
             authenticationToken.setDetails(new WebAuthenticationDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
@@ -119,7 +118,7 @@ public class TokenFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             response.setHeader("content-type", "application/json");
             IoUtil.write(response.getOutputStream(), true, JSONUtil.toJsonStr(Result.error(Result.UNAUTHORIZED, e.getMessage())).getBytes());
-            e.printStackTrace();
+            log.error(e.getMessage());
             return;
         }
 

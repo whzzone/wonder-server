@@ -42,6 +42,7 @@ public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, Orde
     public List<Integer> limitAmountBetween(BigDecimal begin, BigDecimal end) {
         LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.between(Order::getOrderAmount, begin, end);
+        queryWrapper.select(BaseEntity::getId);
         List<Order> list = list(queryWrapper);
         if (CollectionUtil.isEmpty(list))
             return new ArrayList<>();

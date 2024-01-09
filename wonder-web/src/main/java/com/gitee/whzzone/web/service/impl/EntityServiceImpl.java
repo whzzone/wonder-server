@@ -9,10 +9,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
-import com.gitee.whzzone.annotation.Query;
 import com.gitee.whzzone.annotation.EntityField;
-import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.annotation.Query;
 import com.gitee.whzzone.web.entity.BaseEntity;
+import com.gitee.whzzone.web.pojo.dto.EntityDto;
 import com.gitee.whzzone.web.pojo.other.PageData;
 import com.gitee.whzzone.web.pojo.query.EntityQuery;
 import com.gitee.whzzone.web.pojo.sort.Sort;
@@ -460,6 +460,10 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
         }
 
         for (Sort sort : sorts) {
+            if (sort.getAsc() == null || sort.getField() == null) {
+                continue;
+            }
+
             if (sort.getAsc()) {
                 queryWrapper.orderByAsc(StrUtil.toUnderlineCase(sort.getField()));
             } else {

@@ -26,19 +26,19 @@ public class DeptController extends EntityController<Dept, DeptService, DeptDto,
     private DeptService deptService;
 
     @ApiOperation("列表")
-    @PostMapping("list")
-    public Result<List<DeptDto>> list(@RequestBody DeptQuery query) {
+    @GetMapping("list")
+    public Result<List<DeptDto>> list(DeptQuery query) {
         return Result.ok("", deptService.list(query));
     }
 
     @ApiOperation("树")
-    @PostMapping("tree")
-    public Result<List<DeptDto>> tree(@RequestBody DeptQuery query) {
+    @GetMapping("tree")
+    public Result<List<DeptDto>> tree(DeptQuery query) {
         return Result.ok(deptService.tree(query));
     }
 
     @ApiOperation("改变启用状态")
-    @GetMapping("/enabledSwitch/{id}")
+    @PutMapping("/enabledSwitch/{id}")
     public Result enabledSwitch(@PathVariable Integer id) {
         deptService.enabledSwitch(id);
         return Result.ok();

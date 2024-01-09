@@ -6,6 +6,7 @@ import com.gitee.whzzone.admin.common.redis.RedisCache;
 import com.gitee.whzzone.admin.common.security.LoginUser;
 import com.gitee.whzzone.common.constant.CommonConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -52,5 +53,15 @@ public class TokenService {
             throw new RuntimeException("无效的token");
 
         return (LoginUser) redisCache.get(tokenKey);
+    }
+
+    @Async
+    public void renewToken(String token) {
+        String tokenKey = StrUtil.format(CommonConstants.TOKEN_CACHE_KEY, token);
+
+        if (redisCache.getExpire(tokenKey) < securityProperties.getToken().getRefreshUnit().toSeconds(securityProperties.getToken().getRefreshTime())) {
+            redisCache.expire(tokenKey, securityProperties.getToken().getLiveTime(), securityProperties.getToken().getLiveUnit());
+        }
+
     }
 }

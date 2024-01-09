@@ -11,8 +11,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -29,8 +31,8 @@ public class MarkController extends EntityController<Mark, MarkService, MarkDto,
     private MarkService markService;
 
     @ApiOperation("分页")
-    @PostMapping("page")
-    public Result<PageData<MarkDto>> page(@Validated @RequestBody MarkQuery query){
+    @GetMapping("page")
+    public Result<PageData<MarkDto>> page(MarkQuery query){
         return Result.ok(markService.page(query));
     }
 
@@ -42,8 +44,8 @@ public class MarkController extends EntityController<Mark, MarkService, MarkDto,
     }
 
     @ApiOperation("列表")
-    @PostMapping("list")
-    public Result<List<MarkDto>> list(@Validated @RequestBody MarkQuery query){
+    @GetMapping("list")
+    public Result<List<MarkDto>> list(MarkQuery query){
         return Result.ok("", markService.list(query));
     }
 

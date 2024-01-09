@@ -12,10 +12,7 @@ import com.gitee.whzzone.web.validation.groups.UpdateGroup;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,7 +27,7 @@ public abstract class EntityController<T extends BaseEntity, S extends EntitySer
 
     @ApiLogger
     @ApiOperation("获取")
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public Result<D> get(@PathVariable Integer id){
         T entity = service.getById(id);
         return Result.ok("操作成功", service.afterQueryHandler(entity));
@@ -38,7 +35,7 @@ public abstract class EntityController<T extends BaseEntity, S extends EntitySer
 
     @ApiLogger
     @ApiOperation("删除")
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public Result<Boolean> delete(@PathVariable Integer id){
         return Result.ok("操作成功", service.removeById(id));
     }
@@ -52,21 +49,21 @@ public abstract class EntityController<T extends BaseEntity, S extends EntitySer
 
     @ApiLogger
     @ApiOperation("更新")
-    @PostMapping("update")
+    @PutMapping("update")
     public Result<T> update(@Validated(UpdateGroup.class) @RequestBody D dto){
         return Result.ok("操作成功", service.updateById(dto));
     }
 
     @ApiLogger
     @ApiOperation("分页")
-    @PostMapping("page")
-    public Result<PageData<D>> page(@RequestBody Q query){
+    @GetMapping("page")
+    public Result<PageData<D>> page(Q query){
         return Result.ok("操作成功", service.page(query));
     }
 
     @ApiLogger
     @ApiOperation("列表")
-    @PostMapping("list")
+    @GetMapping("list")
     public Result<List<D>> list(@RequestBody Q query){
         return Result.ok("操作成功", service.list(query));
     }

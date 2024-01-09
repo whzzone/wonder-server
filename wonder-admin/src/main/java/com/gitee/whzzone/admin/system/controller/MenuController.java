@@ -31,15 +31,15 @@ public class MenuController extends EntityController<Menu, MenuService, MenuDto,
 
     @ApiOperation("查询菜单树")
 //    @PreAuthorize("hasAuthority('sys:menu:view')")
-    @PostMapping("/treeList")
-    public Result<List<MenuTreeDto>> treeList(@RequestBody MenuQuery query){
+    @GetMapping("/treeList")
+    public Result<List<MenuTreeDto>> treeList(MenuQuery query){
         return Result.ok("操作成功", menuService.treeList(query));
     }
 
     @ApiOperation("列表")
     //    @PreAuthorize("hasAuthority('sys:menu:view')")
-    @PostMapping("list")
-    public Result<List<MenuDto>> list(@RequestBody MenuQuery query){
+    @GetMapping("list")
+    public Result<List<MenuDto>> list(MenuQuery query){
         return Result.ok("操作成功", menuService.list(query));
     }
 
