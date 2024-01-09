@@ -11,6 +11,7 @@ import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.expression.operators.relational.InExpression;
 import net.sf.jsqlparser.schema.Column;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 /**
  * @author Create by whz at 2023/8/18
  */
+@Service("NOT_IN")
 public class NotInStrategyImpl implements ExpressStrategy{
 
     @Override

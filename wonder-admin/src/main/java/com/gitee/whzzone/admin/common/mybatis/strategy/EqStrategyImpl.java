@@ -7,10 +7,12 @@ import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
 import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
 import net.sf.jsqlparser.schema.Column;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Create by whz at 2023/8/18
  */
+@Service("EQ")
 public class EqStrategyImpl implements ExpressStrategy{
 
     @Override
