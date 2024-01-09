@@ -14,7 +14,6 @@ import com.gitee.whzzone.admin.system.pojo.auth.WxLoginDto;
 import com.gitee.whzzone.admin.system.service.AuthService;
 import com.gitee.whzzone.admin.util.CaptchaUtil;
 import com.gitee.whzzone.admin.util.SecurityUtil;
-import com.gitee.whzzone.common.constant.CommonConstants;
 import com.gitee.whzzone.web.pojo.other.Result;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -104,7 +103,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void logout() {
         LoginUser loginUser = SecurityUtil.getLoginUser();
-        String tokenKey = StrUtil.format(CommonConstants.TOKEN_CACHE_KEY, loginUser.getToken());
+        String tokenKey = tokenService.getTokenKey(loginUser.getToken());
         redisCache.delete(tokenKey);
     }
 

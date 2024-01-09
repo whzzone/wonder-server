@@ -39,7 +39,7 @@ public class TokenService {
      * @param loginUser 封装信息
      */
     public void cacheToken(LoginUser loginUser) {
-        redisCache.set(StrUtil.format(CommonConstants.TOKEN_CACHE_KEY, loginUser.getToken()), loginUser, securityProperties.getToken().getLiveTime(), securityProperties.getToken().getLiveUnit());
+        redisCache.set(getTokenKey(loginUser.getToken()), loginUser, securityProperties.getToken().getLiveTime(), securityProperties.getToken().getLiveUnit());
     }
 
     /**
@@ -48,7 +48,7 @@ public class TokenService {
      * @return 登录的用户信息
      */
     public LoginUser getLoginUser(String token) {
-        String tokenKey = StrUtil.format(CommonConstants.TOKEN_CACHE_KEY, token);
+        String tokenKey = getTokenKey(token);
         if (Boolean.FALSE.equals(redisCache.hasKey(tokenKey)))
             throw new RuntimeException("无效的token");
 
@@ -57,11 +57,15 @@ public class TokenService {
 
     @Async
     public void renewToken(String token) {
-        String tokenKey = StrUtil.format(CommonConstants.TOKEN_CACHE_KEY, token);
+        String tokenKey = getTokenKey(token);
 
         if (redisCache.getExpire(tokenKey) < securityProperties.getToken().getRefreshUnit().toSeconds(securityProperties.getToken().getRefreshTime())) {
             redisCache.expire(tokenKey, securityProperties.getToken().getLiveTime(), securityProperties.getToken().getLiveUnit());
         }
 
+    }
+
+    public String getTokenKey(String token) {
+        return StrUtil.format(CommonConstants.TOKEN_CACHE_KEY, token);
     }
 }
