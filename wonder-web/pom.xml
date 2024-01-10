@@ -6,37 +6,11 @@
     <parent>
         <groupId>com.gitee.whzzone</groupId>
         <artifactId>wonder-server</artifactId>
-        <version>1.0</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.gitee.whzzone.web</groupId>
     <artifactId>wonder-web</artifactId>
-    <version>1.0</version>
-    <name>wonder-web</name>
     <packaging>jar</packaging>
-
-    <description>web快速开发依赖</description>
-    <url>https://gitee.com/whzzone/wonder-server</url>
-
-    <licenses>
-        <license>
-            <name>MIT</name>
-            <url>https://opensource.org/licenses/MIT</url>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>whz</name>
-            <email>whz@live.com</email>
-        </developer>
-    </developers>
-
-    <scm>
-        <connection>scm:git@gitee.com/whzzone/wonder-server.git</connection>
-        <developerConnection>scm:git@gitee.com/whzzone/wonder-server.git</developerConnection>
-        <url>scm:git@gitee.com/whzzone/wonder-server</url>
-    </scm>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -65,9 +39,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.gitee.whzzone.annotation</groupId>
+            <groupId>com.gitee.whzzone</groupId>
             <artifactId>wonder-annotation</artifactId>
-            <version>1.0</version>
+            <version>${parent.version}</version>
         </dependency>
 
         <dependency>
@@ -77,79 +51,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.gitee.whzzone</groupId>
-            <artifactId>wonder-common</artifactId>
-            <version>1.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
-                <configuration>
-                    <additionalJOptions>
-                        <additionalJOption>-Xdoclint:none</additionalJOption>
-                    </additionalJOptions>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
-    <!--发布到Maven中央仓库-->
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
 
 </project>

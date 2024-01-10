@@ -6,10 +6,9 @@
     <parent>
         <groupId>com.gitee.whzzone</groupId>
         <artifactId>wonder-server</artifactId>
-        <version>1.0</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.gitee.whzzone.annotation</groupId>
     <artifactId>wonder-annotation</artifactId>
 
     <properties>
@@ -17,12 +16,12 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.gitee.whzzone</groupId>
             <artifactId>wonder-common</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
+            <version>${parent.version}</version>
         </dependency>
     </dependencies>
 

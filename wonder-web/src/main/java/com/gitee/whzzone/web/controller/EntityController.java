@@ -22,6 +22,7 @@ import java.util.List;
  */
 public abstract class EntityController<T extends BaseEntity, S extends EntityService<T, D, Q>, D extends EntityDto, Q extends EntityQuery> {
 
+    @SuppressWarnings("all")
     @Autowired
     private S service;
 

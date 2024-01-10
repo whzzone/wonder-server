@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.gitee.whzzone</groupId>
         <artifactId>wonder-server</artifactId>
-        <version>1.0</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>wonder-admin</artifactId>
@@ -15,6 +15,7 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
     <dependencies>
@@ -107,20 +108,13 @@
         <dependency>
             <groupId>com.gitee.whzzone</groupId>
             <artifactId>wonder-processor</artifactId>
-            <version>1.0</version>
+            <version>${parent.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.gitee.whzzone</groupId>
-            <artifactId>wonder-common</artifactId>
-            <version>1.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.gitee.whzzone.web</groupId>
             <artifactId>wonder-web</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
+            <version>${parent.version}</version>
         </dependency>
 
     </dependencies>
