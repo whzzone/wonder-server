@@ -27,6 +27,8 @@
 - 方案一：优先考虑提供类型为`值`的情况是否满足当前需求。~~如需要限制两个及以上字段时，使用提供类型为`方法`来处理，此时配置记录中字段`column_name`为`id`，配置对应的无参或有参方法，返回`idList`去`IN`，就能满足。例如问题中可一执行一个方法返回 付款金额大于100元 && 已经完成的订单 的`idList`去`order`表拼接`id IN( idList )` 就能满足~~
 - 方案二：已实现多规则拼接，支持`OR`、`AND`
 
+测试账号 user01/123456
+
 例子 我们想在订单不分页接口限制某个角色只能查看`收获地址中存在钦北区`或者`订单金额小于等于100`的订单。
 
 那么我们可以添加一个`mark`（我这里暂时把他叫做标记），标记这个接口为`order-list`。![image-20231205112116030](https://cdn.weihuazhou.top/blog/2023/12/image-20231205112116030.png)
@@ -86,9 +88,9 @@ public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, Orde
 maven引入
 ```java
 <dependency>
-    <groupId>com.gitee.whzzone.web</groupId>
+    <groupId>com.gitee.whzzone</groupId>
     <artifactId>wonder-web</artifactId>
-    <version>1.0</version>
+    <version>1.2</version>
 </dependency>
 ```
 
