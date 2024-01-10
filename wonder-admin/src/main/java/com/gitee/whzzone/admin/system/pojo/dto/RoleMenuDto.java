@@ -1,5 +1,6 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
+import com.gitee.whzzone.annotation.EntityField;
 import com.gitee.whzzone.web.pojo.dto.EntityDto;
 import lombok.Data;
 
@@ -10,8 +11,10 @@ import lombok.Data;
 @Data
 public class RoleMenuDto extends EntityDto {
 
+    @EntityField
     private Integer roleId;
 
+    @EntityField
     private Integer menuId;
 
 }
