@@ -28,7 +28,7 @@ public abstract class EntityController<T extends BaseEntity, S extends EntitySer
 
     @ApiLogger
     @ApiOperation("获取")
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public Result<D> get(@PathVariable Integer id){
         T entity = service.getById(id);
         return Result.ok("操作成功", service.afterQueryHandler(entity));
@@ -36,21 +36,21 @@ public abstract class EntityController<T extends BaseEntity, S extends EntitySer
 
     @ApiLogger
     @ApiOperation("删除")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     public Result<Boolean> delete(@PathVariable Integer id){
         return Result.ok("操作成功", service.removeById(id));
     }
 
     @ApiLogger
     @ApiOperation("保存")
-    @PostMapping("save")
+    @PostMapping
     public Result<T> save(@Validated(InsertGroup.class) @RequestBody D dto){
         return Result.ok("操作成功", service.save(dto));
     }
 
     @ApiLogger
     @ApiOperation("更新")
-    @PutMapping("update")
+    @PutMapping
     public Result<T> update(@Validated(UpdateGroup.class) @RequestBody D dto){
         return Result.ok("操作成功", service.updateById(dto));
     }

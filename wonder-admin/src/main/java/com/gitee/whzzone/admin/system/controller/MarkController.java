@@ -11,10 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,7 +34,7 @@ public class MarkController extends EntityController<Mark, MarkService, MarkDto,
     }
 
     @ApiOperation("改变启用状态")
-    @GetMapping("/enabledSwitch/{id}")
+    @PutMapping("/enabledSwitch/{id}")
     public Result enabledSwitch(@PathVariable Integer id) {
         markService.enabledSwitch(id);
         return Result.ok();
