@@ -5,6 +5,26 @@ spring:
     url: jdbc:mysql://weihuazhou.top:3306/wonder?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: 5278eedc6119a326
+    druid:
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        # 排除一些不必要的url
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        login-username: admin
+        login-password: 123456
+
+      filter:
+        stat:
+          db-type: mysql
+          enabled: true
+          log-slow-sql: true
+          slow-sql-millis: 2000
+
   redis:
     host: weihuazhou.top
     port: 6379
@@ -25,12 +45,6 @@ spring:
     type: redis
 
 mybatis-plus:
-  global-config:
-    db-config:
-      logic-delete-field: deleted
-      logic-not-delete-value: 0
-      logic-delete-value: 1
-
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     #log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl

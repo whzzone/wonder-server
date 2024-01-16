@@ -11,7 +11,7 @@
  Target Server Version : 80033
  File Encoding         : 65001
 
- Date: 02/01/2024 15:56:43
+ Date: 16/01/2024 16:04:44
 */
 
 SET NAMES utf8mb4;
@@ -29,7 +29,7 @@ CREATE TABLE `base_table`  (
   `update_by` int NULL DEFAULT NULL COMMENT '更新人',
   `deleted` bit(1) NULL DEFAULT NULL COMMENT '已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of base_table
@@ -106,7 +106,7 @@ CREATE TABLE `gen_table`  (
   `update_by` int NULL DEFAULT NULL COMMENT '更新人',
   `deleted` bit(1) NULL DEFAULT NULL COMMENT '已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '代码生成表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '代码生成表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of gen_table
@@ -171,7 +171,7 @@ CREATE TABLE `sys_dept`  (
 -- ----------------------------
 -- Records of sys_dept
 -- ----------------------------
-INSERT INTO `sys_dept` VALUES (1, 0, '默认部门', b'1', 1, '2023-05-17 15:02:47', 1, '2023-05-17 15:02:47', 1, b'0');
+INSERT INTO `sys_dept` VALUES (1, 0, '默认部门3', b'1', 1, '2023-05-17 15:02:47', 1, '2023-05-17 15:02:47', 1, b'0');
 INSERT INTO `sys_dept` VALUES (2, 0, '研发部', b'1', 2, '2023-05-17 22:32:24', 1, '2023-05-17 22:32:24', 1, b'0');
 INSERT INTO `sys_dept` VALUES (3, 0, '运维部', b'1', 3, '2023-05-17 22:38:18', 1, '2023-07-09 15:45:00', 1, b'0');
 INSERT INTO `sys_dept` VALUES (4, 1, '测试部门1-1', b'0', 1, '2023-07-08 21:16:00', 1, '2023-07-08 21:16:00', 1, b'0');
@@ -298,12 +298,12 @@ CREATE TABLE `sys_mark`  (
 -- ----------------------------
 -- Records of sys_mark
 -- ----------------------------
-INSERT INTO `sys_mark` VALUES (1, 'sn1', '无参测试', b'1', 2, NULL, NULL, '2023-07-16 09:11:09', 1, b'0');
-INSERT INTO `sys_mark` VALUES (2, 'sn2', '查看创建人是当前登录用户的数据', b'0', 3, NULL, NULL, '2023-07-15 17:53:42', 1, b'0');
-INSERT INTO `sys_mark` VALUES (3, 'sn3', '带参注入测试', b'1', 4, NULL, NULL, '2023-07-15 17:53:42', NULL, b'0');
-INSERT INTO `sys_mark` VALUES (4, 'sn5', '查看父级id为0的数据', b'1', 5, NULL, NULL, '2023-07-15 17:53:42', NULL, b'0');
-INSERT INTO `sys_mark` VALUES (5, 'role-page', '角色分页接口', b'1', 1, NULL, NULL, '2023-07-15 17:53:42', 1, b'0');
-INSERT INTO `sys_mark` VALUES (6, 'order-list', '订单列表接口', NULL, NULL, '2023-08-04 10:09:52', 1, '2023-08-04 10:09:52', 1, b'0');
+INSERT INTO `sys_mark` VALUES (1, 'sn1', '无参测试', b'1', 2, NULL, 1, '2023-07-16 09:11:09', 1, b'0');
+INSERT INTO `sys_mark` VALUES (2, 'sn2', '查看创建人是当前登录用户的数据', b'0', 3, NULL, 1, '2023-07-15 17:53:42', 1, b'0');
+INSERT INTO `sys_mark` VALUES (3, 'sn3', '带参注入测试', b'1', 4, NULL, 1, '2023-07-15 17:53:42', 1, b'0');
+INSERT INTO `sys_mark` VALUES (4, 'sn5', '查看父级id为0的数据', b'1', 5, NULL, 1, '2023-07-15 17:53:42', 1, b'0');
+INSERT INTO `sys_mark` VALUES (5, 'role-page', '角色分页接口', b'1', 1, NULL, 1, '2023-07-15 17:53:42', 1, b'0');
+INSERT INTO `sys_mark` VALUES (6, 'order-list', '订单列表接口', b'1', 9, '2023-08-04 10:09:52', 1, '2023-08-04 10:09:52', 1, b'0');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -382,7 +382,7 @@ CREATE TABLE `sys_request_log`  (
   `update_by` int NULL DEFAULT NULL COMMENT '更新人',
   `deleted` bit(1) NULL DEFAULT NULL COMMENT '已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = 'API日志' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = 'API日志' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_request_log
@@ -570,7 +570,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '管理员', '$2a$10$M.cAsmqLLmMwG/.K.Dtr4en9XkE1c/7VFZpgtgRyk6EcrwYoHFqx.', '18276904847', 'oXNOh4jjNCN7SnhfnhsdUlNB_bGw', NULL, 'whz@live.com', b'1', '2023-05-17 15:02:47', NULL, '2023-05-17 15:02:47', 1, b'0');
+INSERT INTO `sys_user` VALUES (1, 'admin', '管理员', '$2a$10$M.cAsmqLLmMwG/.K.Dtr4en9XkE1c/7VFZpgtgRyk6EcrwYoHFqx.', '18276904847', 'oXNOh4jjNCN7SnhfnhsdUlNB_bGw', NULL, 'whz@live.com', b'1', '2023-05-17 15:02:47', 1, '2023-05-17 15:02:47', 1, b'0');
 INSERT INTO `sys_user` VALUES (2, 'user1', '普通用户1', '$2a$10$mTtXxlfpHXCfYkI3fE.Z2uFyPPv46NG1fNN.xmZ1xduAvoXrsVoWm', '15578701918', NULL, NULL, '2625219048@qq.com', b'1', '2023-05-17 22:32:24', 1, '2023-05-17 22:32:24', 1, b'0');
 INSERT INTO `sys_user` VALUES (3, 'user2', '普通用户2', '$2a$10$.FUEa0YGbkS4BC7Tq8dlWuWOv3pATyT2hE6nPJclbYjbJ2pPBDroS', '13222222222', NULL, NULL, '1721675433@qq.com', b'1', '2023-05-17 22:38:18', 1, '2023-05-22 19:21:11', 1, b'0');
 INSERT INTO `sys_user` VALUES (4, 'user04', 'user04', '$2a$10$9cA68ty8svlAaciZ3TBgYewZzb3qyanpPudF77rJKcAJx9vpmsJMO', '13566666666', NULL, NULL, '', b'1', '2023-07-10 16:53:51', 1, '2023-07-10 16:53:51', 1, b'0');

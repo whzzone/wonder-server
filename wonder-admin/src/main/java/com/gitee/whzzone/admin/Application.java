@@ -21,7 +21,8 @@ public class Application {
         Environment env = context.getEnvironment();
         String port = env.getProperty("server.port");
         String path = env.containsProperty("server.servlet.context-path") ? env.getProperty("server.servlet.context-path") : "";
-        log.info("=======> http://localhost:" + port + path + "/doc.html <=======");
+        log.info("=======>API文档 http://localhost:" + port + path + "/doc.html <=======");
+        log.info("=======>Druid监控 http://localhost:" + port + path + "/druid/login.html <=======");
     }
 
 }

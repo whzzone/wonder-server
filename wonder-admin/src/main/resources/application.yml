@@ -30,6 +30,7 @@ security:
     - /doc.html
     - /favicon.ico
     - /auth/login/**
+    - /druid/**
 
   token:
     header: Authorization
