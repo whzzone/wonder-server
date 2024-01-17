@@ -1,5 +1,6 @@
 package com.gitee.whzzone.web.pojo.dto;
 
+import com.gitee.whzzone.annotation.EntityField;
 import com.gitee.whzzone.web.validation.groups.UpdateGroup;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -12,6 +13,7 @@ import java.util.Date;
  */
 public class EntityDto {
 
+    @EntityField(insert = false)
     @NotNull(message = "id不能为空", groups = {UpdateGroup.class})
     @ApiModelProperty("id")
     private Integer id;

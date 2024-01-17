@@ -45,7 +45,8 @@
         <java.version>8</java.version>
         <spring-boot.version>2.5.6</spring-boot.version>
         <druid.version>1.1.10</druid.version>
-        <mybatis-plus.version>3.5.1</mybatis-plus.version>
+        <mybatis-plus.version>3.5.2</mybatis-plus.version>
+        <mybatis-generator.version>3.5.2</mybatis-generator.version>
         <fastjson.version>1.2.83</fastjson.version>
         <hutool-all.version>5.8.18</hutool-all.version>
         <swagger2.version>3.0.0</swagger2.version>
@@ -187,7 +188,7 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-generator</artifactId>
-                <version>3.5.2</version>
+                <version>${mybatis-generator.version}</version>
             </dependency>
 
             <dependency>
