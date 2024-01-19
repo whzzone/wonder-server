@@ -19,4 +19,7 @@ public interface OrderMapper extends BaseMapper<Order> {
     @DataScope("order-list")
     @Override
     List<Order> selectList(@Param(Constants.WRAPPER) Wrapper<Order> queryWrapper);
+
+    @DataScope("order-list")
+    List<Order> listTest( @Param("id") Integer id);
 }

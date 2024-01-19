@@ -11,6 +11,7 @@ import com.gitee.whzzone.admin.business.queryhandler.order.BOrderQueryHandler;
 import com.gitee.whzzone.admin.business.service.OrderService;
 import com.gitee.whzzone.web.entity.BaseEntity;
 import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,6 +25,9 @@ import java.util.stream.Collectors;
 @Service
 public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, OrderDto, OrderQuery> implements OrderService {
 
+    @Autowired
+    private OrderMapper orderMapper;
+
     @Override
     public List<OrderDto> list(OrderQuery query) {
         LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
@@ -36,6 +40,7 @@ public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, Orde
 
         // BOrderQueryHandler未注入容器
         return afterQueryHandler(list(queryWrapper), new BOrderQueryHandler());
+//        return afterQueryHandler(orderMapper.listTest(1), new BOrderQueryHandler());
     }
 
     @Override

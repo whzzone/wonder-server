@@ -72,7 +72,7 @@ public abstract class EntityController<T extends BaseEntity, S extends EntitySer
     @ApiLogger
     @ApiOperation("列表")
     @GetMapping("list")
-    public Result<List<D>> list(@RequestBody Q query){
+    public Result<List<D>> list(Q query){
         return Result.ok("操作成功", service.list(query));
     }
 
