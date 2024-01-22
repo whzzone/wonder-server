@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
 import com.gitee.whzzone.annotation.EntityField;
-import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.pojo.dto.EntityDTO;
 import com.gitee.whzzone.web.validation.groups.InsertGroup;
 import com.gitee.whzzone.web.validation.groups.UpdateGroup;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
  * @author Create by whz at 2023/7/13
  */
 @Data
-public class MarkDto extends EntityDto {
+public class MarkDTO extends EntityDTO {
 
     @EntityField
     @NotBlank(message = "名称不能为空", groups = {InsertGroup.class, UpdateGroup.class})

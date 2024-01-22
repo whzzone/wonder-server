@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.controller;
 
 import com.gitee.whzzone.admin.system.entity.Dept;
-import com.gitee.whzzone.admin.system.pojo.dto.DeptDto;
+import com.gitee.whzzone.admin.system.pojo.dto.DeptDTO;
 import com.gitee.whzzone.admin.system.pojo.query.DeptQuery;
 import com.gitee.whzzone.admin.system.service.DeptService;
 import com.gitee.whzzone.web.controller.EntityController;
@@ -20,20 +20,20 @@ import java.util.List;
 @Api(tags = "部门相关")
 @RestController
 @RequestMapping("dept")
-public class DeptController extends EntityController<Dept, DeptService, DeptDto, DeptQuery> {
+public class DeptController extends EntityController<Dept, DeptService, DeptDTO, DeptQuery> {
 
     @Autowired
     private DeptService deptService;
 
     @ApiOperation("列表")
     @GetMapping("list")
-    public Result<List<DeptDto>> list(DeptQuery query) {
+    public Result<List<DeptDTO>> list(DeptQuery query) {
         return Result.ok("", deptService.list(query));
     }
 
     @ApiOperation("树")
     @GetMapping("tree")
-    public Result<List<DeptDto>> tree(DeptQuery query) {
+    public Result<List<DeptDTO>> tree(DeptQuery query) {
         return Result.ok(deptService.tree(query));
     }
 

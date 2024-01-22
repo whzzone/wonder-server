@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
-import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.pojo.dto.EntityDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -14,8 +14,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@ApiModel(value = "RequestLogDto对象", description = "请求日志")
-public class RequestLogDto extends EntityDto {
+@ApiModel(value = "RequestLogDTO对象", description = "请求日志")
+public class RequestLogDTO extends EntityDTO {
 
     @ApiModelProperty("响应码")
     private Integer code;

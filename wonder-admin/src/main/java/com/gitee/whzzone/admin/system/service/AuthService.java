@@ -1,8 +1,8 @@
 package com.gitee.whzzone.admin.system.service;
 
 import com.gitee.whzzone.admin.common.security.LoginUser;
-import com.gitee.whzzone.admin.system.pojo.auth.UsernameLoginDto;
-import com.gitee.whzzone.admin.system.pojo.auth.WxLoginDto;
+import com.gitee.whzzone.admin.system.pojo.auth.UsernameLoginDTO;
+import com.gitee.whzzone.admin.system.pojo.auth.WxLoginDTO;
 import com.gitee.whzzone.web.pojo.other.Result;
 
 import java.util.Map;
@@ -14,9 +14,9 @@ import java.util.Map;
 public interface AuthService {
     Map<String, String> getCode();
     
-    Result<LoginUser> loginByUsername(UsernameLoginDto dto);
+    Result<LoginUser> loginByUsername(UsernameLoginDTO dto);
 
     void logout();
 
-    Result loginByWeixin(WxLoginDto dto);
+    Result loginByWeixin(WxLoginDTO dto);
 }

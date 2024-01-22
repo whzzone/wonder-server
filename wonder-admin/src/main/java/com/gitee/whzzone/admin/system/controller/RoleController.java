@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.controller;
 
 import com.gitee.whzzone.admin.system.entity.Role;
-import com.gitee.whzzone.admin.system.pojo.dto.RoleDto;
+import com.gitee.whzzone.admin.system.pojo.dto.RoleDTO;
 import com.gitee.whzzone.admin.system.pojo.query.RoleQuery;
 import com.gitee.whzzone.admin.system.service.RoleService;
 import com.gitee.whzzone.web.controller.EntityController;
@@ -21,20 +21,20 @@ import java.util.List;
 @Api(tags = "角色相关")
 @RestController
 @RequestMapping("role")
-public class RoleController extends EntityController<Role, RoleService, RoleDto, RoleQuery> {
+public class RoleController extends EntityController<Role, RoleService, RoleDTO, RoleQuery> {
 
     @Autowired
     private RoleService roleService;
 
     @ApiOperation("列表")
     @GetMapping("list")
-    public Result<List<RoleDto>> list(RoleQuery query){
+    public Result<List<RoleDTO>> list(RoleQuery query){
         return Result.ok("操作成功", roleService.list(query));
     }
 
     @ApiOperation("分页")
     @GetMapping("page")
-    public Result<PageData<RoleDto>> page(RoleQuery query){
+    public Result<PageData<RoleDTO>> page(RoleQuery query){
         return Result.ok(roleService.page(query));
     }
 

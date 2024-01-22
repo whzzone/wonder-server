@@ -3,7 +3,7 @@ package com.gitee.whzzone.admin.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gitee.whzzone.admin.system.entity.Dict;
 import com.gitee.whzzone.admin.system.mapper.DictMapper;
-import com.gitee.whzzone.admin.system.pojo.other.Dict.DictDto;
+import com.gitee.whzzone.admin.system.pojo.other.Dict.DictDTO;
 import com.gitee.whzzone.admin.system.pojo.other.Dict.DictQuery;
 import com.gitee.whzzone.admin.system.service.DictService;
 import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 * @author Create by generator at 2023/8/8
 */
 @Service
-public class DictServiceImpl extends EntityServiceImpl<DictMapper, Dict, DictDto, DictQuery> implements DictService {
+public class DictServiceImpl extends EntityServiceImpl<DictMapper, Dict, DictDTO, DictQuery> implements DictService {
 
     @Override
-    public DictDto beforeSaveOrUpdateHandler(DictDto dto) {
+    public DictDTO beforeSaveOrUpdateHandler(DictDTO dto) {
         if (existSameDictCode(dto.getId(), dto.getDictCode())){
             throw new RuntimeException("存在相同的字典编码");
         }

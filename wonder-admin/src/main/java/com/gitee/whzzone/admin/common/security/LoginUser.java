@@ -2,8 +2,8 @@ package com.gitee.whzzone.admin.common.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gitee.whzzone.admin.system.entity.User;
-import com.gitee.whzzone.admin.system.pojo.dto.DeptDto;
-import com.gitee.whzzone.admin.system.pojo.dto.RoleDto;
+import com.gitee.whzzone.admin.system.pojo.dto.DeptDTO;
+import com.gitee.whzzone.admin.system.pojo.dto.RoleDTO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,10 +34,10 @@ public class LoginUser extends User implements UserDetails {
     private List<Integer> deptIds;
 
     @ApiModelProperty("部门List")
-    private List<DeptDto> depts;
+    private List<DeptDTO> depts;
 
     @ApiModelProperty("角色List")
-    private List<RoleDto> roles;
+    private List<RoleDTO> roles;
 
     @ApiModelProperty("权限")
     private List<String> permissions;

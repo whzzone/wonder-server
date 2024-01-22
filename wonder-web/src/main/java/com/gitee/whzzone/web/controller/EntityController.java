@@ -2,7 +2,7 @@ package com.gitee.whzzone.web.controller;
 
 import com.gitee.whzzone.annotation.ApiLogger;
 import com.gitee.whzzone.web.entity.BaseEntity;
-import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.pojo.dto.EntityDTO;
 import com.gitee.whzzone.web.pojo.other.PageData;
 import com.gitee.whzzone.web.pojo.other.Result;
 import com.gitee.whzzone.web.pojo.query.EntityQuery;
@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * 基础的控制器
  * @author Create by whz at 2023/7/8
  */
-public abstract class EntityController<T extends BaseEntity, S extends EntityService<T, D, Q>, D extends EntityDto, Q extends EntityQuery> {
+public abstract class EntityController<T extends BaseEntity, S extends EntityService<T, D, Q>, D extends EntityDTO, Q extends EntityQuery> {
 
     @SuppressWarnings("all")
     @Autowired

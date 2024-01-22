@@ -12,7 +12,7 @@ import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.gitee.whzzone.annotation.EntityField;
 import com.gitee.whzzone.annotation.Query;
 import com.gitee.whzzone.web.entity.BaseEntity;
-import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.pojo.dto.EntityDTO;
 import com.gitee.whzzone.web.pojo.other.PageData;
 import com.gitee.whzzone.web.pojo.query.EntityQuery;
 import com.gitee.whzzone.web.pojo.sort.Sort;
@@ -33,7 +33,7 @@ import java.util.*;
 /**
  * @author Create by whz at 2023/7/16
  */
-public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseEntity, D extends EntityDto, Q extends EntityQuery> extends ServiceImpl<M, T> implements EntityService<T, D, Q> {
+public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseEntity, D extends EntityDTO, Q extends EntityQuery> extends ServiceImpl<M, T> implements EntityService<T, D, Q> {
 
     @Autowired
     private ApplicationContext context;
@@ -179,7 +179,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             if (queryHandler == null) {
                 return afterQueryHandler(entity);
             }
-            return queryHandler.apply(entity);
+            return queryHandler.process(entity);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
@@ -206,7 +206,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     public List<D> afterQueryHandler(List<T> list) {
         return afterQueryHandler(list, new BaseQueryHandler<T, D>() {
             @Override
-            public D apply(T entity) {
+            public D process(T entity) {
                 return afterQueryHandler(entity);
             }
         });
@@ -284,7 +284,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     public PageData<D> page(Q query) {
         return page(query, new BaseQueryHandler<T, D>() {
             @Override
-            public D apply(T entity) {
+            public D process(T entity) {
                 return afterQueryHandler(entity);
             }
         });

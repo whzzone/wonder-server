@@ -1,8 +1,8 @@
 package com.gitee.whzzone.admin.system.controller;
 
 import com.gitee.whzzone.admin.system.entity.User;
-import com.gitee.whzzone.admin.system.pojo.dto.ResetPWDDto;
-import com.gitee.whzzone.admin.system.pojo.dto.UserDto;
+import com.gitee.whzzone.admin.system.pojo.dto.ResetPWDDTO;
+import com.gitee.whzzone.admin.system.pojo.dto.UserDTO;
 import com.gitee.whzzone.admin.system.pojo.query.UserQuery;
 import com.gitee.whzzone.admin.system.service.UserService;
 import com.gitee.whzzone.web.controller.EntityController;
@@ -23,14 +23,14 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "用户相关")
 @RestController
 @RequestMapping("user")
-public class UserController extends EntityController<User, UserService, UserDto, UserQuery> {
+public class UserController extends EntityController<User, UserService, UserDTO, UserQuery> {
 
     @Autowired
     private UserService userService;
 
     @ApiOperation("分页")
     @GetMapping("page")
-    public Result<PageData<UserDto>> page(UserQuery query){
+    public Result<PageData<UserDTO>> page(UserQuery query){
         return Result.ok(userService.page(query));
     }
 
@@ -44,7 +44,7 @@ public class UserController extends EntityController<User, UserService, UserDto,
     @ApiOperation("重置密码")
     @PreAuthorize("hasAuthority('sys:user:resetPWD')")
     @PutMapping("resetPWD")
-    public Result resetPWD(@Validated @RequestBody ResetPWDDto dto){
+    public Result resetPWD(@Validated @RequestBody ResetPWDDTO dto){
         userService.resetPWD(dto);
         return Result.ok();
     }

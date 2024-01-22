@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gitee.whzzone.admin.system.entity.UserDept;
 import com.gitee.whzzone.admin.system.mapper.UserDeptMapper;
-import com.gitee.whzzone.admin.system.pojo.dto.UserDeptDto;
+import com.gitee.whzzone.admin.system.pojo.dto.UserDeptDTO;
 import com.gitee.whzzone.admin.system.pojo.query.UserDeptQuery;
 import com.gitee.whzzone.admin.system.service.DeptService;
 import com.gitee.whzzone.admin.system.service.UserDeptService;
@@ -21,7 +21,7 @@ import java.util.List;
 
 @Validated
 @Service
-public class UserDeptServiceImpl extends EntityServiceImpl<UserDeptMapper, UserDept, UserDeptDto, UserDeptQuery> implements UserDeptService {
+public class UserDeptServiceImpl extends EntityServiceImpl<UserDeptMapper, UserDept, UserDeptDTO, UserDeptQuery> implements UserDeptService {
 
     @Autowired
     private DeptService deptService;

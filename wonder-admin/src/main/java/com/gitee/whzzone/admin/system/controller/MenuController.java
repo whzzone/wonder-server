@@ -1,8 +1,8 @@
 package com.gitee.whzzone.admin.system.controller;
 
 import com.gitee.whzzone.admin.system.entity.Menu;
-import com.gitee.whzzone.admin.system.pojo.dto.MenuDto;
-import com.gitee.whzzone.admin.system.pojo.dto.MenuTreeDto;
+import com.gitee.whzzone.admin.system.pojo.dto.MenuDTO;
+import com.gitee.whzzone.admin.system.pojo.dto.MenuTreeDTO;
 import com.gitee.whzzone.admin.system.pojo.query.MenuQuery;
 import com.gitee.whzzone.admin.system.service.MenuService;
 import com.gitee.whzzone.admin.util.SecurityUtil;
@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/menu")
 @Validated
-public class MenuController extends EntityController<Menu, MenuService, MenuDto, MenuQuery> {
+public class MenuController extends EntityController<Menu, MenuService, MenuDTO, MenuQuery> {
 
     @Autowired
     private MenuService menuService;
@@ -32,20 +32,20 @@ public class MenuController extends EntityController<Menu, MenuService, MenuDto,
     @ApiOperation("查询菜单树")
 //    @PreAuthorize("hasAuthority('sys:menu:view')")
     @GetMapping("/treeList")
-    public Result<List<MenuTreeDto>> treeList(MenuQuery query){
+    public Result<List<MenuTreeDTO>> treeList(MenuQuery query){
         return Result.ok("操作成功", menuService.treeList(query));
     }
 
     @ApiOperation("列表")
     //    @PreAuthorize("hasAuthority('sys:menu:view')")
     @GetMapping("list")
-    public Result<List<MenuDto>> list(MenuQuery query){
+    public Result<List<MenuDTO>> list(MenuQuery query){
         return Result.ok("操作成功", menuService.list(query));
     }
 
     @ApiOperation("获取用户菜单-包含路由、权限")
     @GetMapping("/findByUserId")
-    public Result<List<MenuDto>> getRoutes(){
+    public Result<List<MenuDTO>> getRoutes(){
         return Result.ok("操作成功", menuService.findByUserId(SecurityUtil.getLoginUser().getId()));
     }
 }

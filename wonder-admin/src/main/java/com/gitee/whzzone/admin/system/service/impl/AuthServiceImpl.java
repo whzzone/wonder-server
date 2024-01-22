@@ -9,8 +9,8 @@ import cn.hutool.core.util.StrUtil;
 import com.gitee.whzzone.admin.common.redis.RedisCache;
 import com.gitee.whzzone.admin.common.security.LoginUser;
 import com.gitee.whzzone.admin.common.service.TokenService;
-import com.gitee.whzzone.admin.system.pojo.auth.UsernameLoginDto;
-import com.gitee.whzzone.admin.system.pojo.auth.WxLoginDto;
+import com.gitee.whzzone.admin.system.pojo.auth.UsernameLoginDTO;
+import com.gitee.whzzone.admin.system.pojo.auth.WxLoginDTO;
 import com.gitee.whzzone.admin.system.service.AuthService;
 import com.gitee.whzzone.admin.util.CaptchaUtil;
 import com.gitee.whzzone.admin.util.SecurityUtil;
@@ -77,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Result<LoginUser> loginByUsername(UsernameLoginDto dto) {
+    public Result<LoginUser> loginByUsername(UsernameLoginDTO dto) {
         Authentication authentication;
         try {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
@@ -108,7 +108,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Result loginByWeixin(WxLoginDto dto) {
+    public Result loginByWeixin(WxLoginDTO dto) {
         try {
             log.warn("code =========" + dto.getCode());
             WxMaJscode2SessionResult session = wxMaService.getUserService().getSessionInfo(dto.getCode());

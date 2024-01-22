@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.common.mybatis.strategy;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.gitee.whzzone.admin.system.pojo.dto.RuleDto;
+import com.gitee.whzzone.admin.system.pojo.dto.RuleDTO;
 import com.gitee.whzzone.common.enums.ProvideTypeEnum;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.StringValue;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class InStrategyImpl implements ExpressStrategy {
 
     @Override
-    public Expression apply(RuleDto rule, Expression where) {
+    public Expression apply(RuleDTO rule, Expression where) {
         boolean or = isOr(rule.getSpliceType());
         Column column = getColumn(rule);
         Object value = getValue(rule);

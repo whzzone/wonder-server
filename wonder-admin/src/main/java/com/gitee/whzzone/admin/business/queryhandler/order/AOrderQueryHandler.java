@@ -2,7 +2,7 @@ package com.gitee.whzzone.admin.business.queryhandler.order;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.gitee.whzzone.admin.business.entity.Order;
-import com.gitee.whzzone.admin.business.pojo.dto.OrderDto;
+import com.gitee.whzzone.admin.business.pojo.dto.OrderDTO;
 import com.gitee.whzzone.admin.system.service.UserService;
 import com.gitee.whzzone.admin.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +18,10 @@ public class AOrderQueryHandler implements OrderQueryHandler{
     private UserService userService;
 
     @Override
-    public OrderDto apply(Order order) {
-        OrderDto orderDto = BeanUtil.copyProperties(order, OrderDto.class);
-        orderDto.setReceiverName(userService.getById(SecurityUtil.getLoginUser().getId()).getNickname());
-        return orderDto;
+    public OrderDTO process(Order order) {
+        OrderDTO orderDTO = BeanUtil.copyProperties(order, OrderDTO.class);
+        orderDTO.setReceiverName(userService.getById(SecurityUtil.getLoginUser().getId()).getNickname());
+        return orderDTO;
     }
 
 }

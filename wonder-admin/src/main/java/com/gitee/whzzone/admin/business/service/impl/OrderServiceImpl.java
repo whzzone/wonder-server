@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gitee.whzzone.admin.business.entity.Order;
 import com.gitee.whzzone.admin.business.mapper.OrderMapper;
-import com.gitee.whzzone.admin.business.pojo.dto.OrderDto;
+import com.gitee.whzzone.admin.business.pojo.dto.OrderDTO;
 import com.gitee.whzzone.admin.business.pojo.query.OrderQuery;
 import com.gitee.whzzone.admin.business.queryhandler.order.BOrderQueryHandler;
 import com.gitee.whzzone.admin.business.service.OrderService;
@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
  * @author Create by whz at 2023/8/4
  */
 @Service
-public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, OrderDto, OrderQuery> implements OrderService {
+public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, OrderDTO, OrderQuery> implements OrderService {
 
     @Autowired
     private OrderMapper orderMapper;
 
     @Override
-    public List<OrderDto> list(OrderQuery query) {
+    public List<OrderDTO> list(OrderQuery query) {
         LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverName()), Order::getReceiverName, query.getReceiverName());
         queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverPhone()), Order::getReceiverPhone, query.getReceiverPhone());

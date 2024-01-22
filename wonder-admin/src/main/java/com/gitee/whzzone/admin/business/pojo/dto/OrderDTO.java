@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.business.pojo.dto;
 
 import com.gitee.whzzone.annotation.EntityField;
-import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.pojo.dto.EntityDTO;
 import com.gitee.whzzone.web.validation.groups.InsertGroup;
 import com.gitee.whzzone.web.validation.groups.UpdateGroup;
 import io.swagger.annotations.ApiModelProperty;
@@ -14,7 +14,7 @@ import java.math.BigDecimal;
  * @author Create by whz at 2023/8/4
  */
 @Data
-public class OrderDto extends EntityDto {
+public class OrderDTO extends EntityDTO {
 
     @EntityField
     @NotBlank(message = "收货人不能为空", groups = {InsertGroup.class, UpdateGroup.class})

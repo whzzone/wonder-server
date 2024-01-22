@@ -11,8 +11,8 @@ import com.gitee.whzzone.admin.system.entity.RoleMark;
 import com.gitee.whzzone.admin.system.entity.Rule;
 import com.gitee.whzzone.admin.system.mapper.MarkMapper;
 import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
-import com.gitee.whzzone.admin.system.pojo.dto.MarkDto;
-import com.gitee.whzzone.admin.system.pojo.dto.RuleDto;
+import com.gitee.whzzone.admin.system.pojo.dto.MarkDTO;
+import com.gitee.whzzone.admin.system.pojo.dto.RuleDTO;
 import com.gitee.whzzone.admin.system.pojo.query.MarkQuery;
 import com.gitee.whzzone.admin.system.service.MarkService;
 import com.gitee.whzzone.admin.system.service.RoleMarkService;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  */
 
 @Service
-public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDto, MarkQuery> implements MarkService {
+public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDTO, MarkQuery> implements MarkService {
 
     @Autowired
     private ApplicationContext context;
@@ -78,10 +78,10 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDto
         if (CollectionUtil.isEmpty(rules))
             return null;
 
-        List<RuleDto> ruleList = new ArrayList<>();
+        List<RuleDTO> ruleList = new ArrayList<>();
 
         for (Rule rule : rules) {
-            RuleDto dto = new RuleDto();
+            RuleDTO dto = new RuleDTO();
             BeanUtil.copyProperties(rule, dto);
 
             if (rule.getProvideType().equals(ProvideTypeEnum.VALUE.getCode())) {
@@ -167,7 +167,7 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDto
     }
 
     @Override
-    public MarkDto beforeSaveOrUpdateHandler(MarkDto dto) {
+    public MarkDTO beforeSaveOrUpdateHandler(MarkDTO dto) {
         if (existSameName(dto.getId(), dto.getName()))
             throw new RuntimeException("存在相同的名称：" + dto.getName());
         return dto;
@@ -182,7 +182,7 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDto
     }
 
     @Override
-    public PageData<MarkDto> page(MarkQuery query) {
+    public PageData<MarkDTO> page(MarkQuery query) {
         Page<Mark> page = new Page<>(query.getCurPage(), query.getPageSize());
 
         LambdaQueryWrapper<Mark> queryWrapper = new LambdaQueryWrapper<>();
@@ -191,7 +191,7 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDto
 
         page(page, queryWrapper);
 
-        List<MarkDto> list = afterQueryHandler(page.getRecords());
+        List<MarkDTO> list = afterQueryHandler(page.getRecords());
         return new PageData<>(list, page.getTotal(), page.getPages());
     }
 
@@ -206,7 +206,7 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDto
     }
 
     @Override
-    public List<MarkDto> list(MarkQuery query) {
+    public List<MarkDTO> list(MarkQuery query) {
         LambdaQueryWrapper<Mark> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StrUtil.isNotBlank(query.getName()), Mark::getName, query.getName());
         queryWrapper.orderByAsc(Mark::getSort);
@@ -245,16 +245,16 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDto
     }
 
     //    @Override
-//    public MarkDto afterQueryHandler(MarkDto dto) {
+//    public MarkDTO afterQueryHandler(MarkDTO dto) {
 //        if (dto.getProvideType().equals(ProvideTypeEnum.METHOD.getCode())){
 //            if (StrUtil.isNotBlank(dto.getFormalParam()) && StrUtil.isNotBlank(dto.getActualParam())) {
 //                String[] formalParamSplit = dto.getFormalParam().split(";");
 //                String[] actualParamSplit = dto.getActualParam().split(";");
 //                // dto.setFormalParamList(dto.getFormalParam().split(";"));
 //                // dto.setActualParamList(dto.getActualParam().split(";"));
-//                List<ParamDto> paramList = new ArrayList<>();
+//                List<ParamDTO> paramList = new ArrayList<>();
 //                for (int i = 0; i < formalParamSplit.length; i++) {
-//                    paramList.add(new ParamDto(formalParamSplit[i], actualParamSplit[i]));
+//                    paramList.add(new ParamDTO(formalParamSplit[i], actualParamSplit[i]));
 //                }
 //                dto.setParamList(paramList);
 //            }

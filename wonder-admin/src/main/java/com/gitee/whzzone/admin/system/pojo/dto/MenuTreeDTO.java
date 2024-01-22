@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
-import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.pojo.dto.EntityDTO;
 import lombok.Data;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  * @date : 2023/2/7 16:29
  */
 @Data
-public class MenuTreeDto extends EntityDto {
+public class MenuTreeDTO extends EntityDTO {
     private Integer id;
     private Integer parentId;
     private String parentName;
@@ -24,7 +24,7 @@ public class MenuTreeDto extends EntityDto {
     private String icon;
     private Integer menuType;
 
-    private List<MenuTreeDto> children;
+    private List<MenuTreeDTO> children;
 
 
 }

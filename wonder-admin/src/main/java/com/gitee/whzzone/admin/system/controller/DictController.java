@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.controller;
 
 import com.gitee.whzzone.admin.system.entity.Dict;
-import com.gitee.whzzone.admin.system.pojo.other.Dict.DictDto;
+import com.gitee.whzzone.admin.system.pojo.other.Dict.DictDTO;
 import com.gitee.whzzone.admin.system.pojo.other.Dict.DictQuery;
 import com.gitee.whzzone.admin.system.service.DictService;
 import com.gitee.whzzone.web.controller.EntityController;
@@ -16,6 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "系统字典")
 @RestController
 @RequestMapping("/dict")
-public class DictController extends EntityController<Dict, DictService, DictDto, DictQuery> {
+public class DictController extends EntityController<Dict, DictService, DictDTO, DictQuery> {
 
 }

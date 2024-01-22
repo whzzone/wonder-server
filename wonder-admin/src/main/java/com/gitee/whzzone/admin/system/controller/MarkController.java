@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.controller;
 
 import com.gitee.whzzone.admin.system.entity.Mark;
-import com.gitee.whzzone.admin.system.pojo.dto.MarkDto;
+import com.gitee.whzzone.admin.system.pojo.dto.MarkDTO;
 import com.gitee.whzzone.admin.system.pojo.query.MarkQuery;
 import com.gitee.whzzone.admin.system.service.MarkService;
 import com.gitee.whzzone.web.controller.EntityController;
@@ -22,14 +22,14 @@ import java.util.List;
 @RequestMapping("mark")
 @Api(tags = "标记相关")
 @Slf4j
-public class MarkController extends EntityController<Mark, MarkService, MarkDto, MarkQuery> {
+public class MarkController extends EntityController<Mark, MarkService, MarkDTO, MarkQuery> {
 
     @Autowired
     private MarkService markService;
 
     @ApiOperation("分页")
     @GetMapping("page")
-    public Result<PageData<MarkDto>> page(MarkQuery query){
+    public Result<PageData<MarkDTO>> page(MarkQuery query){
         return Result.ok(markService.page(query));
     }
 
@@ -42,7 +42,7 @@ public class MarkController extends EntityController<Mark, MarkService, MarkDto,
 
     @ApiOperation("列表")
     @GetMapping("list")
-    public Result<List<MarkDto>> list(MarkQuery query){
+    public Result<List<MarkDTO>> list(MarkQuery query){
         return Result.ok("", markService.list(query));
     }
 

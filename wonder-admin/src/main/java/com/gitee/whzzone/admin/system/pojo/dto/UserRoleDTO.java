@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
-import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.pojo.dto.EntityDTO;
 import lombok.Data;
 
 /**
@@ -8,6 +8,6 @@ import lombok.Data;
  */
 
 @Data
-public class UserDeptDto extends EntityDto {
+public class UserRoleDTO extends EntityDTO {
 
 }

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gitee.whzzone.admin.system.entity.Dict;
 import com.gitee.whzzone.admin.system.entity.DictData;
 import com.gitee.whzzone.admin.system.mapper.DictDataMapper;
-import com.gitee.whzzone.admin.system.pojo.other.DictData.DictDataDto;
+import com.gitee.whzzone.admin.system.pojo.other.DictData.DictDataDTO;
 import com.gitee.whzzone.admin.system.pojo.other.DictData.DictDataQuery;
 import com.gitee.whzzone.admin.system.service.DictDataService;
 import com.gitee.whzzone.admin.system.service.DictService;
@@ -20,13 +20,13 @@ import java.util.List;
 * @author Create by generator at 2023/8/8
 */
 @Service
-public class DictDataServiceImpl extends EntityServiceImpl<DictDataMapper, DictData, DictDataDto, DictDataQuery> implements DictDataService {
+public class DictDataServiceImpl extends EntityServiceImpl<DictDataMapper, DictData, DictDataDTO, DictDataQuery> implements DictDataService {
 
     @Autowired
     private DictService dictService;
 
     @Override
-    public DictDataDto beforeSaveOrUpdateHandler(DictDataDto dto) {
+    public DictDataDTO beforeSaveOrUpdateHandler(DictDataDTO dto) {
         if (!dictService.isExist(dto.getDictId())) {
             throw new RuntimeException("不存在字典：" + dto.getDictId());
         }
@@ -48,7 +48,7 @@ public class DictDataServiceImpl extends EntityServiceImpl<DictDataMapper, DictD
     }
 
     @Override
-    public List<DictDataDto> findByDictCode(String dictCode) {
+    public List<DictDataDTO> findByDictCode(String dictCode) {
         Dict dict = dictService.findByDictCode(dictCode);
         if (dict == null) {
             return null;
@@ -56,7 +56,7 @@ public class DictDataServiceImpl extends EntityServiceImpl<DictDataMapper, DictD
 
         List<DictData> dictDataList = findByDictId(dict.getId());
 
-        return BeanUtil.copyToList(dictDataList, DictDataDto.class);
+        return BeanUtil.copyToList(dictDataList, DictDataDTO.class);
     }
 
     public List<DictData> findByDictId(Integer dictId){

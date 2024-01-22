@@ -11,7 +11,7 @@ import java.util.Date;
  * @author : whz
  * @date : 2023/5/22 16:35
  */
-public class EntityDto {
+public class EntityDTO {
 
     @EntityField(insert = false)
     @NotNull(message = "id不能为空", groups = {UpdateGroup.class})
@@ -50,7 +50,7 @@ public class EntityDto {
 
     @Override
     public String toString() {
-        return "EntityDto{" +
+        return "EntityDTO{" +
                 "id=" + id +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +

@@ -7,7 +7,7 @@ import lombok.Data;
  * @date : 2023/5/19 16:34
  */
 @Data
-public class WxLoginDto {
+public class WxLoginDTO {
 
     private String scene;
     private String code;

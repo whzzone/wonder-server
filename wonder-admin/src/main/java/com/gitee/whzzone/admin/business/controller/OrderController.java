@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.business.controller;
 
 import com.gitee.whzzone.admin.business.entity.Order;
-import com.gitee.whzzone.admin.business.pojo.dto.OrderDto;
+import com.gitee.whzzone.admin.business.pojo.dto.OrderDTO;
 import com.gitee.whzzone.admin.business.pojo.query.OrderQuery;
 import com.gitee.whzzone.admin.business.service.OrderService;
 import com.gitee.whzzone.web.controller.EntityController;
@@ -15,6 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "订单相关")
 @RestController
 @RequestMapping("order")
-public class OrderController extends EntityController<Order, OrderService, OrderDto, OrderQuery> {
+public class OrderController extends EntityController<Order, OrderService, OrderDTO, OrderQuery> {
 
 }

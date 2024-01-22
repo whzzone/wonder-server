@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
  * @date : 2023/5/17 16:23
  */
 @Data
-public class UsernameLoginDto {
+public class LoginDTO {
 
     @NotBlank
     private String username;
@@ -17,9 +17,9 @@ public class UsernameLoginDto {
     @NotBlank
     private String password;
 
-//    @NotBlank
-//    private String code;
-//
-//    @NotBlank
-//    private String uuid;
+    @NotBlank
+    private String code;
+
+    @NotBlank
+    private String uuid;
 }

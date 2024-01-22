@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
  * @date : 2023/1/11 14:32
  */
 @Data
-public class ResetPWDDto {
+public class ResetPWDDTO {
 
     @ApiModelProperty(value = "用户id", required = true)
     @NotNull(message = "用户id不能为空")

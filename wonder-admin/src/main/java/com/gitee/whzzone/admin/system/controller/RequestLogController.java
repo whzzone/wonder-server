@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.controller;
 
 import com.gitee.whzzone.web.controller.EntityController;
-import com.gitee.whzzone.admin.system.pojo.dto.RequestLogDto;
+import com.gitee.whzzone.admin.system.pojo.dto.RequestLogDTO;
 import com.gitee.whzzone.admin.system.entity.RequestLog;
 import com.gitee.whzzone.admin.system.pojo.query.RequestLogQuery;
 import com.gitee.whzzone.admin.system.service.RequestLogService;
@@ -16,6 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "请求日志")
 @RestController
 @RequestMapping("/requestLog")
-public class RequestLogController extends EntityController<RequestLog, RequestLogService, RequestLogDto, RequestLogQuery> {
+public class RequestLogController extends EntityController<RequestLog, RequestLogService, RequestLogDTO, RequestLogQuery> {
 
 }

@@ -7,8 +7,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gitee.whzzone.admin.system.entity.Menu;
 import com.gitee.whzzone.admin.system.entity.RoleMenu;
 import com.gitee.whzzone.admin.system.mapper.MenuMapper;
-import com.gitee.whzzone.admin.system.pojo.dto.MenuDto;
-import com.gitee.whzzone.admin.system.pojo.dto.MenuTreeDto;
+import com.gitee.whzzone.admin.system.pojo.dto.MenuDTO;
+import com.gitee.whzzone.admin.system.pojo.dto.MenuTreeDTO;
 import com.gitee.whzzone.admin.system.pojo.query.MenuQuery;
 import com.gitee.whzzone.admin.system.service.MenuService;
 import com.gitee.whzzone.admin.system.service.RoleMenuService;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * @date : 2023/5/22 20:17
  */
 @Service
-public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto, MenuQuery> implements MenuService {
+public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDTO, MenuQuery> implements MenuService {
 
     @Autowired
     private MenuMapper menuMapper;
@@ -40,10 +40,10 @@ public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto
     }
 
     @Override
-    public List<MenuTreeDto> treeList(MenuQuery query) {
+    public List<MenuTreeDTO> treeList(MenuQuery query) {
         List<Menu> menuList = getEnabledList();
 
-        List<MenuTreeDto> menuTreeVos = BeanUtil.copyToList(menuList, MenuTreeDto.class);
+        List<MenuTreeDTO> menuTreeVos = BeanUtil.copyToList(menuList, MenuTreeDTO.class);
 
         //获取父节点
         return menuTreeVos.stream().filter(m -> m.getParentId() == 0).map(
@@ -54,8 +54,8 @@ public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto
         ).collect(Collectors.toList());
     }
 
-    public static List<MenuTreeDto> getChildrenList(MenuTreeDto tree, List<MenuTreeDto> list){
-        List<MenuTreeDto> children = list.stream().filter(item -> Objects.equals(item.getParentId(), tree.getId())).map(
+    public static List<MenuTreeDTO> getChildrenList(MenuTreeDTO tree, List<MenuTreeDTO> list){
+        List<MenuTreeDTO> children = list.stream().filter(item -> Objects.equals(item.getParentId(), tree.getId())).map(
                 (item) -> {
                     item.setChildren(getChildrenList(item, list));
                     return item;
@@ -65,7 +65,7 @@ public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto
     }
 
     @Override
-    public List<MenuDto> list(MenuQuery query) {
+    public List<MenuDTO> list(MenuQuery query) {
         if (query.getParentId() == null)
             query.setParentId(0);
 
@@ -85,14 +85,14 @@ public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto
     }
 
     @Override
-    public List<MenuDto> findByUserId(Integer userId) {
+    public List<MenuDTO> findByUserId(Integer userId) {
         List<Menu> byUserId = menuMapper.findByUserId(userId);
-        return BeanUtil.copyToList(byUserId, MenuDto.class );
+        return BeanUtil.copyToList(byUserId, MenuDTO.class );
     }
 
     @Override
-    public MenuDto afterQueryHandler(Menu entity) {
-        MenuDto dto = super.afterQueryHandler(entity);
+    public MenuDTO afterQueryHandler(Menu entity) {
+        MenuDTO dto = super.afterQueryHandler(entity);
         Menu parent = getById(dto.getParentId());
         if (parent != null){
             dto.setParentName(parent.getName());
@@ -147,7 +147,7 @@ public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto
     }
 
     @Override
-    public MenuDto beforeUpdateHandler(MenuDto dto) {
+    public MenuDTO beforeUpdateHandler(MenuDTO dto) {
         if (existSamePermission(dto.getId(), dto.getPermission()))
             throw new RuntimeException("存在相同的权限标识：" + dto.getPermission());
 
@@ -158,7 +158,7 @@ public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto
     }
 
     @Override
-    public MenuDto beforeSaveHandler(MenuDto dto) {
+    public MenuDTO beforeSaveHandler(MenuDTO dto) {
         if (existSameRouteName(dto.getId(), dto.getRouteName()))
             throw new RuntimeException("存在相同的路由名称：" + dto.getRouteName());
 
@@ -169,7 +169,7 @@ public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto
     }
 
     @Override
-    public Menu save(MenuDto dto) {
+    public Menu save(MenuDTO dto) {
         if (dto.getParentId() == null){
             dto.setParentId(0);
         }
@@ -177,7 +177,7 @@ public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDto
     }
 
     @Override
-    public MenuDto beforeSaveOrUpdateHandler(MenuDto dto) {
+    public MenuDTO beforeSaveOrUpdateHandler(MenuDTO dto) {
         if (dto.getParentId() == null){
             dto.setParentId(0);
         }

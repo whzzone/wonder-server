@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gitee.whzzone.admin.system.entity.Dept;
 import com.gitee.whzzone.admin.system.mapper.DeptMapper;
-import com.gitee.whzzone.admin.system.pojo.dto.DeptDto;
+import com.gitee.whzzone.admin.system.pojo.dto.DeptDTO;
 import com.gitee.whzzone.admin.system.pojo.query.DeptQuery;
 import com.gitee.whzzone.admin.system.service.DeptService;
 import com.gitee.whzzone.web.entity.BaseEntity;
@@ -26,13 +26,13 @@ import java.util.stream.Collectors;
  */
 
 @Service
-public class DeptServiceImpl extends EntityServiceImpl<DeptMapper, Dept, DeptDto, DeptQuery> implements DeptService {
+public class DeptServiceImpl extends EntityServiceImpl<DeptMapper, Dept, DeptDTO, DeptQuery> implements DeptService {
 
     @Autowired
     private DeptMapper deptMapper;
 
     @Override
-    public List<DeptDto> list(DeptQuery query) {
+    public List<DeptDTO> list(DeptQuery query) {
         LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StrUtil.isNotBlank(query.getName()), Dept::getName, query.getName());
         queryWrapper.eq(query.getParentId() != null, Dept::getParentId, query.getParentId());
@@ -42,7 +42,7 @@ public class DeptServiceImpl extends EntityServiceImpl<DeptMapper, Dept, DeptDto
 
     @Transactional
     @Override
-    public Dept save(DeptDto dto) {
+    public Dept save(DeptDTO dto) {
         if (dto.getParentId() == null) {
             dto.setParentId(0);
         } else if (!isExist(dto.getParentId()))
@@ -58,7 +58,7 @@ public class DeptServiceImpl extends EntityServiceImpl<DeptMapper, Dept, DeptDto
     }
 
     @Override
-    public DeptDto beforeSaveOrUpdateHandler(DeptDto dto) {
+    public DeptDTO beforeSaveOrUpdateHandler(DeptDTO dto) {
         if (dto.getParentId() != null && !dto.getParentId().equals(0L) && !isExist(dto.getParentId())) {
             throw new RuntimeException("父级不存在");
         }
@@ -71,8 +71,8 @@ public class DeptServiceImpl extends EntityServiceImpl<DeptMapper, Dept, DeptDto
     }
 
     @Override
-    public DeptDto afterQueryHandler(Dept entity) {
-        DeptDto dto = super.afterQueryHandler(entity);
+    public DeptDTO afterQueryHandler(Dept entity) {
+        DeptDTO dto = super.afterQueryHandler(entity);
 
         dto.setHasChildren(hasChildren(dto.getId()));
 
@@ -87,7 +87,7 @@ public class DeptServiceImpl extends EntityServiceImpl<DeptMapper, Dept, DeptDto
     }
 
     @Override
-    public List<DeptDto> tree(DeptQuery query) {
+    public List<DeptDTO> tree(DeptQuery query) {
         LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(query.getParentId() != null, Dept::getParentId, query.getParentId());
         queryWrapper.eq(query.getEnabled() != null, Dept::getEnabled, query.getEnabled());
@@ -95,10 +95,10 @@ public class DeptServiceImpl extends EntityServiceImpl<DeptMapper, Dept, DeptDto
 
         List<Dept> deptList = list(queryWrapper);
 
-        List<DeptDto> dtoList = BeanUtil.copyToList(deptList, DeptDto.class);
+        List<DeptDTO> dtoList = BeanUtil.copyToList(deptList, DeptDTO.class);
 
         if (CollectionUtil.isNotEmpty(dtoList) && dtoList.size() == 1) {
-            DeptDto dto = dtoList.get(0);
+            DeptDTO dto = dtoList.get(0);
             dto.setChildren(new ArrayList<>());
             dto.setHasChildren(false);
             return dtoList;
@@ -114,8 +114,8 @@ public class DeptServiceImpl extends EntityServiceImpl<DeptMapper, Dept, DeptDto
         ).collect(Collectors.toList());
     }
 
-    private List<DeptDto> getChildrenList(DeptDto tree, List<DeptDto> list) {
-        List<DeptDto> children = list.stream().filter(item -> Objects.equals(item.getParentId(), tree.getId())).map(
+    private List<DeptDTO> getChildrenList(DeptDTO tree, List<DeptDTO> list) {
+        List<DeptDTO> children = list.stream().filter(item -> Objects.equals(item.getParentId(), tree.getId())).map(
                 (item) -> {
                     item.setChildren(getChildrenList(item, list));
                     item.setHasChildren(CollectionUtil.isNotEmpty(item.getChildren()));
@@ -159,13 +159,13 @@ public class DeptServiceImpl extends EntityServiceImpl<DeptMapper, Dept, DeptDto
     }
 
     @Override
-    public List<DeptDto> getDtoListIn(List<Integer> ids) {
+    public List<DeptDTO> getDTOListIn(List<Integer> ids) {
         LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.in(BaseEntity::getId, ids);
         List<Dept> list = list(queryWrapper);
         if (CollectionUtil.isEmpty(list)) {
             return null;
         }
-        return BeanUtil.copyToList(list, DeptDto.class);
+        return BeanUtil.copyToList(list, DeptDTO.class);
     }
 }

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.handler.DataPermissionHandler;
 import com.gitee.whzzone.admin.common.aspect.DataScopeAspect;
 import com.gitee.whzzone.admin.common.mybatis.strategy.ExpressStrategy;
 import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
-import com.gitee.whzzone.admin.system.pojo.dto.RuleDto;
+import com.gitee.whzzone.admin.system.pojo.dto.RuleDTO;
 import com.gitee.whzzone.admin.util.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
@@ -42,8 +42,8 @@ public class DataScopeHandler implements DataPermissionHandler {
 
         Expression newWhere = null;
 
-        List<RuleDto> ruleList = dataScopeInfo.getRuleList();
-        for (RuleDto rule : ruleList) {
+        List<RuleDTO> ruleList = dataScopeInfo.getRuleList();
+        for (RuleDTO rule : ruleList) {
             ExpressStrategy expressStrategy = expressStrategyMap.get(rule.getExpression());
             if (expressStrategy == null)
                 throw new IllegalArgumentException("错误的表达式：" + rule.getExpression());

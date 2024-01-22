@@ -10,6 +10,6 @@ import java.util.List;
 @Data
 public class DataScopeInfo {
 
-    private List<RuleDto> ruleList;
+    private List<RuleDTO> ruleList;
 
 }

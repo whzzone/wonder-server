@@ -4,8 +4,8 @@ import com.gitee.whzzone.admin.common.security.LoginUser;
 import com.gitee.whzzone.admin.system.entity.Dept;
 import com.gitee.whzzone.admin.system.entity.Role;
 import com.gitee.whzzone.admin.system.entity.User;
-import com.gitee.whzzone.admin.system.pojo.dto.ResetPWDDto;
-import com.gitee.whzzone.admin.system.pojo.dto.UserDto;
+import com.gitee.whzzone.admin.system.pojo.dto.ResetPWDDTO;
+import com.gitee.whzzone.admin.system.pojo.dto.UserDTO;
 import com.gitee.whzzone.admin.system.pojo.query.UserQuery;
 import com.gitee.whzzone.web.pojo.other.PageData;
 import com.gitee.whzzone.web.service.EntityService;
@@ -16,7 +16,7 @@ import java.util.List;
  * @author :whz
  * @date : 2023/5/16 23:03
  */
-public interface UserService extends EntityService<User, UserDto, UserQuery> {
+public interface UserService extends EntityService<User, UserDTO, UserQuery> {
     User getByEmail(String email);
 
     void beforeLoginCheck(User sysUser);
@@ -29,7 +29,7 @@ public interface UserService extends EntityService<User, UserDto, UserQuery> {
 
     Role getUserRoleInfo(Integer userId);
 
-    PageData<UserDto> page(UserQuery query);
+    PageData<UserDTO> page(UserQuery query);
 
     void enabledSwitch(Integer id);
 
@@ -39,7 +39,7 @@ public interface UserService extends EntityService<User, UserDto, UserQuery> {
 
     boolean existSameEmail(Integer userId, String email);
 
-    void resetPWD(ResetPWDDto dto);
+    void resetPWD(ResetPWDDTO dto);
 
     List<Integer> getDeptIds(Integer userId);
 

@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
 import com.gitee.whzzone.annotation.EntityField;
-import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.pojo.dto.EntityDTO;
 import com.gitee.whzzone.web.validation.groups.InsertGroup;
 import com.gitee.whzzone.web.validation.groups.UpdateGroup;
 import io.swagger.annotations.ApiModelProperty;
@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
  * @date : 2023/5/22 20:18
  */
 @Data
-public class MenuDto extends EntityDto {
+public class MenuDTO extends EntityDTO {
 
     @EntityField
     @ApiModelProperty(value = "parentId")

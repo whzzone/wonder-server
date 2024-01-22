@@ -2,7 +2,7 @@ package ${package.ServiceImpl};
 
 import ${package.Entity}.${entity};
 import ${package.Other}.${entity}.${entity}Query;
-import ${package.Other}.${entity}.${entity}Dto;
+import ${package.Other}.${entity}.${entity}DTO;
 import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};
 import ${superServiceImplClassPackage};
@@ -18,7 +18,7 @@ open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperNam
 
 }
 <#else>
-public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}, ${entity}Dto, ${entity}Query> implements ${table.serviceName} {
+public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}, ${entity}DTO, ${entity}Query> implements ${table.serviceName} {
 
 }
 </#if>

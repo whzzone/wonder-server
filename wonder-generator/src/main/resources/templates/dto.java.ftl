@@ -6,7 +6,7 @@ import ${pkg};
     </#if>
 </#list>
 import com.gitee.whzzone.annotation.EntityField;
-import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.pojo.dto.EntityDTO;
 <#if swagger>
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -33,9 +33,9 @@ import lombok.experimental.Accessors;
     </#if>
 </#if>
 <#if swagger>
-@ApiModel(value = "${entity}Dto对象", description = "${table.comment!}")
+@ApiModel(value = "${entity}DTO对象", description = "${table.comment!}")
 </#if>
-public class ${entity}Dto extends EntityDto {
+public class ${entity}DTO extends EntityDTO {
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.fields as field>
     <#if field != "id" && field != "createTime" && field != "createBy" && field != "updateTime" && field != "updateBy" && field != "deleted">

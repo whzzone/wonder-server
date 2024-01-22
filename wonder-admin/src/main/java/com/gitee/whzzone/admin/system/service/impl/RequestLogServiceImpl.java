@@ -2,7 +2,7 @@ package com.gitee.whzzone.admin.system.service.impl;
 
 import com.gitee.whzzone.admin.system.entity.RequestLog;
 import com.gitee.whzzone.admin.system.mapper.RequestLogMapper;
-import com.gitee.whzzone.admin.system.pojo.dto.RequestLogDto;
+import com.gitee.whzzone.admin.system.pojo.dto.RequestLogDTO;
 import com.gitee.whzzone.admin.system.pojo.query.RequestLogQuery;
 import com.gitee.whzzone.admin.system.service.RequestLogService;
 import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 */
 @Slf4j
 @Service
-public class RequestLogServiceImpl extends EntityServiceImpl<RequestLogMapper, RequestLog, RequestLogDto, RequestLogQuery> implements RequestLogService {
+public class RequestLogServiceImpl extends EntityServiceImpl<RequestLogMapper, RequestLog, RequestLogDTO, RequestLogQuery> implements RequestLogService {
 
     @Async
     @Override

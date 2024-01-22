@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.controller;
 
 import com.gitee.whzzone.admin.system.entity.DictData;
-import com.gitee.whzzone.admin.system.pojo.other.DictData.DictDataDto;
+import com.gitee.whzzone.admin.system.pojo.other.DictData.DictDataDTO;
 import com.gitee.whzzone.admin.system.pojo.other.DictData.DictDataQuery;
 import com.gitee.whzzone.admin.system.service.DictDataService;
 import com.gitee.whzzone.annotation.ApiLogger;
@@ -24,7 +24,7 @@ import java.util.List;
 @Api(tags = "系统字典数据")
 @RestController
 @RequestMapping("/dictData")
-public class DictDataController extends EntityController<DictData, DictDataService, DictDataDto, DictDataQuery> {
+public class DictDataController extends EntityController<DictData, DictDataService, DictDataDTO, DictDataQuery> {
 
     @Autowired
     private DictDataService dictDataService;
@@ -32,7 +32,7 @@ public class DictDataController extends EntityController<DictData, DictDataServi
     @ApiLogger
     @ApiOperation("根据dictCode查询字典数据")
     @GetMapping("/dictCode/{dictCode}")
-    public Result<List<DictDataDto>> findByDictCode(@PathVariable String dictCode) {
+    public Result<List<DictDataDTO>> findByDictCode(@PathVariable String dictCode) {
         return Result.ok(dictDataService.findByDictCode(dictCode));
     }
 

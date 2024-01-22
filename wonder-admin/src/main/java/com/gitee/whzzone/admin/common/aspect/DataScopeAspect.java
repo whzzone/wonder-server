@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.common.aspect;
 
 import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
-import com.gitee.whzzone.admin.system.pojo.dto.RuleDto;
+import com.gitee.whzzone.admin.system.pojo.dto.RuleDTO;
 import com.gitee.whzzone.admin.system.service.MarkService;
 import com.gitee.whzzone.admin.util.SecurityUtil;
 import com.gitee.whzzone.annotation.DataScope;
@@ -81,7 +81,7 @@ public class DataScopeAspect {
     private void printDebug(DataScopeInfo dataScopeInfo) {
         if (dataScopeInfo.getRuleList() != null && dataScopeInfo.getRuleList().size() > 0) {
             log.debug("--------------------------------设置数据权限信息--------------------------------");
-            for (RuleDto rule : dataScopeInfo.getRuleList()) {
+            for (RuleDTO rule : dataScopeInfo.getRuleList()) {
                 log.debug("- markId: {}, ruleId：{}, ruleName：{}, expression: {}", rule.getMarkId(), rule.getId(), rule.getRemark(), rule.getExpression());
             }
             log.debug("------------------------------------------------------------------------------");

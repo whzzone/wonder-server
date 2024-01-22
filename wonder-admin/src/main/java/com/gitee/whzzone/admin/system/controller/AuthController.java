@@ -3,7 +3,7 @@ package com.gitee.whzzone.admin.system.controller;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import com.gitee.whzzone.admin.common.redis.RedisCache;
 import com.gitee.whzzone.admin.common.security.LoginUser;
-import com.gitee.whzzone.admin.system.pojo.auth.UsernameLoginDto;
+import com.gitee.whzzone.admin.system.pojo.auth.UsernameLoginDTO;
 import com.gitee.whzzone.admin.system.service.AuthService;
 import com.gitee.whzzone.admin.system.service.UserService;
 import com.gitee.whzzone.web.pojo.other.Result;
@@ -60,7 +60,7 @@ public class AuthController {
 
     @ApiOperation("账号密码登录")
     @PostMapping("/login/username")
-    public Result<LoginUser> loginByUsername(@Validated @RequestBody UsernameLoginDto dto) {
+    public Result<LoginUser> loginByUsername(@Validated @RequestBody UsernameLoginDTO dto) {
         return authService.loginByUsername(dto);
     }
 
@@ -74,7 +74,7 @@ public class AuthController {
 
 /*    @ApiOperation("微信登录")
     @PostMapping("/login/weixin")
-    public Result loginByWeixin(@Validated @RequestBody WxLoginDto dto) {
+    public Result loginByWeixin(@Validated @RequestBody WxLoginDTO dto) {
         return authService.loginByWeixin(dto);
     }*/
 
@@ -158,7 +158,7 @@ public class AuthController {
 
     @ApiOperation("PC小程序码登录")
     @PostMapping("/login/weixin/pc")
-    public Result loginByWeixinPC(@Validated @RequestBody WxLoginDto dto) throws WxErrorException {
+    public Result loginByWeixinPC(@Validated @RequestBody WxLoginDTO dto) throws WxErrorException {
         log.info("进入PC小程序码登录");
         String scene = dto.getScene();
         String code = dto.getCode();
@@ -207,9 +207,9 @@ public class AuthController {
         String keyToken = StrUtil.format(keyTokenFormat, scene);
         redisCache.set(keyToken, token, 10, TimeUnit.MINUTES);
 
-        UserDto sysUserDto = new UserDto();
-        BeanUtil.copyProperties(sysUser,sysUserDto);
-        LoginSuccessDto res = new LoginSuccessDto();
+        UserDTO sysUserDTO = new UserDTO();
+        BeanUtil.copyProperties(sysUser,sysUserDTO);
+        LoginSuccessDTO res = new LoginSuccessDTO();
         res.setToken(token);
         res.setExpire(cacheTimeUnit.toSeconds(cacheTime));
         return Result.ok("登录成功", res);

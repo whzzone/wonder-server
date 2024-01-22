@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
 import com.gitee.whzzone.annotation.EntityField;
-import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.pojo.dto.EntityDTO;
 import com.gitee.whzzone.web.validation.groups.InsertGroup;
 import com.gitee.whzzone.web.validation.groups.UpdateGroup;
 import io.swagger.annotations.ApiModelProperty;
@@ -14,7 +14,7 @@ import java.util.List;
  * @author Create by whz at 2023/7/13
  */
 @Data
-public class RuleDto extends EntityDto {
+public class RuleDTO extends EntityDTO {
 
     @EntityField
     @NotNull(message = "markId不能为空", groups = {InsertGroup.class, UpdateGroup.class})
@@ -73,7 +73,7 @@ public class RuleDto extends EntityDto {
     private String actualParam;
 
     @ApiModelProperty("参数")
-    private List<ParamDto> paramList;
+    private List<ParamDTO> paramList;
 
     @ApiModelProperty("方法执行返回结果")
     private Object result;

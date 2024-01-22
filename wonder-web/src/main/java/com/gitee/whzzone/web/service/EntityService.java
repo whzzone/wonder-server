@@ -3,7 +3,7 @@ package com.gitee.whzzone.web.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.pojo.dto.EntityDTO;
 import com.gitee.whzzone.web.entity.BaseEntity;
 import com.gitee.whzzone.web.pojo.other.PageData;
 import com.gitee.whzzone.web.pojo.query.EntityQuery;
@@ -17,7 +17,7 @@ import java.util.List;
  * @author : whz
  * @date : 2023/5/22 16:27
  */
-public interface EntityService<T extends BaseEntity, D extends EntityDto, Q extends EntityQuery> extends IService<T> {
+public interface EntityService<T extends BaseEntity, D extends EntityDTO, Q extends EntityQuery> extends IService<T> {
 
     /**
      * 插入

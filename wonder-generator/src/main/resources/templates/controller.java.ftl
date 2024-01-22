@@ -11,7 +11,7 @@ import ${superControllerClassPackage};
 </#if>
 import ${package.Entity}.${entity};
 import ${package.Other}.${entity}.${entity}Query;
-import ${package.Other}.${entity}.${entity}Dto;
+import ${package.Other}.${entity}.${entity}DTO;
 import ${package.Service}.${table.serviceName};
 import io.swagger.annotations.Api;
 
@@ -30,7 +30,7 @@ import io.swagger.annotations.Api;
 class ${table.controllerName}<#if superControllerClass??> : ${superControllerClass}()</#if>
 <#else>
 <#if superControllerClass??>
-public class ${table.controllerName} extends ${superControllerClass}<${entity}, ${table.serviceName}, ${entity}Dto, ${entity}Query> {
+public class ${table.controllerName} extends ${superControllerClass}<${entity}, ${table.serviceName}, ${entity}DTO, ${entity}Query> {
 <#else>
 public class ${table.controllerName} {
 </#if>

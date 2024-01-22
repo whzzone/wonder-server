@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gitee.whzzone.admin.system.entity.RoleMenu;
 import com.gitee.whzzone.admin.system.mapper.RoleMenuMapper;
-import com.gitee.whzzone.admin.system.pojo.dto.RoleMenuDto;
+import com.gitee.whzzone.admin.system.pojo.dto.RoleMenuDTO;
 import com.gitee.whzzone.admin.system.pojo.query.RoleMenuQuery;
 import com.gitee.whzzone.admin.system.service.RoleMenuService;
 import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
@@ -18,7 +18,7 @@ import java.util.List;
  * @date : 2023/5/23 10:06
  */
 @Service
-public class RoleMenuServiceImpl extends EntityServiceImpl<RoleMenuMapper, RoleMenu, RoleMenuDto, RoleMenuQuery> implements RoleMenuService {
+public class RoleMenuServiceImpl extends EntityServiceImpl<RoleMenuMapper, RoleMenu, RoleMenuDTO, RoleMenuQuery> implements RoleMenuService {
 
     @Override
     public void addRelation(Integer roleId, List<Integer> menuIds) {

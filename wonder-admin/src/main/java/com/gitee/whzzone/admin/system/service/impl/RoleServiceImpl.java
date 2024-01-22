@@ -10,7 +10,7 @@ import com.gitee.whzzone.admin.system.entity.Role;
 import com.gitee.whzzone.admin.system.entity.Rule;
 import com.gitee.whzzone.admin.system.entity.UserRole;
 import com.gitee.whzzone.admin.system.mapper.RoleMapper;
-import com.gitee.whzzone.admin.system.pojo.dto.RoleDto;
+import com.gitee.whzzone.admin.system.pojo.dto.RoleDTO;
 import com.gitee.whzzone.admin.system.pojo.query.RoleQuery;
 import com.gitee.whzzone.admin.system.service.*;
 import com.gitee.whzzone.admin.util.SecurityUtil;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  */
 
 @Service
-public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto, RoleQuery> implements RoleService {
+public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDTO, RoleQuery> implements RoleService {
 
     @Autowired
     private RoleMenuService roleMenuService;
@@ -51,7 +51,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
 
     @DataScope("role-page")
     @Override
-    public PageData<RoleDto> page(RoleQuery query) {
+    public PageData<RoleDTO> page(RoleQuery query) {
         Page<Role> page = new Page<>(query.getCurPage(), query.getPageSize());
 
         LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
@@ -59,7 +59,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
 
         page(page, queryWrapper);
 
-        List<RoleDto> userVos = BeanUtil.copyToList(page.getRecords(), RoleDto.class);
+        List<RoleDTO> userVos = BeanUtil.copyToList(page.getRecords(), RoleDTO.class);
 
         return new PageData<>(userVos, page.getTotal(), page.getPages());
     }
@@ -75,7 +75,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
     }
 
     @Override
-    public List<RoleDto> list(RoleQuery query) {
+    public List<RoleDTO> list(RoleQuery query) {
         LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.ne(Role::getCode, SecurityUtil.ADMIN);
 
@@ -85,7 +85,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
 
     @Transactional
     @Override
-    public Role updateById(RoleDto dto) {
+    public Role updateById(RoleDTO dto) {
         Role entity = getById(dto.getId());
         Assert.notNull(entity, "{} 不存在", dto.getName());
 
@@ -99,14 +99,14 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
     }
 
     @Override
-    public RoleDto beforeUpdateHandler(RoleDto dto) {
+    public RoleDTO beforeUpdateHandler(RoleDTO dto) {
         Assert.isFalse(existSameCode(dto.getId(), dto.getCode()), "{} 已存在", dto.getCode());
         Assert.isFalse(existSameName(dto.getId(), dto.getName()), "{} 已存在", dto.getName());
         return dto;
     }
 
     @Override
-    public RoleDto beforeSaveHandler(RoleDto dto) {
+    public RoleDTO beforeSaveHandler(RoleDTO dto) {
         Assert.isFalse(existSameCode(dto.getId(), dto.getCode()), "{} 已存在", dto.getCode());
         Assert.isFalse(existSameName(dto.getId(), dto.getName()), "{} 已存在", dto.getName());
         return dto;
@@ -177,15 +177,15 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
     }
 
     @Override
-    public RoleDto afterQueryHandler(Role entity) {
-        RoleDto dto = super.afterQueryHandler(entity);
+    public RoleDTO afterQueryHandler(Role entity) {
+        RoleDTO dto = super.afterQueryHandler(entity);
         List<Integer> menuIdList = menuService.getIdListByRoleId(dto.getId());
         dto.setMenuIds(menuIdList);
         return dto;
     }
 
     @Override
-    public Role save(RoleDto dto) {
+    public Role save(RoleDTO dto) {
         Role save = super.save(dto);
         // 添加角色与权限的关联
         roleMenuService.addRelation(save.getId(), dto.getMenuIds());
@@ -203,11 +203,11 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDto
     }
 
     @Override
-    public List<RoleDto> getDtoListIn(List<Integer> ids) {
+    public List<RoleDTO> getDTOListIn(List<Integer> ids) {
         LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.in(BaseEntity::getId, ids);
         List<Role> list = list(queryWrapper);
-        return BeanUtil.copyToList(list, RoleDto.class);
+        return BeanUtil.copyToList(list, RoleDTO.class);
     }
 
     @Transactional

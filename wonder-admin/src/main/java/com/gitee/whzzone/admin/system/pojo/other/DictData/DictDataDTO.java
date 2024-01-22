@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.system.pojo.other.DictData;
 
-import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.pojo.dto.EntityDTO;
 import com.gitee.whzzone.web.validation.groups.InsertGroup;
 import com.gitee.whzzone.web.validation.groups.UpdateGroup;
 import io.swagger.annotations.ApiModel;
@@ -19,8 +19,8 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @ToString
-@ApiModel(value = "DictDataDto对象", description = "系统字典数据")
-public class DictDataDto extends EntityDto {
+@ApiModel(value = "DictDataDTO对象", description = "系统字典数据")
+public class DictDataDTO extends EntityDTO {
 
     @NotNull(message = "字典id不能为空", groups = {InsertGroup.class, UpdateGroup.class})
     @ApiModelProperty(value = "字典id", required = true)

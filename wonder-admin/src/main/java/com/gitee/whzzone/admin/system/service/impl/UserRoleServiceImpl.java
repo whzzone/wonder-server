@@ -3,7 +3,7 @@ package com.gitee.whzzone.admin.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.gitee.whzzone.admin.system.entity.UserRole;
 import com.gitee.whzzone.admin.system.mapper.UserRoleMapper;
-import com.gitee.whzzone.admin.system.pojo.dto.UserRoleDto;
+import com.gitee.whzzone.admin.system.pojo.dto.UserRoleDTO;
 import com.gitee.whzzone.admin.system.pojo.query.UserRoleQuery;
 import com.gitee.whzzone.admin.system.service.UserRoleService;
 import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
@@ -16,7 +16,7 @@ import java.util.List;
  */
 
 @Service
-public class UserRoleServiceImpl extends EntityServiceImpl<UserRoleMapper, UserRole, UserRoleDto, UserRoleQuery> implements UserRoleService {
+public class UserRoleServiceImpl extends EntityServiceImpl<UserRoleMapper, UserRole, UserRoleDTO, UserRoleQuery> implements UserRoleService {
 
     @Override
     public List<UserRole> getByUserId(Integer userId) {

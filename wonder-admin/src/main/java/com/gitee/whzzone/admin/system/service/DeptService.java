@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.service;
 
 import com.gitee.whzzone.admin.system.entity.Dept;
-import com.gitee.whzzone.admin.system.pojo.dto.DeptDto;
+import com.gitee.whzzone.admin.system.pojo.dto.DeptDTO;
 import com.gitee.whzzone.admin.system.pojo.query.DeptQuery;
 import com.gitee.whzzone.web.service.EntityService;
 
@@ -11,13 +11,13 @@ import java.util.List;
  * @author Create by whz at 2023/7/8
  */
 
-public interface DeptService extends EntityService<Dept, DeptDto, DeptQuery> {
+public interface DeptService extends EntityService<Dept, DeptDTO, DeptQuery> {
 
-    List<DeptDto> list(DeptQuery query);
+    List<DeptDTO> list(DeptQuery query);
 
     boolean hasChildren(Integer id);
 
-    List<DeptDto> tree(DeptQuery query);
+    List<DeptDTO> tree(DeptQuery query);
 
     void enabledSwitch(Integer id);
 
@@ -27,5 +27,5 @@ public interface DeptService extends EntityService<Dept, DeptDto, DeptQuery> {
 
     boolean existAll(List<Integer> ids);
 
-    List<DeptDto> getDtoListIn(List<Integer> deptIds);
+    List<DeptDTO> getDTOListIn(List<Integer> deptIds);
 }

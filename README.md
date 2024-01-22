@@ -60,10 +60,10 @@ public interface OrderMapper extends BaseMapper<Order> {
 // 用在service层方法上时，要注意调用的方法是否是本类的方法
 // 如果是，会导致代理失败，数据权限失效
 @Service
-public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, OrderDto, OrderQuery> implements OrderService {
+public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, OrderDTO, OrderQuery> implements OrderService {
     
     @Override
-    public List<OrderDto> list(OrderQuery query) {
+    public List<OrderDTO> list(OrderQuery query) {
         LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StrUtil.isNotBlank(query.getReceiverName()), Order::getReceiverName, query.getReceiverName());
         // ...其他条件
@@ -147,7 +147,7 @@ maven引入
 
 `Book.java` 实体。继承了`BaseEntity`，继承一些基础属性，如：id、createTime、updateTime、deleted...等等
 
-`BookDto.java` 传输对象。继承了`EntityDto`，也是继承了一些基础属性
+`BookDTO.java` 传输对象。继承了`EntityDTO`，也是继承了一些基础属性
 
 `BookQuery.java` 查询参数。继承了`EntityQuery`，继承了基础的查询基础属性，排序，分页等
 
@@ -210,7 +210,7 @@ maven引入
 
 1. 进入`beforeSaveOrUpdateHandler(dto)`方法，可以对'增改'接口参数进行统一处理
 2. '增'接口进入`beforeSaveHandler(dto)`，'改'接口进入`beforeUpdateHandler(dto)`，分别对参数进行处理
-3. 复制带有`XxxDto`中带有`@EntityField`属性给实体
+3. 复制带有`XxxDTO`中带有`@EntityField`属性给实体
 4. 执行更新`updateById(entity)`或插入`save(entity)`操作
 5. 执行`afterSaveHandler(entity)`方法，可在此进行添加或更新的后置处理
 

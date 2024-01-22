@@ -32,10 +32,10 @@ public class Generator {
     private static final String MODULE_NAME = "";
 
     // 表名，多个表使用英文逗号分割
-    private static final String[] TBL_NAMES = {"t_org"};
+    private static final String[] TBL_NAMES = {"ex_book"};
 
     // 表名的前缀，从表生成代码时会去掉前缀
-    private static final String TABLE_PREFIX = "t_";
+    private static final String TABLE_PREFIX = "ex_";
 
     // 生成代码入口main方法
     public static void main(String[] args) {
@@ -103,7 +103,7 @@ public class Generator {
             HashMap<String, String> customFileMap = new HashMap<>();
 
             injectionConfig.beforeOutputFile((tableInfo, biConsumer) -> {
-                customFileMap.put(tableInfo.getEntityName() + "Dto.java", "/templates/dto.java.ftl");
+                customFileMap.put(tableInfo.getEntityName() + "DTO.java", "/templates/dto.java.ftl");
                 customFileMap.put(tableInfo.getEntityName() + "Query.java", "/templates/query.java.ftl");
             });
 

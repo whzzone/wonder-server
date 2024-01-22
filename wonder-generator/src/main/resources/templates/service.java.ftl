@@ -3,7 +3,7 @@ package ${package.Service};
 import ${package.Entity}.${entity};
 import ${superServiceClassPackage};
 import ${package.Other}.${entity}.${entity}Query;
-import ${package.Other}.${entity}.${entity}Dto;
+import ${package.Other}.${entity}.${entity}DTO;
 
 /**
 * ${table.comment!} 服务类
@@ -12,7 +12,7 @@ import ${package.Other}.${entity}.${entity}Dto;
 <#if kotlin>
 interface ${table.serviceName} : ${superServiceClass}<${entity}>
 <#else>
-public interface ${table.serviceName} extends ${superServiceClass}<${entity}, ${entity}Dto, ${entity}Query> {
+public interface ${table.serviceName} extends ${superServiceClass}<${entity}, ${entity}DTO, ${entity}Query> {
 
 }
 </#if>

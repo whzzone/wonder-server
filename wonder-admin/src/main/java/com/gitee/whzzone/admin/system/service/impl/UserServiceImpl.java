@@ -13,8 +13,8 @@ import com.gitee.whzzone.admin.common.security.LoginUser;
 import com.gitee.whzzone.admin.common.service.TokenService;
 import com.gitee.whzzone.admin.system.entity.*;
 import com.gitee.whzzone.admin.system.mapper.UserMapper;
-import com.gitee.whzzone.admin.system.pojo.dto.ResetPWDDto;
-import com.gitee.whzzone.admin.system.pojo.dto.UserDto;
+import com.gitee.whzzone.admin.system.pojo.dto.ResetPWDDTO;
+import com.gitee.whzzone.admin.system.pojo.dto.UserDTO;
 import com.gitee.whzzone.admin.system.pojo.query.UserQuery;
 import com.gitee.whzzone.admin.system.service.*;
 import com.gitee.whzzone.common.constant.CommonConstants;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto, UserQuery> implements UserService {
+public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDTO, UserQuery> implements UserService {
 
     @Autowired
     private UserDeptService userDeptService;
@@ -114,8 +114,8 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
     }
 
     @Override
-    public UserDto afterQueryHandler(User entity) {
-        UserDto dto = super.afterQueryHandler(entity);
+    public UserDTO afterQueryHandler(User entity) {
+        UserDTO dto = super.afterQueryHandler(entity);
         dto.setPassword("");
 
         List<Dept> deptList = getUserDeptInfo(dto.getId());
@@ -155,7 +155,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
     }
 
     @Override
-    public PageData<UserDto> page(UserQuery query) {
+    public PageData<UserDTO> page(UserQuery query) {
         Page<User> page = new Page<>(query.getCurPage(), query.getPageSize());
 
         List<Integer> userIds = new ArrayList<>();
@@ -182,7 +182,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
         queryWrapper.in(query.getDeptId() != null, User::getId, userIds);
         page(page, queryWrapper);
 
-        List<UserDto> dtoList = afterQueryHandler(page.getRecords());
+        List<UserDTO> dtoList = afterQueryHandler(page.getRecords());
 
         return new PageData<>(dtoList, page.getPages(), page.getTotal());
     }
@@ -204,7 +204,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
 
     @Transactional
     @Override
-    public User updateById(UserDto dto) {
+    public User updateById(UserDTO dto) {
         User user = getById(dto.getId());
 
         if (user == null)
@@ -223,7 +223,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
 
     @Transactional
     @Override
-    public User save(UserDto dto) {
+    public User save(UserDTO dto) {
         if (StrUtil.isBlank(dto.getPassword())){
             dto.setPassword(passwordEncoder.encode(securityProperties.getDefaultPassword()));
         }else {
@@ -242,7 +242,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
     }
 
     @Override
-    public UserDto beforeSaveHandler(UserDto dto) {
+    public UserDTO beforeSaveHandler(UserDTO dto) {
         Assert.isFalse(existSameUsername(dto.getId(), dto.getUsername()), "{} 已存在", dto.getUsername());
         Assert.isFalse(existSamePhone(dto.getId(), dto.getPhone()), "{} 已存在", dto.getPhone());
         Assert.isFalse(existSameEmail(dto.getId(), dto.getEmail()), "{} 已存在", dto.getEmail());
@@ -280,7 +280,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
     }
 
     @Override
-    public void resetPWD(ResetPWDDto dto) {
+    public void resetPWD(ResetPWDDTO dto) {
         if (StrUtil.isBlank(dto.getPassword()))
             throw new RuntimeException("新密码不能为空");
 
@@ -355,8 +355,8 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDto
         loginUser.setDeptIds(deptIds);
         loginUser.setRoleIds(roleIds);
 
-        loginUser.setDepts(deptService.getDtoListIn(deptIds));
-        loginUser.setRoles(roleService.getDtoListIn(roleIds));
+        loginUser.setDepts(deptService.getDTOListIn(deptIds));
+        loginUser.setRoles(roleService.getDTOListIn(roleIds));
 
         loginUser.setPermissions(menuService.findPermitByUserId(loginUser.getId()));
 

@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
 import com.gitee.whzzone.annotation.EntityField;
-import com.gitee.whzzone.web.pojo.dto.EntityDto;
+import com.gitee.whzzone.web.pojo.dto.EntityDTO;
 import com.gitee.whzzone.web.validation.groups.InsertGroup;
 import com.gitee.whzzone.web.validation.groups.UpdateGroup;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Data
-public class RoleDto extends EntityDto {
+public class RoleDTO extends EntityDTO {
 
     @EntityField
     @ApiModelProperty("名称")
