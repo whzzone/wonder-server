@@ -3,9 +3,11 @@ package com.gitee.whzzone.web.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
@@ -25,7 +27,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -39,16 +40,36 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     private ApplicationContext context;
 
     @Override
+    protected Class<M> currentMapperClass() {
+        return super.currentMapperClass();
+    }
+
+    private final Class<T> currentEntityClass = (Class<T>) ReflectionKit.getSuperClassGenericType(this.getClass(), EntityServiceImpl.class, 1);
+
+    private final Class<D> currentDtoClass = (Class<D>) ReflectionKit.getSuperClassGenericType(this.getClass(), EntityServiceImpl.class, 2);
+
+    private final Class<Q> currentQueryClass = (Class<Q>) ReflectionKit.getSuperClassGenericType(this.getClass(), EntityServiceImpl.class, 3);
+
+    private final String[] insertIgnoreField = getInsertIgnoreField();
+
+    private final String[] updateIgnoreField = getUpdateIgnoreField();
+
+    private final Field[] currentEntityFields = currentEntityClass.getDeclaredFields();
+
+    private final Field[] currentDtoFields = currentDtoClass.getDeclaredFields();
+
+    private final Field[] currentQueryFields = currentQueryClass.getDeclaredFields();
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public T save(D dto) {
         try {
             dto = beforeSaveOrUpdateHandler(dto);
             dto = beforeSaveHandler(dto);
 
-            Class<T> dClass = getTClass();
-            T entity = dClass.getDeclaredConstructor().newInstance();
+            T entity = currentEntityClass.getDeclaredConstructor().newInstance();
 
-            BeanUtil.copyProperties(dto, entity, getInsertIgnoreField(dto));
+            BeanUtil.copyProperties(dto, entity, insertIgnoreField);
 
             boolean save = save(entity);
             if (!save) {
@@ -69,17 +90,13 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             dto = beforeSaveOrUpdateHandler(dto);
             dto = beforeUpdateHandler(dto);
 
-            Class<D> dClass = getDClass();
-            Class<? super D> superclass = dClass.getSuperclass();
-            Field fieldId = superclass.getDeclaredField("id");
-            fieldId.setAccessible(true);
-            Integer id = (Integer) fieldId.get(dto);
+            Integer id = dto.getId();
             T entity = getById(id);
             if (entity == null) {
                 throw new RuntimeException(StrUtil.format("【{}】不存在", id));
             }
 
-            BeanUtil.copyProperties(dto, entity, getUpdateIgnoreField(dto));
+            BeanUtil.copyProperties(dto, entity, updateIgnoreField);
 
             boolean b = super.updateById(entity);
             if (!b) {
@@ -92,47 +109,9 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
         }
     }
 
-    private String[] getInsertIgnoreField(D dto) {
-        List<String> list = new ArrayList<>();
-
-        Field[] fields = dto.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            EntityField webFieldAnnotation = field.getAnnotation(EntityField.class);
-            if (webFieldAnnotation == null || !webFieldAnnotation.insert()) {
-                list.add(field.getName());
-            }
-        }
-        return list.toArray(new String[0]);
-    }
-
-    private String[] getUpdateIgnoreField(D dto) {
-        List<String> list = new ArrayList<>();
-
-        Field[] fields = dto.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            EntityField webFieldAnnotation = field.getAnnotation(EntityField.class);
-            if (webFieldAnnotation == null || !webFieldAnnotation.update()) {
-                list.add(field.getName());
-            }
-        }
-        return list.toArray(new String[0]);
-    }
-
-    private String[] getIgnoreField(D dto, Class<? extends Annotation> annotation) {
-        List<String> list = new ArrayList<>();
-
-        Field[] fields = dto.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            if (!field.isAnnotationPresent(annotation)) {
-                list.add(field.getName());
-            }
-        }
-        return list.toArray(new String[0]);
-    }
-
     @Override
     public T getById(Serializable id) {
-        if (id == null)
+        if (Objects.isNull(id))
             return null;
         return super.getById(id);
     }
@@ -144,7 +123,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
     @Override
     public boolean removeById(Serializable id) {
-        if (id == null) {
+        if (Objects.isNull(id)) {
             throw new RuntimeException("id不能为空");
         }
 
@@ -170,13 +149,13 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
     @Override
     public D afterQueryHandler(T entity) {
-        return BeanUtil.copyProperties(entity, getDClass());
+        return BeanUtil.copyProperties(entity, currentDtoClass);
     }
 
     @Override
     public D afterQueryHandler(T entity, BaseQueryHandler<T, D> queryHandler) {
         try {
-            if (queryHandler == null) {
+            if (Objects.isNull(queryHandler)) {
                 return afterQueryHandler(entity);
             }
             return queryHandler.process(entity);
@@ -258,10 +237,10 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
     @Override
     public boolean isExist(Integer id) {
-        if (id == null)
+        if (Objects.isNull(id))
             throw new RuntimeException("id 为空");
 
-        long count = count(new QueryWrapper<T>().eq("id", id));
+        long count = count(new LambdaQueryWrapper<T>().eq(T::getId, id));
         return count > 0;
     }
 
@@ -364,10 +343,6 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     @Override
     public QueryWrapper<T> handleQueryWrapper(Q query, QueryWrapper<T> queryWrapper) {
         try {
-            Class<? extends EntityQuery> qClass = query.getClass();
-
-            Field[] fields = qClass.getDeclaredFields();
-
             if (Objects.isNull(queryWrapper)) {
                 queryWrapper = new QueryWrapper<>();
             }
@@ -377,7 +352,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             handleSort(queryWrapper, query);
 
             // 遍历所有字段
-            for (Field field : fields) {
+            for (Field field : currentQueryFields) {
                 field.setAccessible(true);
                 Object value = field.get(query);
 
@@ -385,13 +360,16 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
                 if (Objects.isNull(value) || String.valueOf(value).equals("null") || value.equals("")) {
                     continue;
                 }
+
                 // 判断属性是否为静态变量
                 if (Modifier.isFinal(field.getModifiers())) {
                     continue;
                 }
-                // 是否存在注解@Query
+
+                // 是否存在注解@Query，不存在但是有值的话，默认EQ查询
                 Query queryAnnotation = field.getDeclaredAnnotation(Query.class);
                 if (queryAnnotation == null) {
+                    queryWrapper.eq(StrUtil.toUnderlineCase(field.getName()), value);
                     continue;
                 }
 
@@ -460,8 +438,17 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
         }
 
         for (Sort sort : sorts) {
-            if (sort.getAsc() == null || sort.getField() == null) {
+            if (Objects.isNull(sort.getAsc()) || Objects.isNull(sort.getField())) {
                 continue;
+            }
+
+            String sortFieldName = sort.getField();
+            Optional<Field> optional = Arrays.stream(currentEntityFields)
+                    .filter(field -> sortFieldName.equals(field.getName()))
+                    .findFirst();
+
+            if (!optional.isPresent()) {
+                throw new RuntimeException("无效的排序字段：" + sortFieldName);
             }
 
             if (sort.getAsc()) {
@@ -504,4 +491,31 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
         }
     }
 
+    private String[] getInsertIgnoreField() {
+        List<String> list = new ArrayList<>();
+
+        if (currentDtoFields != null) {
+            for (Field field : currentDtoFields) {
+                EntityField webFieldAnnotation = field.getAnnotation(EntityField.class);
+                if (webFieldAnnotation == null || !webFieldAnnotation.insert()) {
+                    list.add(field.getName());
+                }
+            }
+        }
+        return list.toArray(new String[0]);
+    }
+
+    private String[] getUpdateIgnoreField() {
+        List<String> list = new ArrayList<>();
+
+        if (currentDtoFields != null) {
+            for (Field field : currentDtoFields) {
+                EntityField webFieldAnnotation = field.getAnnotation(EntityField.class);
+                if (webFieldAnnotation == null || !webFieldAnnotation.update()) {
+                    list.add(field.getName());
+                }
+            }
+        }
+        return list.toArray(new String[0]);
+    }
 }

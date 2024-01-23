@@ -1,10 +1,9 @@
 package com.gitee.whzzone.web.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.gitee.whzzone.web.pojo.dto.EntityDTO;
 import com.gitee.whzzone.web.entity.BaseEntity;
+import com.gitee.whzzone.web.pojo.dto.EntityDTO;
 import com.gitee.whzzone.web.pojo.other.PageData;
 import com.gitee.whzzone.web.pojo.query.EntityQuery;
 import com.gitee.whzzone.web.queryhandler.BaseQueryHandler;
@@ -18,6 +17,12 @@ import java.util.List;
  * @date : 2023/5/22 16:27
  */
 public interface EntityService<T extends BaseEntity, D extends EntityDTO, Q extends EntityQuery> extends IService<T> {
+
+    Class<T> currentEntityClass();
+
+    Class<D> currentDtoClass();
+
+    Class<Q> currentQueryClass();
 
     /**
      * 插入
@@ -186,17 +191,5 @@ public interface EntityService<T extends BaseEntity, D extends EntityDTO, Q exte
      * @param query 查询参数
      */
     QueryWrapper<T> handleQueryWrapper(Q query);
-
-    default Class<T> getTClass() {
-        return (Class<T>) ReflectionKit.getSuperClassGenericType(this.getClass(), EntityService.class, 0);
-    }
-
-    default Class<D> getDClass() {
-        return (Class<D>) ReflectionKit.getSuperClassGenericType(this.getClass(), EntityService.class, 1);
-    }
-
-    default Class<Q> getQClass() {
-        return (Class<Q>) ReflectionKit.getSuperClassGenericType(this.getClass(), EntityService.class, 2);
-    }
 
 }
