@@ -18,12 +18,6 @@ import java.util.List;
  */
 public interface EntityService<T extends BaseEntity, D extends EntityDTO, Q extends EntityQuery> extends IService<T> {
 
-    Class<T> currentEntityClass();
-
-    Class<D> currentDtoClass();
-
-    Class<Q> currentQueryClass();
-
     /**
      * 插入
      * @param dto

@@ -3,7 +3,6 @@ package com.gitee.whzzone.web.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -235,7 +234,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
         if (Objects.isNull(id))
             throw new RuntimeException("id 为空");
 
-        long count = count(new LambdaQueryWrapper<T>().eq(T::getId, id));
+        long count = count(new QueryWrapper<T>().eq("id", id));
         return count > 0;
     }
 
