@@ -39,11 +39,6 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     @Autowired
     private ApplicationContext context;
 
-    @Override
-    protected Class<M> currentMapperClass() {
-        return super.currentMapperClass();
-    }
-
     private final Class<T> currentEntityClass = (Class<T>) ReflectionKit.getSuperClassGenericType(this.getClass(), EntityServiceImpl.class, 1);
 
     private final Class<D> currentDtoClass = (Class<D>) ReflectionKit.getSuperClassGenericType(this.getClass(), EntityServiceImpl.class, 2);
