@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.gitee.whzzone.annotation.EntityField;
 import com.gitee.whzzone.annotation.Query;
+import com.gitee.whzzone.common.util.CommonUtil;
 import com.gitee.whzzone.web.entity.BaseEntity;
 import com.gitee.whzzone.web.pojo.dto.EntityDTO;
 import com.gitee.whzzone.web.pojo.other.PageData;
@@ -29,6 +30,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Create by whz at 2023/7/16
@@ -44,15 +46,18 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
     private final Class<Q> currentQueryClass = (Class<Q>) ReflectionKit.getSuperClassGenericType(this.getClass(), EntityServiceImpl.class, 3);
 
-    private final String[] insertIgnoreField = getInsertIgnoreField();
+    private final String[] insertIgnoreField = initInsertIgnoreField();
 
-    private final String[] updateIgnoreField = getUpdateIgnoreField();
+    private final String[] updateIgnoreField = initUpdateIgnoreField();
 
-    private final Field[] currentEntityFields = currentEntityClass.getDeclaredFields();
+    private final Field[] currentEntityFields = CommonUtil.getAllFieldsIncludingParents(currentEntityClass);
 
-    private final Field[] currentDtoFields = currentDtoClass.getDeclaredFields();
+    private final Field[] currentDtoFields = CommonUtil.getAllFieldsIncludingParents(currentDtoClass);
 
-    private final Field[] currentQueryFields = currentQueryClass.getDeclaredFields();
+    private final List<Field> currentQueryFields = Arrays.stream(CommonUtil.getAllFieldsIncludingParents(currentQueryClass))
+            .filter(f -> !Modifier.isStatic(f.getModifiers())).collect(Collectors.toList());
+
+    private final Map<String, Query> queryFieldMap = initQueryFieldMap();
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -355,13 +360,8 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
                     continue;
                 }
 
-                // 判断属性是否为静态变量
-                if (Modifier.isFinal(field.getModifiers())) {
-                    continue;
-                }
-
                 // 是否存在注解@Query，不存在但是有值的话，默认EQ查询
-                Query queryAnnotation = field.getDeclaredAnnotation(Query.class);
+                Query queryAnnotation = queryFieldMap.get(field.getName());
                 if (queryAnnotation == null) {
                     queryWrapper.eq(StrUtil.toUnderlineCase(field.getName()), value);
                     continue;
@@ -485,7 +485,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
         }
     }
 
-    private String[] getInsertIgnoreField() {
+    private String[] initInsertIgnoreField() {
         List<String> list = new ArrayList<>();
 
         if (currentDtoFields != null) {
@@ -499,7 +499,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
         return list.toArray(new String[0]);
     }
 
-    private String[] getUpdateIgnoreField() {
+    private String[] initUpdateIgnoreField() {
         List<String> list = new ArrayList<>();
 
         if (currentDtoFields != null) {
@@ -511,5 +511,14 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             }
         }
         return list.toArray(new String[0]);
+    }
+
+    private Map<String, Query> initQueryFieldMap() {
+        Map<String, Query> map = new HashMap<>();
+        for (Field item : currentQueryFields) {
+            Query annotation = item.getDeclaredAnnotation(Query.class);
+            map.put(item.getName(), annotation);
+        }
+        return map;
     }
 }
