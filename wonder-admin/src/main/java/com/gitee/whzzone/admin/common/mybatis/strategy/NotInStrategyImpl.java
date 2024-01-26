@@ -6,8 +6,6 @@ import com.gitee.whzzone.common.enums.ProvideTypeEnum;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.NotExpression;
 import net.sf.jsqlparser.expression.StringValue;
-import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
-import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.expression.operators.relational.InExpression;
 import net.sf.jsqlparser.schema.Column;
@@ -25,7 +23,6 @@ public class NotInStrategyImpl implements ExpressStrategy{
 
     @Override
     public Expression apply(RuleDTO rule, Expression where) {
-        boolean or = isOr(rule.getSpliceType());
         Column column = getColumn(rule);
         Object value = getValue(rule);
         if (rule.getProvideType().equals(ProvideTypeEnum.VALUE.getCode())){
@@ -41,20 +38,10 @@ public class NotInStrategyImpl implements ExpressStrategy{
             return where;
         }
 
-//        ExpressionList itemsList = new ExpressionList();
-//
-//        for (Object item : (List) value) {
-//            itemsList.addExpressions(new StringValue(item.toString()));
-//        }
-
         ExpressionList itemsList = new ExpressionList(((List<?>) value).stream().map(v -> new StringValue(v.toString())).collect(Collectors.toList()));
 
         InExpression inExpression = new InExpression(column, itemsList);
         NotExpression notExpression = new NotExpression(inExpression);
-        if (or) {
-            return where == null ? notExpression : new OrExpression(where, notExpression);
-        } else {
-            return where == null ? notExpression : new AndExpression(where, notExpression);
-        }
+        return assemble(rule.getSpliceType(), where, notExpression);
     }
 }

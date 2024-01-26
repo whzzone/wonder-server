@@ -5,8 +5,6 @@ import com.gitee.whzzone.admin.system.pojo.dto.RuleDTO;
 import com.gitee.whzzone.common.enums.ProvideTypeEnum;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.StringValue;
-import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
-import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.expression.operators.relational.InExpression;
 import net.sf.jsqlparser.schema.Column;
@@ -24,7 +22,6 @@ public class InStrategyImpl implements ExpressStrategy {
 
     @Override
     public Expression apply(RuleDTO rule, Expression where) {
-        boolean or = isOr(rule.getSpliceType());
         Column column = getColumn(rule);
         Object value = getValue(rule);
         if (rule.getProvideType().equals(ProvideTypeEnum.VALUE.getCode())) {
@@ -43,10 +40,6 @@ public class InStrategyImpl implements ExpressStrategy {
 
         InExpression inExpression = new InExpression(column, itemsList);
 
-        if (or) {
-            return where == null ? inExpression : new OrExpression(where, inExpression);
-        } else {
-            return where == null ? inExpression : new AndExpression(where, inExpression);
-        }
+        return assemble(rule.getSpliceType(), where, inExpression);
     }
 }
