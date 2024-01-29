@@ -1,5 +1,7 @@
 package com.gitee.whzzone.web.pojo.other;
 
+import com.gitee.whzzone.annotation.QueryIgnore;
+
 import io.swagger.annotations.ApiModelProperty;
 
 /**
@@ -8,9 +10,11 @@ import io.swagger.annotations.ApiModelProperty;
 public class QueryPage {
 
     @ApiModelProperty(value = "当前页数", required = true)
+    @QueryIgnore
     private Integer curPage = 1;
 
     @ApiModelProperty(value = "每页数量", required = true)
+    @QueryIgnore
     private Integer pageSize = 10;
 
     public Integer getCurPage() {
@@ -31,9 +35,6 @@ public class QueryPage {
 
     @Override
     public String toString() {
-        return "QueryPage{" +
-                "curPage=" + curPage +
-                ", pageSize=" + pageSize +
-                '}';
+        return "QueryPage{" + "curPage=" + curPage + ", pageSize=" + pageSize + '}';
     }
 }

@@ -1,8 +1,16 @@
 package com.gitee.whzzone.web.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.StrUtil;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -12,6 +20,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.gitee.whzzone.annotation.EntityField;
 import com.gitee.whzzone.annotation.Query;
+import com.gitee.whzzone.annotation.QueryIgnore;
 import com.gitee.whzzone.common.util.CommonUtil;
 import com.gitee.whzzone.web.entity.BaseEntity;
 import com.gitee.whzzone.web.pojo.dto.EntityDTO;
@@ -21,30 +30,28 @@ import com.gitee.whzzone.web.pojo.sort.Sort;
 import com.gitee.whzzone.web.queryhandler.BaseQueryHandler;
 import com.gitee.whzzone.web.service.EntityService;
 import com.gitee.whzzone.web.utils.ThenerUtil;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.*;
-import java.util.stream.Collectors;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * @author Create by whz at 2023/7/16
  */
-public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseEntity, D extends EntityDTO, Q extends EntityQuery> extends ServiceImpl<M, T> implements EntityService<T, D, Q> {
+public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseEntity, D extends EntityDTO,
+    Q extends EntityQuery> extends ServiceImpl<M, T> implements EntityService<T, D, Q> {
 
     @Autowired
     private ApplicationContext context;
 
-    private final Class<T> currentEntityClass = (Class<T>) ReflectionKit.getSuperClassGenericType(this.getClass(), EntityServiceImpl.class, 1);
+    private final Class<T> currentEntityClass =
+        (Class<T>)ReflectionKit.getSuperClassGenericType(this.getClass(), EntityServiceImpl.class, 1);
 
-    private final Class<D> currentDtoClass = (Class<D>) ReflectionKit.getSuperClassGenericType(this.getClass(), EntityServiceImpl.class, 2);
+    private final Class<D> currentDtoClass =
+        (Class<D>)ReflectionKit.getSuperClassGenericType(this.getClass(), EntityServiceImpl.class, 2);
 
-    private final Class<Q> currentQueryClass = (Class<Q>) ReflectionKit.getSuperClassGenericType(this.getClass(), EntityServiceImpl.class, 3);
+    private final Class<Q> currentQueryClass =
+        (Class<Q>)ReflectionKit.getSuperClassGenericType(this.getClass(), EntityServiceImpl.class, 3);
 
     private final String[] insertIgnoreField = initInsertIgnoreField();
 
@@ -54,7 +61,8 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
     private final Field[] currentDtoFields = CommonUtil.getAllFieldsIncludingParents(currentDtoClass);
 
-    private final List<Field> currentQueryFields = Arrays.stream(CommonUtil.getAllFieldsIncludingParents(currentQueryClass))
+    private final List<Field> currentQueryFields =
+        Arrays.stream(CommonUtil.getAllFieldsIncludingParents(currentQueryClass))
             .filter(f -> !Modifier.isStatic(f.getModifiers())).collect(Collectors.toList());
 
     private final Map<String, Query> queryFieldMap = initQueryFieldMap();
@@ -359,6 +367,11 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
                 if (Objects.isNull(value) || String.valueOf(value).equals("null") || value.equals("")) {
                     continue;
                 }
+                // 设置了 @QueryIgnore 注解，直接忽略
+                QueryIgnore queryIgnore = field.getAnnotation(QueryIgnore.class);
+                if (null != queryIgnore) {
+                    continue;
+                }
 
                 // 是否存在注解@Query，不存在但是有值的话，默认EQ查询
                 Query queryAnnotation = queryFieldMap.get(field.getName());
@@ -367,7 +380,8 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
                     continue;
                 }
 
-                String columnName = StrUtil.isBlank(queryAnnotation.column()) ? StrUtil.toUnderlineCase(field.getName()) : queryAnnotation.column();
+                String columnName = StrUtil.isBlank(queryAnnotation.column()) ? StrUtil.toUnderlineCase(field.getName())
+                    : queryAnnotation.column();
 
                 switch (queryAnnotation.expression()) {
                     case EQ:
@@ -422,7 +436,7 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
     @Override
     public QueryWrapper<T> handleQueryWrapper(Q query) {
-        return handleQueryWrapper(query,null);
+        return handleQueryWrapper(query, null);
     }
 
     private void handleSort(QueryWrapper<T> queryWrapper, Q query) {
@@ -437,9 +451,8 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             }
 
             String sortFieldName = sort.getField();
-            Optional<Field> optional = Arrays.stream(currentEntityFields)
-                    .filter(field -> sortFieldName.equals(field.getName()))
-                    .findFirst();
+            Optional<Field> optional =
+                Arrays.stream(currentEntityFields).filter(field -> sortFieldName.equals(field.getName())).findFirst();
 
             if (!optional.isPresent()) {
                 throw new RuntimeException("无效的排序字段：" + sortFieldName);
@@ -453,7 +466,8 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
         }
     }
 
-    private void handleBetween(QueryWrapper<T> queryWrapper, Map<String, Field[]> betweenFieldMap, Q query) throws IllegalAccessException {
+    private void handleBetween(QueryWrapper<T> queryWrapper, Map<String, Field[]> betweenFieldMap, Q query)
+        throws IllegalAccessException {
         Set<String> keySet = betweenFieldMap.keySet();
         for (String columnName : keySet) {
             // 已在编译时做了相关校验，在此无须做重复且耗时的校验
@@ -467,14 +481,18 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
 
             if (field1.get(query) instanceof Date) {
                 if (ThenerUtil.compareFields(field1, field2, query)) {
-                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%d') >= date_format({0},'%y%m%d')", field1.get(query));
-                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%d') <= date_format({0},'%y%m%d')", field2.get(query));
+                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%d') >= date_format({0},'%y%m%d')",
+                        field1.get(query));
+                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%d') <= date_format({0},'%y%m%d')",
+                        field2.get(query));
                 } else {
-                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%d') <= date_format({0},'%y%m%d')", field1.get(query));
-                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%d') >= date_format({0},'%y%m%d')", field2.get(query));
+                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%d') <= date_format({0},'%y%m%d')",
+                        field1.get(query));
+                    queryWrapper.apply("date_format(" + columnName + ",'%y%m%d') >= date_format({0},'%y%m%d')",
+                        field2.get(query));
                 }
             } else {
-                //其他类型，数字、字符等等实现了Comparable接口的类型
+                // 其他类型，数字、字符等等实现了Comparable接口的类型
                 if (!ThenerUtil.compareFields(field1, field2, query)) {
                     queryWrapper.between(columnName, field1.get(query), field2.get(query));
                 } else {
