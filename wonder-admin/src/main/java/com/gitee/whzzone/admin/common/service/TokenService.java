@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.common.service;
 
 import cn.hutool.core.util.StrUtil;
-import com.gitee.whzzone.admin.common.properties.SecurityProperties;
+import com.gitee.whzzone.admin.common.properties.WonderProperties;
 import com.gitee.whzzone.admin.common.redis.RedisCache;
 import com.gitee.whzzone.admin.common.security.LoginUser;
 import com.gitee.whzzone.common.constant.CommonConstants;
@@ -21,7 +21,7 @@ public class TokenService {
     private RedisCache redisCache;
 
     @Autowired
-    private SecurityProperties securityProperties;
+    private WonderProperties wonderProperties;
 
     /**
      * 生成令牌
@@ -39,7 +39,7 @@ public class TokenService {
      * @param loginUser 封装信息
      */
     public void cacheToken(LoginUser loginUser) {
-        redisCache.set(getTokenKey(loginUser.getToken()), loginUser, securityProperties.getToken().getLiveTime(), securityProperties.getToken().getLiveUnit());
+        redisCache.set(getTokenKey(loginUser.getToken()), loginUser, wonderProperties.getToken().getLiveTime(), wonderProperties.getToken().getLiveUnit());
     }
 
     /**
@@ -59,8 +59,8 @@ public class TokenService {
     public void renewToken(String token) {
         String tokenKey = getTokenKey(token);
 
-        if (redisCache.getExpire(tokenKey) < securityProperties.getToken().getRefreshUnit().toSeconds(securityProperties.getToken().getRefreshTime())) {
-            redisCache.expire(tokenKey, securityProperties.getToken().getLiveTime(), securityProperties.getToken().getLiveUnit());
+        if (redisCache.getExpire(tokenKey) < wonderProperties.getToken().getRefreshUnit().toSeconds(wonderProperties.getToken().getRefreshTime())) {
+            redisCache.expire(tokenKey, wonderProperties.getToken().getLiveTime(), wonderProperties.getToken().getLiveUnit());
         }
 
     }

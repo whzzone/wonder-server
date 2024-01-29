@@ -1,7 +1,7 @@
 package com.gitee.whzzone.admin.common.security;
 
 import com.gitee.whzzone.admin.common.filter.TokenFilter;
-import com.gitee.whzzone.admin.common.properties.SecurityProperties;
+import com.gitee.whzzone.admin.common.properties.WonderProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +26,7 @@ import org.springframework.util.AntPathMatcher;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private SecurityProperties securityProperties;
+    private WonderProperties wonderProperties;
 
     @Lazy
     @Autowired
@@ -81,7 +81,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler(authFailureHandler)  //认证失败处理器
                 .disable()
                 .authorizeRequests()
-                .antMatchers(securityProperties.getIgnorePath().toArray(new String[0])).permitAll()
+                .antMatchers(wonderProperties.getWeb().getIgnorePath().toArray(new String[0])).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .csrf()

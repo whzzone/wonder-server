@@ -1,8 +1,10 @@
 package com.gitee.whzzone.admin.common.aspect;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
+import com.gitee.whzzone.admin.common.event.HttpAccessEvent;
+import com.gitee.whzzone.admin.common.listener.HttpAccessListener;
 import com.gitee.whzzone.admin.system.entity.RequestLog;
-import com.gitee.whzzone.admin.system.service.RequestLogService;
 import com.gitee.whzzone.admin.util.IpUtil;
 import com.gitee.whzzone.admin.util.SecurityUtil;
 import com.gitee.whzzone.annotation.ApiLogger;
@@ -17,10 +19,12 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
@@ -33,16 +37,20 @@ import java.lang.reflect.Method;
 public class RequestLoggerAspect {
 
     @Autowired
-    private RequestLogService requestLogService;
+    private ApplicationContext applicationContext;
 
     @Value("server.servlet.context-path")
     private String contextPath;
 
-    @Value("${security.request.enable-log}")
     private Boolean enableLog;
 
     @Pointcut("@annotation(com.gitee.whzzone.annotation.ApiLogger)")
     public void pointcut() {
+    }
+
+    @PostConstruct
+    public void init() {
+        enableLog = CollectionUtil.isNotEmpty(applicationContext.getBeansOfType(HttpAccessListener.class));
     }
 
     @Around("pointcut()")
@@ -93,9 +101,8 @@ public class RequestLoggerAspect {
         try {
             requestLog.setUserId(SecurityUtil.getLoginUser() == null ? null :SecurityUtil.getLoginUser().getId());
         }catch (Exception ignored){}
-        // 异步保存
-        requestLogService.saveAsync(requestLog);
 
+        applicationContext.publishEvent(new HttpAccessEvent(requestLog));
         return result;
     }
 

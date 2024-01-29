@@ -15,7 +15,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Configuration
 public class AsyncConfig implements AsyncConfigurer {
 
-    @Bean
+    @Bean({"applicationTaskExecutor", "taskExecutor"})
     public TaskExecutor taskExecutor() {
         //Java虚拟机可用的处理器数
         int processors = Runtime.getRuntime().availableProcessors();

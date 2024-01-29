@@ -11,11 +11,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author : whz
@@ -38,12 +35,6 @@ public class AuthController {
 
     @Autowired
     private UserService sysUserService;
-
-    @Value("${security.token.live-time}")
-    private long cacheTime;
-
-    @Value("${security.token.live-unit}")
-    private TimeUnit cacheTimeUnit;
 
 /*    @ApiOperation("账号密码登录-获取验证码")
     @GetMapping("/getCode")

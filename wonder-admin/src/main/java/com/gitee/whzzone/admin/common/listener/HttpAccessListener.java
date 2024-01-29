@@ -1,0 +1,50 @@
+package com.gitee.whzzone.admin.common.listener;
+
+import com.gitee.whzzone.admin.common.event.HttpAccessEvent;
+import com.gitee.whzzone.admin.system.entity.RequestLog;
+import com.gitee.whzzone.admin.system.service.RequestLogService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * @author Create by whz at 2024/1/29
+ */
+@Slf4j
+@ConditionalOnProperty(prefix = "security.request", name = "enable-log", havingValue = "true")
+@Configuration
+public class HttpAccessListener implements ApplicationListener<HttpAccessEvent> {
+
+    @Autowired
+    private RequestLogService requestLogService;
+
+    @Override
+    public void onApplicationEvent(HttpAccessEvent event) {
+        try {
+            RequestLog requestLog = (RequestLog) event.getSource();
+            log.debug("====================================请求信息开始========================================");
+            //请求用户
+            log.debug("请求用户：{}", requestLog.getUserId());
+            //请求链接
+            log.debug("请求URI：{}", requestLog.getUrl());
+            //接口描述信息
+            log.debug("接口描述：{}", requestLog.getDesc());
+            //请求类型
+            log.debug("接口类型：{}", requestLog.getType());
+            //请求方法
+            log.debug("请求方法：{}", requestLog.getMethod());
+            //请求IP
+            log.debug("请求IP：{}", requestLog.getIp());
+            //请求入参
+            log.debug("请求入参：{}", requestLog.getParams());
+            //请求耗时
+            log.debug("请求耗时：{}", requestLog.getDuration());
+            //请求返回
+            // log.debug("请求返回：{}", requestLog.getResult());
+            log.debug("====================================请求信息结束========================================");
+            requestLogService.save(requestLog);
+        }catch (Exception ignored) {}
+    }
+}

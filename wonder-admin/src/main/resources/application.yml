@@ -1,3 +1,35 @@
+wonder:
+  web:
+    # 是否开启请求日志 true-开，false-关
+    enable-log: true
+    # 无需认证的访问的接口
+    ignore-path:
+      - /swagger/**
+      - /webjars/**
+      - /v2/**
+      - /swagger-resources/**
+      - /doc.html
+      - /favicon.ico
+      - /auth/login/**
+      - /druid/**
+
+  token:
+    header: Authorization
+    live-time: 60
+    live-unit: MINUTES
+    refresh-time: 10
+    refresh-unit: MINUTES
+    default-password: 123456
+
+  upload:
+    # 上传存储的路径
+    dir: E:/phpstudy_pro/WWW/upload
+    # 允许上传的文件扩展名
+    allow-type:
+      - jpg
+      - jpeg
+      - png
+
 server:
   servlet:
     context-path: /wonder-server
@@ -15,32 +47,6 @@ spring:
     multipart:
       max-file-size: 10MB #单个文件的最大大小限制为10MB
       max-request-size: 20MB #整个请求体的最大大小限制为20MB，包括所有文件和其他表单字段
-
-upload:
-  path: E:/phpstudy_pro/WWW/upload
-  allow-type: jpg,jpeg,gif,png,zip,7z,rar,txt,doc,docx,xls,xlsx,mp3,mp4
-
-security:
-  default-password: 123456
-  ignore-path:
-    - /swagger/**
-    - /webjars/**
-    - /v2/**
-    - /swagger-resources/**
-    - /doc.html
-    - /favicon.ico
-    - /auth/login/**
-    - /druid/**
-
-  token:
-    header: Authorization
-    live-time: 30
-    live-unit: MINUTES
-    refresh-time: 10
-    refresh-unit: MINUTES
-
-  request:
-    enable-log: false
 
 wx:
   miniapp:

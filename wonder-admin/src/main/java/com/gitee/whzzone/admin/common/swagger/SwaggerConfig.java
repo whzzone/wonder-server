@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.common.swagger;
 
-import com.gitee.whzzone.admin.common.properties.SecurityProperties;
+import com.gitee.whzzone.admin.common.properties.WonderProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +28,7 @@ import java.util.List;
 public class SwaggerConfig {
 
     @Autowired
-    private SecurityProperties securityProperties;
+    private WonderProperties wonderProperties;
 
     @Value("${server.servlet.context-path}")
     private String contextPath;
@@ -101,7 +101,7 @@ public class SwaggerConfig {
                         .operationSelector(o -> {
                             // 判断请求路径是否匹配ignore-path中的接口
                             String requestMappingPattern = o.requestMappingPattern();
-                            for (String ignorePath : securityProperties.getIgnorePath()) {
+                            for (String ignorePath : wonderProperties.getWeb().getIgnorePath()) {
                                 if (antPathMatcher.match(contextPath + ignorePath, requestMappingPattern)) {
                                     // 如果匹配，则创建一个没有任何安全要求的SecurityContext
                                     return false;

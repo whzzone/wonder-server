@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gitee.whzzone.admin.common.properties.SecurityProperties;
+import com.gitee.whzzone.admin.common.properties.WonderProperties;
 import com.gitee.whzzone.admin.common.redis.RedisCache;
 import com.gitee.whzzone.admin.common.security.LoginUser;
 import com.gitee.whzzone.admin.common.service.TokenService;
@@ -56,7 +56,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDTO
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private SecurityProperties securityProperties;
+    private WonderProperties wonderProperties;
 
     @Autowired
     private MenuService menuService;
@@ -225,7 +225,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDTO
     @Override
     public User save(UserDTO dto) {
         if (StrUtil.isBlank(dto.getPassword())){
-            dto.setPassword(passwordEncoder.encode(securityProperties.getDefaultPassword()));
+            dto.setPassword(passwordEncoder.encode(wonderProperties.getToken().getDefaultPassword()));
         }else {
             dto.setPassword(passwordEncoder.encode(dto.getPassword()));
         }

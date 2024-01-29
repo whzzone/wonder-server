@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.gitee.whzzone.admin.common.properties.SecurityProperties;
+import com.gitee.whzzone.admin.common.properties.WonderProperties;
 import com.gitee.whzzone.admin.common.security.LoginUser;
 import com.gitee.whzzone.admin.common.service.TokenService;
 import com.gitee.whzzone.admin.system.service.UserService;
@@ -40,7 +40,7 @@ public class TokenFilter extends OncePerRequestFilter {
     private UserService userService;
 
     @Autowired
-    private SecurityProperties securityProperties;
+    private WonderProperties wonderProperties;
 
     @Autowired
     private AntPathMatcher antPathMatcher;
@@ -52,7 +52,7 @@ public class TokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String path = request.getRequestURI().substring(request.getContextPath().length()).replaceAll("[/]+$", "");
-            for (String ignorePath : securityProperties.getIgnorePath()) {
+            for (String ignorePath : wonderProperties.getWeb().getIgnorePath()) {
                 if (antPathMatcher.match(ignorePath, path)) {
                     // 如果当前请求的 URL 在忽略列表中，则直接放行
                     filterChain.doFilter(request, response);
@@ -60,7 +60,7 @@ public class TokenFilter extends OncePerRequestFilter {
                 }
             }
 
-            String token = request.getHeader(securityProperties.getToken().getHeader());
+            String token = request.getHeader(wonderProperties.getToken().getHeader());
             Integer roleId = StringUtils.hasText(request.getHeader("RoleId")) ? Integer.valueOf(request.getHeader("RoleId")) : null;
             Integer deptId = StringUtils.hasText(request.getHeader("DeptId")) ? Integer.valueOf(request.getHeader("DeptId")) : null;
 

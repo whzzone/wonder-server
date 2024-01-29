@@ -1,10 +1,11 @@
 package com.gitee.whzzone.admin.business.controller;
 
 import cn.hutool.crypto.digest.DigestUtil;
+import com.gitee.whzzone.admin.common.properties.WonderProperties;
 import com.gitee.whzzone.web.pojo.other.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,8 +28,8 @@ import java.util.Date;
 @RequestMapping("file")
 public class FileController {
 
-    @Value("${upload.path}")
-    private String uploadPath;
+    @Autowired
+    private WonderProperties wonderProperties;
 
     @ApiOperation(value = "文件上传", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PostMapping("upload")
@@ -47,7 +48,7 @@ public class FileController {
 
             // 构造上传目录路径
             String currentDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
-            uploadPath = Paths.get(uploadPath, currentDate).toString();
+            String uploadPath = Paths.get(wonderProperties.getUpload().getDir(), currentDate).toString();
 
             // 兼容Windows和Linux的文件路径分隔符
             String fileSeparator = System.getProperty("file.separator");

@@ -11,6 +11,4 @@ import com.gitee.whzzone.admin.system.pojo.query.RequestLogQuery;
 */
 public interface RequestLogService extends EntityService<RequestLog, RequestLogDTO, RequestLogQuery> {
 
-    void saveAsync(RequestLog requestLog);
-
 }
