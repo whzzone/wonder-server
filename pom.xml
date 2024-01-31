@@ -44,7 +44,7 @@
     <properties>
         <java.version>8</java.version>
         <spring-boot.version>2.5.6</spring-boot.version>
-        <druid.version>1.1.10</druid.version>
+        <druid.version>1.1.22</druid.version>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <mybatis-generator.version>3.5.2</mybatis-generator.version>
         <fastjson.version>1.2.83</fastjson.version>
@@ -207,6 +207,12 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.9</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>2.15.3</version>
             </dependency>
 
         </dependencies>

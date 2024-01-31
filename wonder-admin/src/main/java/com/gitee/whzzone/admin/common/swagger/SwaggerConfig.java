@@ -10,12 +10,15 @@ import org.springframework.util.AntPathMatcher;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +26,7 @@ import java.util.List;
  * @author : whz
  * @date : 2023/5/17 10:01
  */
-@EnableSwagger2
+@EnableOpenApi
 @Configuration
 public class SwaggerConfig {
 
@@ -50,6 +53,9 @@ public class SwaggerConfig {
                 .build()
                 .securityContexts(securityContexts())
                 .securitySchemes(securitySchemes())
+                .directModelSubstitute(LocalDateTime.class, String.class)
+                .directModelSubstitute(LocalDate.class, String.class)
+                .directModelSubstitute(LocalTime.class, String.class)
                 .groupName("1、系统分组")
                 ;
     }
@@ -57,6 +63,10 @@ public class SwaggerConfig {
     @Bean
     public Docket docketDemo2() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("2、业务分组")
+                .directModelSubstitute(LocalDateTime.class, String.class)
+                .directModelSubstitute(LocalDate.class, String.class)
+                .directModelSubstitute(LocalTime.class, String.class)
                 .useDefaultResponseMessages(false)
                 .apiInfo(apiInfo())
                 .select()
@@ -65,7 +75,6 @@ public class SwaggerConfig {
                 .build()
                 .securityContexts(securityContexts())
                 .securitySchemes(securitySchemes())
-                .groupName("2、业务分组")
                 ;
     }
 
@@ -98,9 +107,9 @@ public class SwaggerConfig {
         securityContexts.add(
                 SecurityContext.builder()
                         .securityReferences(defaultAuth())
-                        .operationSelector(o -> {
+                        .forPaths(o -> {
                             // 判断请求路径是否匹配ignore-path中的接口
-                            String requestMappingPattern = o.requestMappingPattern();
+                            String requestMappingPattern = o.toString();
                             for (String ignorePath : wonderProperties.getWeb().getIgnorePath()) {
                                 if (antPathMatcher.match(contextPath + ignorePath, requestMappingPattern)) {
                                     // 如果匹配，则创建一个没有任何安全要求的SecurityContext

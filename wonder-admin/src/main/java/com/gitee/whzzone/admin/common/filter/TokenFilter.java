@@ -118,6 +118,7 @@ public class TokenFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             response.setHeader("content-type", "application/json");
             IoUtil.write(response.getOutputStream(), true, JSONUtil.toJsonStr(Result.error(Result.UNAUTHORIZED, e.getMessage())).getBytes());
+            e.printStackTrace();
             log.error(e.getMessage());
             return;
         }

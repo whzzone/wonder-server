@@ -86,7 +86,7 @@ public abstract class EntityController<T extends BaseEntity, S extends EntitySer
     /**
      * 将前台传递过来的日期格式的字符串，自动转化为Date类型
      */
-    @InitBinder
+//    @InitBinder
     public void initBinder(WebDataBinder binder) {
         // Date 类型转换
         binder.registerCustomEditor(Date.class, new PropertyEditorSupport() {
@@ -98,6 +98,24 @@ public abstract class EntityController<T extends BaseEntity, S extends EntitySer
                     return;
                 }
                 setValue(parseDate(text));
+            }
+        });
+
+        // Date[] 类型转换
+        binder.registerCustomEditor(Date[].class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                String[] parts = text.split(",");
+                Date[] dates = new Date[parts.length];
+                for (int i = 0; i < parts.length; i++) {
+                    String part = parts[i];
+                    if (StringUtils.isNotEmpty(part) && isInteger(part)) {
+                        dates[i] = new Date(Long.parseLong(part));
+                        continue;
+                    }
+                    dates[i] = parseDate(part);
+                }
+                setValue(dates);
             }
         });
     }

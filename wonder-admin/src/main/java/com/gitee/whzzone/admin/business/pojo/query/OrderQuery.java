@@ -6,7 +6,8 @@ import com.gitee.whzzone.web.pojo.query.EntityQuery;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * @author Create by whz at 2023/8/4
@@ -32,10 +33,19 @@ public class OrderQuery extends EntityQuery {
 
     @Query(column = "create_time", expression = ExpressionEnum.BETWEEN)
     @ApiModelProperty("开始日期")
-    private Date startDate;
+    private LocalDate startDate;
 
     @Query(column = "create_time", expression = ExpressionEnum.BETWEEN)
     @ApiModelProperty("结束日期")
-    private Date endDate;
+    private LocalDate endDate;
+
+    // 对create_time进行范围查询
+//    @Query(column = "create_time", expression = ExpressionEnum.BETWEEN)
+//    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+
+    @ApiModelProperty(value = "结束日期", dataType = "java.lang.String")
+    private LocalDate[] dateSlot;
+
+    private List<LocalDate> dates;
 
 }

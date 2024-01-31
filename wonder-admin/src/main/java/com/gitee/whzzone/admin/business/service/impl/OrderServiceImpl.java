@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +38,7 @@ public class OrderServiceImpl extends EntityServiceImpl<OrderMapper, Order, Orde
         queryWrapper.eq(query.getOrderStatus() != null, Order::getOrderStatus, query.getOrderStatus());
         // AOrderQueryHandler 已注入容器
 //        return afterQueryHandler(list(queryWrapper), AOrderQueryHandler.class);
-
+        System.out.println("Arrays.toString(query.getDateSlot()) = " + Arrays.toString(query.getDateSlot()));
         // BOrderQueryHandler未注入容器
         return afterQueryHandler(list(queryWrapper), new BOrderQueryHandler());
 //        return afterQueryHandler(orderMapper.listTest(1), new BOrderQueryHandler());
