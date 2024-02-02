@@ -1,5 +1,7 @@
+[![weihuazhou/wonder-server](https://gitee.com/whzzone/wonder-server/widgets/widget_card.svg?colors=ffffff,1e252b,323d47,455059,d7deea,99a0ae)](https://gitee.com/whzzone/wonder-server)
+
 ### 简介
-一个灵活的数据权限管理系统
+wonder-server 一个web快速开发、灵活的数据权限管理系统 
 
 优点：传统的5种权限：全部数据权限、本部门数据权限、本部门及下属部门数据、仅本人数据、自定义数据权限，其实再怎么自定义也是针对人和部门的纬度来说的，如果需求是：角色A只能订单表的销售数量>=100的订单，角色B只能订单表的销售数量<100的订单，恐怕实现不了。本项目针对这种需求就设计得更灵活了一点，仅需要针对不同的接口可视化添加一些配置即可以针对数据库表不同字段来控制数据权限。
 
@@ -140,7 +142,8 @@ maven引入
    ```
 
 3. 启动`main`方法即可，会生成如下8个文件，然后启动项目进入项目swagger文档，即可拥有增删改查接口
-   ![image-20231205145954783](https://cdn.weihuazhou.top/blog/2023/12/image-20231205145954783.png)![image-20231205150228822](https://cdn.weihuazhou.top/blog/2023/12/image-20231205150228822.png)
+   ![image-20231205145954783](https://cdn.weihuazhou.top/blog/2023/12/image-20231205145954783.png)
+   ![image-20231205150228822](https://cdn.weihuazhou.top/blog/2023/12/image-20231205150228822.png)
 
 
 #### 生成的代码解释
@@ -185,6 +188,17 @@ maven引入
     @Query(column = "create_time", expression = ExpressionEnum.BETWEEN)
     @ApiModelProperty("结束时间")
     private Date endDate;
+    ```
+  
+- `@QueryIgnore` 该注解标识该属性忽略查询。
+    ```java
+    @ApiModelProperty("当前页数")
+    @QueryIgnore
+    private Integer curPage = 1;
+
+    @ApiModelProperty("每页数量")
+    @QueryIgnore
+    private Integer pageSize = 10;
     ```
 
 - `@EntityField` 该注解标识该字段的对数据库的操作。如下配置, 表示该字段可以新增，但不可编辑字段。

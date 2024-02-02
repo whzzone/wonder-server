@@ -52,3 +52,9 @@ wx:
 sa-token:
   token-name: Authorization
   is-concurrent: true
+
+knife4j:
+  enable: true
+  setting:
+    enable-home-custom: true
+    home-custom-location: https://gitee.com/whzzone/wonder-server/raw/master/README.md

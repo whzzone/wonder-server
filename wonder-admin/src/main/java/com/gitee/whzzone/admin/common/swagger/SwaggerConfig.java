@@ -2,6 +2,7 @@ package com.gitee.whzzone.admin.common.swagger;
 
 import cn.dev33.satoken.config.SaTokenConfig;
 import com.gitee.whzzone.admin.common.properties.WonderProperties;
+import com.github.xiaoymin.knife4j.spring.extension.OpenApiExtensionResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -40,6 +41,9 @@ public class SwaggerConfig {
     @Autowired
     private SaTokenConfig saTokenConfig;
 
+    @Autowired
+    private OpenApiExtensionResolver openApiExtensionResolver;
+
     /**
      * 配置Swagger2相关的bean
      */
@@ -55,6 +59,7 @@ public class SwaggerConfig {
                 .securityContexts(securityContexts()) // 单个Api: 某个api的调试中显示
                 .securitySchemes(securitySchemes()) // 全局: 侧边栏显示
                 .groupName("1、系统分组")
+                .extensions(openApiExtensionResolver.buildSettingExtensions())
                 ;
     }
 
@@ -70,6 +75,7 @@ public class SwaggerConfig {
                 .securityContexts(securityContexts())
                 .securitySchemes(securitySchemes())
                 .groupName("2、业务分组")
+                .extensions(openApiExtensionResolver.buildSettingExtensions())
                 ;
     }
 
