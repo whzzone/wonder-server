@@ -57,12 +57,8 @@ public class RuleDTO extends EntityDTO {
     private String value2;*/
 
     @EntityField
-    @ApiModelProperty("全限定类名")
-    private String className;
-
-    @EntityField
-    @ApiModelProperty("方法名")
-    private String methodName;
+    @ApiModelProperty("全限定类名#方法名")
+    private String fullMethodName;
 
     @EntityField
     @ApiModelProperty("形参")

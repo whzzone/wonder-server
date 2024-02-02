@@ -33,9 +33,7 @@ public class Rule extends BaseEntity {
 
     private String value2;
 
-    private String className;
-
-    private String methodName;
+    private String fullMethodName;
 
     private String formalParam;
 

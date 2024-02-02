@@ -4,14 +4,14 @@
  Source Server         : 个人
  Source Server Type    : MySQL
  Source Server Version : 80033
- Source Host           : bt.weihuazhou.top:3306
- Source Schema         : wonder-test
+ Source Host           : 127.0.0.1:3306
+ Source Schema         : wonder
 
  Target Server Type    : MySQL
  Target Server Version : 80033
  File Encoding         : 65001
 
- Date: 16/01/2024 16:04:44
+ Date: 02/02/2024 17:25:14
 */
 
 SET NAMES utf8mb4;
@@ -69,24 +69,29 @@ CREATE TABLE `ex_order`  (
   `receiver_address` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '收货地址',
   `order_amount` decimal(10, 2) NULL DEFAULT NULL COMMENT '订单金额-元',
   `order_status` tinyint NULL DEFAULT NULL COMMENT '0-待付款，1-已取消，2-已付款，3-已完成',
+  `dept_id` int NULL DEFAULT NULL COMMENT '部门id',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `create_by` int NULL DEFAULT NULL COMMENT '创建人',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `update_by` int NULL DEFAULT NULL COMMENT '更新人',
   `deleted` bit(1) NULL DEFAULT NULL COMMENT '已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '示例-订单表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '示例-订单表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of ex_order
 -- ----------------------------
-INSERT INTO `ex_order` VALUES (1, '王五', '13500000000', '钦州市钦南区', 100.00, 0, '2023-08-04 10:06:37', 1, '2023-08-04 10:06:37', 1, b'0');
-INSERT INTO `ex_order` VALUES (2, '老六', '13511111111', '钦州市钦南区', 50.00, 0, '2023-08-04 10:07:03', 1, '2023-08-04 10:07:03', 1, b'0');
-INSERT INTO `ex_order` VALUES (3, '炮灰甲', '13522222222', '钦州市钦北区', 888.00, 1, '2023-08-04 10:07:47', 1, '2023-08-04 10:07:47', 1, b'0');
-INSERT INTO `ex_order` VALUES (4, '路人甲', '13566666666', '钦州市钦北区', 520.16, 2, '2023-08-04 10:08:17', 4, '2023-08-04 10:08:17', 1, b'0');
-INSERT INTO `ex_order` VALUES (5, '李回归', '13578954567', '南宁市江南区', 200.45, 3, '2023-08-04 10:17:32', 2, '2023-08-04 10:17:32', 1, b'0');
-INSERT INTO `ex_order` VALUES (6, '赵辉', '13547595616', '南宁市西乡塘区', 78.99, 3, '2023-08-04 10:18:13', 2, '2023-08-04 10:18:13', 1, b'0');
-INSERT INTO `ex_order` VALUES (7, 'name1', '13612345678', NULL, NULL, NULL, '2024-01-02 11:50:07', 1, '2024-01-02 11:50:07', 1, b'0');
+INSERT INTO `ex_order` VALUES (1, '王五', '13500000000', '钦州市钦南区', 100.00, 0, 2, '2023-08-04 10:06:37', 1, '2023-08-04 10:06:37', 1, b'0');
+INSERT INTO `ex_order` VALUES (2, '老六', '13511111111', '钦州市钦南区', 50.00, 0, 2, '2023-08-04 10:07:03', 1, '2023-08-04 10:07:03', 1, b'0');
+INSERT INTO `ex_order` VALUES (3, '炮灰甲', '13522222222', '钦州市钦北区', 888.00, 1, NULL, '2023-08-04 10:07:47', 1, '2023-08-04 10:07:47', 1, b'0');
+INSERT INTO `ex_order` VALUES (4, '路人甲', '13566666666', '钦州市钦北区', 520.16, 2, NULL, '2023-08-04 10:08:17', 4, '2023-08-04 10:08:17', 1, b'0');
+INSERT INTO `ex_order` VALUES (5, '李回归', '13578954567', '南宁市江南区', 200.45, 3, NULL, '2023-08-04 10:17:32', 2, '2023-08-04 10:17:32', 1, b'0');
+INSERT INTO `ex_order` VALUES (6, '赵辉', '13547595616', '南宁市西乡塘区', 78.99, 3, NULL, '2023-08-04 10:18:13', 2, '2023-08-04 10:18:13', 1, b'0');
+INSERT INTO `ex_order` VALUES (7, 'name1', '13612345678', NULL, NULL, NULL, NULL, '2024-01-02 11:50:07', 1, '2024-01-02 11:50:07', 1, b'0');
+INSERT INTO `ex_order` VALUES (8, NULL, NULL, NULL, NULL, NULL, NULL, '2024-01-22 17:43:22', 2, '2024-01-22 17:43:22', 2, b'0');
+INSERT INTO `ex_order` VALUES (9, NULL, NULL, NULL, NULL, NULL, NULL, '2024-01-22 17:45:53', 2, '2024-01-22 17:45:53', 2, b'0');
+INSERT INTO `ex_order` VALUES (10, NULL, NULL, NULL, NULL, NULL, NULL, '2024-01-22 17:48:40', 2, '2024-01-22 17:48:40', 2, b'0');
+INSERT INTO `ex_order` VALUES (11, 'receiverName', NULL, NULL, NULL, NULL, NULL, '2024-01-22 17:53:46', 2, '2024-01-22 17:53:46', 2, b'0');
 
 -- ----------------------------
 -- Table structure for gen_table
@@ -111,44 +116,6 @@ CREATE TABLE `gen_table`  (
 -- ----------------------------
 -- Records of gen_table
 -- ----------------------------
-
--- ----------------------------
--- Table structure for sys_data_scope
--- ----------------------------
-DROP TABLE IF EXISTS `sys_data_scope`;
-CREATE TABLE `sys_data_scope`  (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `remark` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '备注',
-  `enabled` bit(1) NULL DEFAULT NULL,
-  `scope_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL,
-  `table_alias` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '表别名',
-  `column_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '数据库字段名',
-  `splice_type` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '拼接类型 SpliceTypeEnum',
-  `expression` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '表达式 ExpressionEnum',
-  `provide_type` tinyint NULL DEFAULT NULL COMMENT 'ProvideTypeEnum 值提供类型，1-值，2-方法',
-  `value1` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '值1',
-  `value2` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '值2',
-  `class_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '全限定类名',
-  `method_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '方法名',
-  `formal_param` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '形参，分号隔开',
-  `actual_param` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '实参，分号隔开',
-  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
-  `create_by` int NULL DEFAULT NULL COMMENT '创建人',
-  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
-  `update_by` int NULL DEFAULT NULL COMMENT '更新人',
-  `deleted` bit(1) NULL DEFAULT NULL COMMENT '已删除',
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `index_scope_name`(`scope_name` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '用户表' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of sys_data_scope
--- ----------------------------
-INSERT INTO `sys_data_scope` VALUES (1, '无参测试', b'1', 'sn1', NULL, 'enabled', 'OR', 'IN', 2, NULL, NULL, 'com.gitee.whzzone.controller.A', 'getIds', NULL, NULL, NULL, NULL, NULL, NULL, b'0');
-INSERT INTO `sys_data_scope` VALUES (2, '查看创建人是当前登录用户的数据', b'0', 'sn2', NULL, 'create_by', 'AND', 'IN', 2, '', NULL, 'com.gitee.whzzone.util.SecurityUtil', 'loginUserId', NULL, NULL, NULL, NULL, '2023-07-15 17:53:42', 1, b'0');
-INSERT INTO `sys_data_scope` VALUES (3, '带参注入测试', b'1', 'sn3', NULL, 'create_by', 'AND', 'IN', 2, NULL, NULL, 'com.gitee.whzzone.controller.A', 'getByName', 'java.lang.String;java.lang.Integer', 'hello world;18', NULL, NULL, NULL, NULL, b'0');
-INSERT INTO `sys_data_scope` VALUES (4, '查看父级id为0的数据', b'1', 'sn5', NULL, 'parent_id', 'AND', 'EQ', 1, '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0');
-INSERT INTO `sys_data_scope` VALUES (5, '查看编码不是work的角色', b'1', 'sn4', NULL, 'code', 'AND', 'NE', 1, 'worker', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, b'0');
 
 -- ----------------------------
 -- Table structure for sys_dept
@@ -358,7 +325,6 @@ INSERT INTO `sys_menu` VALUES (19, 18, '规则管理', NULL, 3, 'rule-index2', '
 INSERT INTO `sys_menu` VALUES (20, 0, '百度', 'el-icon-s-promotion', 999, NULL, 'https://www.baidu.com', b'1', NULL, NULL, 2, b'0', b'1', NULL, NULL, '2023-08-02 09:55:06', 1, '2023-08-02 09:55:06', 1, b'0');
 INSERT INTO `sys_menu` VALUES (21, 2, '字典管理', NULL, 8, 'dict-index', '/system/dict', b'1', 'system/dict/index', NULL, 2, b'1', NULL, b'1', NULL, '2023-08-13 10:28:05', 1, '2023-08-13 10:28:05', 1, b'0');
 INSERT INTO `sys_menu` VALUES (22, 0, '业务', NULL, 3, NULL, NULL, b'1', NULL, NULL, 1, NULL, NULL, NULL, NULL, '2023-08-31 22:11:20', 1, '2023-08-31 22:11:20', 1, b'0');
-INSERT INTO `sys_menu` VALUES (23, 22, '样品信息', NULL, 1, 'sample-index', '/sample-index', b'1', 'business/interview/sample/index', 'busi:sample:index', 2, b'1', NULL, b'1', NULL, '2023-08-31 22:13:25', 1, '2023-08-31 22:13:25', 1, b'0');
 
 -- ----------------------------
 -- Table structure for sys_request_log
@@ -382,11 +348,19 @@ CREATE TABLE `sys_request_log`  (
   `update_by` int NULL DEFAULT NULL COMMENT '更新人',
   `deleted` bit(1) NULL DEFAULT NULL COMMENT '已删除',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = 'API日志' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = 'API日志' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_request_log
 -- ----------------------------
+INSERT INTO `sys_request_log` VALUES (1, 200, 2, '/order/list', '列表', 'GET', 'com.gitee.whzzone.web.controller.EntityController.list', '127.0.0.1', '[{\"curPage\":1,\"pageSize\":10}]', 710, '{\"code\":200,\"data\":[{\"createTime\":1691114797000,\"id\":1,\"orderAmount\":100.00,\"orderStatus\":0,\"receiverAddress\":\"钦州市钦南区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13500000000\",\"updateTime\":1691114797000},{\"createTime\":1691114823000,\"id\":2,\"orderAmount\":50.00,\"orderStatus\":0,\"receiverAddress\":\"钦州市钦南区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13511111111\",\"updateTime\":1691114823000},{\"createTime\":1691114867000,\"id\":3,\"orderAmount\":888.00,\"orderStatus\":1,\"receiverAddress\":\"钦州市钦北区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13522222222\",\"updateTime\":1691114867000},{\"createTime\":1691114897000,\"id\":4,\"orderAmount\":520.16,\"orderStatus\":2,\"receiverAddress\":\"钦州市钦北区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13566666666\",\"updateTime\":1691114897000}],\"msg\":\"操作成功\"}', '2024-01-29 11:57:37', NULL, '2024-01-29 11:57:37', NULL, b'0');
+INSERT INTO `sys_request_log` VALUES (2, 200, 2, '/order/list', '列表', 'GET', 'com.gitee.whzzone.web.controller.EntityController.list', '127.0.0.1', '[{\"curPage\":1,\"pageSize\":10}]', 751, '{\"code\":200,\"data\":[{\"createTime\":1691114797000,\"id\":1,\"orderAmount\":100.00,\"orderStatus\":0,\"receiverAddress\":\"钦州市钦南区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13500000000\",\"updateTime\":1691114797000},{\"createTime\":1691114823000,\"id\":2,\"orderAmount\":50.00,\"orderStatus\":0,\"receiverAddress\":\"钦州市钦南区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13511111111\",\"updateTime\":1691114823000},{\"createTime\":1691114867000,\"id\":3,\"orderAmount\":888.00,\"orderStatus\":1,\"receiverAddress\":\"钦州市钦北区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13522222222\",\"updateTime\":1691114867000},{\"createTime\":1691114897000,\"id\":4,\"orderAmount\":520.16,\"orderStatus\":2,\"receiverAddress\":\"钦州市钦北区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13566666666\",\"updateTime\":1691114897000}],\"msg\":\"操作成功\"}', '2024-01-29 11:59:43', NULL, '2024-01-29 11:59:43', NULL, b'0');
+INSERT INTO `sys_request_log` VALUES (3, 200, 2, '/order/list', '列表', 'GET', 'com.gitee.whzzone.web.controller.EntityController.list', '127.0.0.1', '[{\"curPage\":1,\"pageSize\":10}]', 578, '{\"code\":200,\"data\":[{\"createTime\":1691114797000,\"id\":1,\"orderAmount\":100.00,\"orderStatus\":0,\"receiverAddress\":\"钦州市钦南区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13500000000\",\"updateTime\":1691114797000},{\"createTime\":1691114823000,\"id\":2,\"orderAmount\":50.00,\"orderStatus\":0,\"receiverAddress\":\"钦州市钦南区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13511111111\",\"updateTime\":1691114823000},{\"createTime\":1691114867000,\"id\":3,\"orderAmount\":888.00,\"orderStatus\":1,\"receiverAddress\":\"钦州市钦北区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13522222222\",\"updateTime\":1691114867000},{\"createTime\":1691114897000,\"id\":4,\"orderAmount\":520.16,\"orderStatus\":2,\"receiverAddress\":\"钦州市钦北区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13566666666\",\"updateTime\":1691114897000}],\"msg\":\"操作成功\"}', '2024-01-29 15:51:20', NULL, '2024-01-29 15:51:20', NULL, b'0');
+INSERT INTO `sys_request_log` VALUES (4, 200, 2, '/order/list', '列表', 'GET', 'com.gitee.whzzone.web.controller.EntityController.list', '127.0.0.1', '[{\"curPage\":1,\"pageSize\":10}]', 216, '{\"code\":200,\"data\":[{\"createTime\":1691114797000,\"id\":1,\"orderAmount\":100.00,\"orderStatus\":0,\"receiverAddress\":\"钦州市钦南区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13500000000\",\"updateTime\":1691114797000},{\"createTime\":1691114823000,\"id\":2,\"orderAmount\":50.00,\"orderStatus\":0,\"receiverAddress\":\"钦州市钦南区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13511111111\",\"updateTime\":1691114823000},{\"createTime\":1691114867000,\"id\":3,\"orderAmount\":888.00,\"orderStatus\":1,\"receiverAddress\":\"钦州市钦北区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13522222222\",\"updateTime\":1691114867000},{\"createTime\":1691114897000,\"id\":4,\"orderAmount\":520.16,\"orderStatus\":2,\"receiverAddress\":\"钦州市钦北区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13566666666\",\"updateTime\":1691114897000}],\"msg\":\"操作成功\"}', '2024-02-02 16:14:52', NULL, '2024-02-02 16:14:52', NULL, b'0');
+INSERT INTO `sys_request_log` VALUES (5, 200, 2, '/order/list', '列表', 'GET', 'com.gitee.whzzone.web.controller.EntityController.list', '127.0.0.1', '[{\"curPage\":1,\"pageSize\":10}]', 8401, '{\"code\":200,\"data\":[{\"createTime\":1691114797000,\"deptId\":2,\"id\":1,\"orderAmount\":100.00,\"orderStatus\":0,\"receiverAddress\":\"钦州市钦南区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13500000000\",\"updateTime\":1691114797000},{\"createTime\":1691114823000,\"deptId\":2,\"id\":2,\"orderAmount\":50.00,\"orderStatus\":0,\"receiverAddress\":\"钦州市钦南区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13511111111\",\"updateTime\":1691114823000}],\"msg\":\"操作成功\"}', '2024-02-02 16:58:16', NULL, '2024-02-02 16:58:16', NULL, b'0');
+INSERT INTO `sys_request_log` VALUES (6, 200, 2, '/order/list', '列表', 'GET', 'com.gitee.whzzone.web.controller.EntityController.list', '127.0.0.1', '[{\"curPage\":1,\"pageSize\":10}]', 114, '{\"code\":200,\"data\":[{\"createTime\":1691114797000,\"deptId\":2,\"id\":1,\"orderAmount\":100.00,\"orderStatus\":0,\"receiverAddress\":\"钦州市钦南区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13500000000\",\"updateTime\":1691114797000},{\"createTime\":1691114823000,\"deptId\":2,\"id\":2,\"orderAmount\":50.00,\"orderStatus\":0,\"receiverAddress\":\"钦州市钦南区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13511111111\",\"updateTime\":1691114823000}],\"msg\":\"操作成功\"}', '2024-02-02 17:06:26', NULL, '2024-02-02 17:06:26', NULL, b'0');
+INSERT INTO `sys_request_log` VALUES (7, 200, 2, '/order/list', '列表', 'GET', 'com.gitee.whzzone.web.controller.EntityController.list', '127.0.0.1', '[{\"curPage\":1,\"pageSize\":10}]', 19879, '{\"code\":200,\"data\":[{\"createTime\":1691114797000,\"deptId\":2,\"id\":1,\"orderAmount\":100.00,\"orderStatus\":0,\"receiverAddress\":\"钦州市钦南区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13500000000\",\"updateTime\":1691114797000},{\"createTime\":1691114823000,\"deptId\":2,\"id\":2,\"orderAmount\":50.00,\"orderStatus\":0,\"receiverAddress\":\"钦州市钦南区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13511111111\",\"updateTime\":1691114823000}],\"msg\":\"操作成功\"}', '2024-02-02 17:20:00', NULL, '2024-02-02 17:20:00', NULL, b'0');
+INSERT INTO `sys_request_log` VALUES (8, 200, 2, '/order/list', '列表', 'GET', 'com.gitee.whzzone.web.controller.EntityController.list', '127.0.0.1', '[{\"curPage\":1,\"pageSize\":10}]', 182, '{\"code\":200,\"data\":[{\"createTime\":1691114797000,\"deptId\":2,\"id\":1,\"orderAmount\":100.00,\"orderStatus\":0,\"receiverAddress\":\"钦州市钦南区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13500000000\",\"updateTime\":1691114797000},{\"createTime\":1691114823000,\"deptId\":2,\"id\":2,\"orderAmount\":50.00,\"orderStatus\":0,\"receiverAddress\":\"钦州市钦南区\",\"receiverName\":\"BBBBBBBBBB\",\"receiverPhone\":\"13511111111\",\"updateTime\":1691114823000}],\"msg\":\"操作成功\"}', '2024-02-02 17:23:49', NULL, '2024-02-02 17:23:49', NULL, b'0');
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -411,7 +385,7 @@ CREATE TABLE `sys_role`  (
 -- Records of sys_role
 -- ----------------------------
 INSERT INTO `sys_role` VALUES (1, 0, '超级管理员', 'admin', b'1', '这是超级管理员', '2023-05-23 09:26:19', 1, '2023-05-23 09:26:19', 1, b'0');
-INSERT INTO `sys_role` VALUES (2, NULL, '普通角色', 'user', b'1', '普通角色', '2023-05-23 09:27:09', 1, '2023-05-23 09:27:09', 1, b'0');
+INSERT INTO `sys_role` VALUES (2, NULL, '普通角色1', 'user', b'1', '普通角色', '2023-05-23 09:27:09', 1, '2023-05-23 09:27:09', 1, b'0');
 INSERT INTO `sys_role` VALUES (3, NULL, '工人', 'worker', b'1', '工人', '2023-07-10 22:37:42', 1, '2023-07-10 22:37:42', 1, b'0');
 INSERT INTO `sys_role` VALUES (4, NULL, '测试人员', 'test-person', b'0', '', '2023-07-10 22:44:07', 1, '2023-07-11 12:42:32', 1, b'0');
 
@@ -436,24 +410,13 @@ CREATE TABLE `sys_role_mark`  (
 -- Records of sys_role_mark
 -- ----------------------------
 INSERT INTO `sys_role_mark` VALUES (1, 1, 5, 1, NULL, NULL, NULL, NULL, b'0');
-INSERT INTO `sys_role_mark` VALUES (2, 2, 5, 2, '2023-08-03 10:39:32', 1, '2023-08-03 10:39:32', 1, b'1');
-INSERT INTO `sys_role_mark` VALUES (3, 2, 5, 2, '2023-08-03 10:49:57', 1, '2023-08-03 10:49:57', 1, b'1');
-INSERT INTO `sys_role_mark` VALUES (4, 2, 5, 3, '2023-08-03 17:40:53', 1, '2023-08-03 17:40:53', 1, b'1');
-INSERT INTO `sys_role_mark` VALUES (5, 2, 5, 4, '2023-08-03 17:43:44', 1, '2023-08-03 17:43:44', 1, b'0');
-INSERT INTO `sys_role_mark` VALUES (6, 2, 6, 7, '2023-08-04 10:14:00', 1, '2023-08-04 10:14:00', 1, b'1');
-INSERT INTO `sys_role_mark` VALUES (7, 2, 6, 8, '2023-08-04 10:16:02', 1, '2023-08-04 10:16:02', 1, b'1');
-INSERT INTO `sys_role_mark` VALUES (8, 2, 6, 5, '2023-08-04 10:18:22', 1, '2023-08-04 10:18:22', 1, b'1');
-INSERT INTO `sys_role_mark` VALUES (9, 2, 6, 6, '2023-08-04 10:18:32', 1, '2023-08-04 10:18:32', 1, b'0');
-INSERT INTO `sys_role_mark` VALUES (10, 2, 6, 9, '2023-08-04 11:07:40', 1, '2023-08-04 11:07:40', 1, b'1');
-INSERT INTO `sys_role_mark` VALUES (11, 1, 6, 5, '2023-08-05 11:04:54', 1, '2023-08-05 11:04:54', 1, b'1');
-INSERT INTO `sys_role_mark` VALUES (12, 1, 6, 7, '2023-08-05 11:06:08', 1, '2023-08-05 11:06:08', 1, b'1');
+INSERT INTO `sys_role_mark` VALUES (5, 2, 5, 4, '2023-08-03 17:43:44', 1, '2023-08-03 17:43:44', 1, b'1');
+INSERT INTO `sys_role_mark` VALUES (9, 2, 6, 6, '2023-08-04 10:18:32', 1, '2023-08-04 10:18:32', 1, b'1');
 INSERT INTO `sys_role_mark` VALUES (13, 1, 6, 9, '2023-08-05 11:12:11', 1, '2023-08-05 11:12:11', 1, b'0');
-INSERT INTO `sys_role_mark` VALUES (14, 2, 6, 8, '2023-08-10 11:12:42', 1, '2023-08-10 11:12:42', 1, b'1');
-INSERT INTO `sys_role_mark` VALUES (15, 2, 6, 9, '2023-08-10 11:12:43', 1, '2023-08-10 11:12:43', 1, b'1');
-INSERT INTO `sys_role_mark` VALUES (16, 2, 6, 10, '2023-08-10 14:40:34', 1, '2023-08-10 14:40:34', 1, b'1');
-INSERT INTO `sys_role_mark` VALUES (17, 2, 6, 11, '2023-08-10 15:21:31', 1, '2023-08-10 15:21:31', 1, b'0');
-INSERT INTO `sys_role_mark` VALUES (18, 2, 6, 9, '2023-08-14 21:04:27', 1, '2023-08-14 21:04:27', 1, b'1');
-INSERT INTO `sys_role_mark` VALUES (19, 2, 6, 5, '2023-08-15 11:48:01', 1, '2023-08-15 11:48:01', 1, b'0');
+INSERT INTO `sys_role_mark` VALUES (17, 2, 6, 11, '2023-08-10 15:21:31', 1, '2023-08-10 15:21:31', 1, b'1');
+INSERT INTO `sys_role_mark` VALUES (19, 2, 6, 5, '2023-08-15 11:48:01', 1, '2023-08-15 11:48:01', 1, b'1');
+INSERT INTO `sys_role_mark` VALUES (20, 3, 6, 5, '2023-08-15 11:48:01', 1, '2023-08-15 11:48:01', 1, b'1');
+INSERT INTO `sys_role_mark` VALUES (21, 2, 6, 12, NULL, NULL, NULL, NULL, b'0');
 
 -- ----------------------------
 -- Table structure for sys_role_menu
@@ -469,17 +432,17 @@ CREATE TABLE `sys_role_menu`  (
   `update_by` int NULL DEFAULT NULL,
   `deleted` bit(1) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '角色权限表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 34 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci COMMENT = '角色权限表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_role_menu
 -- ----------------------------
 INSERT INTO `sys_role_menu` VALUES (1, 3, 1, '2023-07-10 22:45:39', 1, '2023-07-10 22:45:39', 1, b'0');
-INSERT INTO `sys_role_menu` VALUES (2, 2, 1, '2023-07-12 19:26:34', 1, '2023-07-12 19:26:34', 1, b'0');
-INSERT INTO `sys_role_menu` VALUES (3, 2, 2, '2023-07-12 19:26:34', 1, '2023-07-12 19:26:34', 1, b'0');
-INSERT INTO `sys_role_menu` VALUES (4, 2, 3, '2023-07-12 19:26:34', 1, '2023-07-12 19:26:34', 1, b'0');
-INSERT INTO `sys_role_menu` VALUES (5, 2, 8, '2023-07-12 19:26:34', 1, '2023-07-12 19:26:34', 1, b'0');
-INSERT INTO `sys_role_menu` VALUES (6, 2, 13, '2023-07-12 19:26:34', 1, '2023-07-12 19:26:34', 1, b'0');
+INSERT INTO `sys_role_menu` VALUES (2, 2, 1, '2023-07-12 19:26:34', 1, '2023-07-12 19:26:34', 1, b'1');
+INSERT INTO `sys_role_menu` VALUES (3, 2, 2, '2023-07-12 19:26:34', 1, '2023-07-12 19:26:34', 1, b'1');
+INSERT INTO `sys_role_menu` VALUES (4, 2, 3, '2023-07-12 19:26:34', 1, '2023-07-12 19:26:34', 1, b'1');
+INSERT INTO `sys_role_menu` VALUES (5, 2, 8, '2023-07-12 19:26:34', 1, '2023-07-12 19:26:34', 1, b'1');
+INSERT INTO `sys_role_menu` VALUES (6, 2, 13, '2023-07-12 19:26:34', 1, '2023-07-12 19:26:34', 1, b'1');
 INSERT INTO `sys_role_menu` VALUES (7, 4, 1, '2023-08-02 22:27:46', 1, '2023-08-02 22:27:46', 1, b'0');
 INSERT INTO `sys_role_menu` VALUES (8, 4, 2, '2023-08-02 22:27:46', 1, '2023-08-02 22:27:46', 1, b'0');
 INSERT INTO `sys_role_menu` VALUES (9, 1, 1, '2023-08-31 22:13:46', 1, '2023-08-31 22:13:46', 1, b'0');
@@ -500,8 +463,12 @@ INSERT INTO `sys_role_menu` VALUES (23, 1, 18, '2023-08-31 22:13:46', 1, '2023-0
 INSERT INTO `sys_role_menu` VALUES (24, 1, 19, '2023-08-31 22:13:46', 1, '2023-08-31 22:13:46', 1, b'0');
 INSERT INTO `sys_role_menu` VALUES (25, 1, 21, '2023-08-31 22:13:46', 1, '2023-08-31 22:13:46', 1, b'0');
 INSERT INTO `sys_role_menu` VALUES (26, 1, 22, '2023-08-31 22:13:46', 1, '2023-08-31 22:13:46', 1, b'0');
-INSERT INTO `sys_role_menu` VALUES (27, 1, 23, '2023-08-31 22:13:46', 1, '2023-08-31 22:13:46', 1, b'0');
 INSERT INTO `sys_role_menu` VALUES (28, 1, 20, '2023-08-31 22:13:46', 1, '2023-08-31 22:13:46', 1, b'0');
+INSERT INTO `sys_role_menu` VALUES (29, 2, 1, '2024-01-16 17:27:55', 1, '2024-01-16 17:27:55', 1, b'0');
+INSERT INTO `sys_role_menu` VALUES (30, 2, 2, '2024-01-16 17:27:55', 1, '2024-01-16 17:27:55', 1, b'0');
+INSERT INTO `sys_role_menu` VALUES (31, 2, 3, '2024-01-16 17:27:55', 1, '2024-01-16 17:27:55', 1, b'0');
+INSERT INTO `sys_role_menu` VALUES (32, 2, 8, '2024-01-16 17:27:55', 1, '2024-01-16 17:27:55', 1, b'0');
+INSERT INTO `sys_role_menu` VALUES (33, 2, 13, '2024-01-16 17:27:55', 1, '2024-01-16 17:27:55', 1, b'0');
 
 -- ----------------------------
 -- Table structure for sys_rule
@@ -518,8 +485,7 @@ CREATE TABLE `sys_rule`  (
   `provide_type` tinyint NULL DEFAULT NULL COMMENT 'ProvideTypeEnum 值提供类型，1-值，2-方法',
   `value1` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '值1',
   `value2` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '值2',
-  `class_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '全限定类名',
-  `method_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '方法名',
+  `full_method_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '全限定类名#方法名',
   `formal_param` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '形参，分号隔开',
   `actual_param` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '实参，分号隔开',
   `create_time` datetime NULL DEFAULT NULL,
@@ -533,17 +499,18 @@ CREATE TABLE `sys_rule`  (
 -- ----------------------------
 -- Records of sys_rule
 -- ----------------------------
-INSERT INTO `sys_rule` VALUES (1, '查看编码不是work的角色', 5, NULL, 'code', 'AND', 'NE', 1, 'worker', NULL, NULL, NULL, NULL, NULL, '2023-07-16 09:11:54', 1, '2023-07-16 09:11:09', 1, b'0');
-INSERT INTO `sys_rule` VALUES (2, '只查看编码work的角色', 5, NULL, 'code', 'AND', 'EQ', 1, 'worker', NULL, NULL, NULL, NULL, NULL, '2023-07-16 09:11:09', 1, '2023-07-16 09:11:09', 1, b'0');
-INSERT INTO `sys_rule` VALUES (3, '查看状态为启用的角色', 5, NULL, 'enabled', 'AND', 'EQ', 1, '1', NULL, NULL, NULL, NULL, NULL, '2023-08-03 17:31:52', 1, '2023-08-03 17:31:52', 1, b'0');
-INSERT INTO `sys_rule` VALUES (4, '只查看禁用的角色', 5, NULL, 'enabled', 'AND', 'EQ', 1, '0', NULL, NULL, NULL, NULL, NULL, '2023-08-03 17:43:35', 1, '2023-08-03 17:43:35', 1, b'0');
-INSERT INTO `sys_rule` VALUES (5, '查看收货地址为钦南区的订单', 6, NULL, 'receiver_address', 'OR', 'RIGHT_LIKE', 1, '钦南', NULL, NULL, NULL, NULL, NULL, '2023-08-04 10:11:38', 1, '2023-08-04 10:11:38', 1, b'0');
-INSERT INTO `sys_rule` VALUES (6, '查看收货地址为钦北区的订单', 6, NULL, 'receiver_address', 'OR', 'LIKE', 1, '钦北区', NULL, NULL, NULL, NULL, NULL, '2023-08-04 10:12:15', 1, '2023-08-04 10:12:15', 1, b'0');
-INSERT INTO `sys_rule` VALUES (7, '查看订单金额大于800的订单', 6, NULL, 'order_amount', 'OR', 'GT', 1, '800', NULL, NULL, NULL, NULL, NULL, '2023-08-04 10:12:58', 1, '2023-08-04 10:12:58', 1, b'0');
-INSERT INTO `sys_rule` VALUES (8, '查看订单金额小于等于100的订单', 6, NULL, 'order_amount', 'AND', 'LE', 1, '100', NULL, NULL, NULL, NULL, NULL, '2023-08-04 10:13:38', 1, '2023-08-04 10:13:38', 1, b'0');
-INSERT INTO `sys_rule` VALUES (9, '查看订单金额大于100且小于500的订单', 6, NULL, 'id', 'OR', 'IN', 2, NULL, NULL, 'com.gitee.whzzone.admin.business.service.impl.OrderServiceImpl', 'limitAmountBetween', 'java.math.BigDecimal;java.math.BigDecimal', '100;500', '2023-08-04 10:33:01', 1, '2023-08-04 10:33:01', 1, b'0');
-INSERT INTO `sys_rule` VALUES (10, '查看订单创建人的名称为- 普通用户1', 6, 'u', 'nickname', 'AND', 'EQ', 1, 'user04', NULL, NULL, NULL, NULL, NULL, '2023-08-10 14:40:16', 1, '2023-08-10 14:40:16', 1, b'0');
-INSERT INTO `sys_rule` VALUES (11, '查看订单状态in (1,2)', 6, NULL, 'id', 'OR', 'IN', 1, '1,2', NULL, NULL, NULL, NULL, NULL, '2023-08-10 15:21:15', 1, '2023-08-10 15:21:15', 1, b'0');
+INSERT INTO `sys_rule` VALUES (1, '查看编码不是work的角色', 5, NULL, 'code', 'AND', 'NE', 1, 'worker', NULL, NULL, NULL, NULL, '2023-07-16 09:11:54', 1, '2023-07-16 09:11:09', 1, b'0');
+INSERT INTO `sys_rule` VALUES (2, '只查看编码work的角色', 5, NULL, 'code', 'AND', 'EQ', 1, 'worker', NULL, NULL, NULL, NULL, '2023-07-16 09:11:09', 1, '2023-07-16 09:11:09', 1, b'0');
+INSERT INTO `sys_rule` VALUES (3, '查看状态为启用的角色', 5, NULL, 'enabled', 'AND', 'EQ', 1, '1', NULL, NULL, NULL, NULL, '2023-08-03 17:31:52', 1, '2023-08-03 17:31:52', 1, b'0');
+INSERT INTO `sys_rule` VALUES (4, '只查看禁用的角色', 5, NULL, 'enabled', 'AND', 'EQ', 1, '0', NULL, NULL, NULL, NULL, '2023-08-03 17:43:35', 1, '2023-08-03 17:43:35', 1, b'0');
+INSERT INTO `sys_rule` VALUES (5, '查看收货地址为钦南区的订单', 6, NULL, 'receiver_address', 'OR', 'RIGHT_LIKE', 1, '钦南', NULL, NULL, NULL, NULL, '2023-08-04 10:11:38', 1, '2023-08-04 10:11:38', 1, b'0');
+INSERT INTO `sys_rule` VALUES (6, '查看收货地址为钦北区的订单', 6, NULL, 'receiver_address', 'OR', 'LIKE', 1, '钦北区', NULL, NULL, NULL, NULL, '2023-08-04 10:12:15', 1, '2023-08-04 10:12:15', 1, b'0');
+INSERT INTO `sys_rule` VALUES (7, '查看订单金额大于800的订单', 6, NULL, 'order_amount', 'OR', 'GT', 1, '800', NULL, NULL, NULL, NULL, '2023-08-04 10:12:58', 1, '2023-08-04 10:12:58', 1, b'0');
+INSERT INTO `sys_rule` VALUES (8, '查看订单金额小于等于100的订单', 6, NULL, 'order_amount', 'AND', 'LE', 1, '100', NULL, NULL, NULL, NULL, '2023-08-04 10:13:38', 1, '2023-08-04 10:13:38', 1, b'0');
+INSERT INTO `sys_rule` VALUES (9, '查看订单金额大于100且小于500的订单', 6, NULL, 'id', 'OR', 'IN', 2, NULL, NULL, 'com.gitee.whzzone.admin.business.service.impl.OrderServiceImpl#limitAmountBetween', 'java.math.BigDecimal;java.math.BigDecimal', '100;500', '2023-08-04 10:33:01', 1, '2023-08-04 10:33:01', 1, b'0');
+INSERT INTO `sys_rule` VALUES (10, '查看订单创建人的名称为- 普通用户1', 6, 'u', 'nickname', 'AND', 'EQ', 1, 'user04', NULL, NULL, NULL, NULL, '2023-08-10 14:40:16', 1, '2023-08-10 14:40:16', 1, b'0');
+INSERT INTO `sys_rule` VALUES (11, '查看订单状态in (1,2)', 6, NULL, 'id', 'OR', 'IN', 1, '1,2', NULL, NULL, NULL, NULL, '2023-08-10 15:21:15', 1, '2023-08-10 15:21:15', 1, b'0');
+INSERT INTO `sys_rule` VALUES (12, '查看当前部门的订单', 6, NULL, 'dept_id', 'OR', 'EQ', 2, NULL, NULL, 'com.gitee.whzzone.admin.util.SecurityUtil#getCurrentDeptId', NULL, NULL, NULL, NULL, NULL, NULL, b'0');
 
 -- ----------------------------
 -- Table structure for sys_user

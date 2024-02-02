@@ -113,10 +113,14 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDTO
                         }
                     }
 
-                    Class<?> clazz = Class.forName(rule.getClassName());
+                    String[] parts = rule.getFullMethodName().split("#");
+                    String className = parts[0];
+                    String methodName = parts[1];
+
+                    Class<?> clazz = Class.forName(className);
                     Object result;
 
-                    Method targetMethod = clazz.getDeclaredMethod(rule.getMethodName(), paramsTypes);
+                    Method targetMethod = clazz.getDeclaredMethod(methodName, paramsTypes);
                     if (Modifier.isStatic(targetMethod.getModifiers())) {
                         // 设置静态方法可访问
                         targetMethod.setAccessible(true);
@@ -125,9 +129,9 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDTO
                     } else {
                         try {
                             // 尝试从容器中获取实例
-                            Object instance = context.getBean(Class.forName(rule.getClassName()));
+                            Object instance = context.getBean(Class.forName(className));
                             Class<?> beanClazz = instance.getClass();
-                            Method beanClazzMethod = beanClazz.getDeclaredMethod(rule.getMethodName(), paramsTypes);
+                            Method beanClazzMethod = beanClazz.getDeclaredMethod(methodName, paramsTypes);
 
                             // 执行方法
                             result = beanClazzMethod.invoke(instance, argValues);
