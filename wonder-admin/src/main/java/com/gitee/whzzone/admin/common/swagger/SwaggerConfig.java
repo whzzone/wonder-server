@@ -52,8 +52,8 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("com.gitee.whzzone.admin.system"))
                 .paths(PathSelectors.any())
                 .build()
-                .securityContexts(securityContexts())
-                .securitySchemes(securitySchemes())
+                .securityContexts(securityContexts()) // 单个Api: 某个api的调试中显示
+                .securitySchemes(securitySchemes()) // 全局: 侧边栏显示
                 .groupName("1、系统分组")
                 ;
     }
@@ -78,8 +78,8 @@ public class SwaggerConfig {
      */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("wander-server") // 标题
-                .description("wander-server api") // 描述
+                .title("wonder-server") // 标题
+                .description("多部门用户需要在请求头中传递当前请求用户选择的deptId, 例如 DeptId: 32") // 描述
                 .termsOfServiceUrl("") // 服务网址，一般写公司地址
                 .version("1.0") // 版本
                 .build();
@@ -88,7 +88,6 @@ public class SwaggerConfig {
     private List<SecurityScheme> securitySchemes() {
         List<SecurityScheme> result = new ArrayList<>();
         result.add(new ApiKey(HttpHeaders.AUTHORIZATION, saTokenConfig.getTokenName(), "header"));
-        result.add(new ApiKey("RoleId", "RoleId", "header"));
         result.add(new ApiKey("DeptId", "DeptId", "header"));
         return result;
     }
@@ -114,17 +113,6 @@ public class SwaggerConfig {
                             return true;
                         })
                         .build());
-
-/*        // 添加不需要登录认证的接口路径
-        securityContexts.add(
-                SecurityContext.builder()
-                        .securityReferences(new ArrayList<>()) // 不设置 securityReferences
-                        .operationSelector(o ->
-                                // 例如，对以 "/api/public/" 开头的路径不需要认证
-                                o.requestMappingPattern().startsWith("/api/public/")
-                        )
-                        .build());*/
-
         return securityContexts;
     }
 
@@ -136,8 +124,7 @@ public class SwaggerConfig {
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
         List<SecurityReference> securityReferences = new ArrayList<>();
-        securityReferences.add(new SecurityReference("Authorization", authorizationScopes));
-        securityReferences.add(new SecurityReference("RoleId", authorizationScopes));
+        securityReferences.add(new SecurityReference(saTokenConfig.getTokenName(), authorizationScopes));
         securityReferences.add(new SecurityReference("DeptId", authorizationScopes));
         return securityReferences;
     }
