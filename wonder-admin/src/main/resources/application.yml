@@ -13,12 +13,7 @@ wonder:
       - /auth/login/**
       - /druid/**
 
-  token:
-    header: Authorization
-    live-time: 60
-    live-unit: MINUTES
-    refresh-time: 10
-    refresh-unit: MINUTES
+  user:
     default-password: 123456
 
   upload:
@@ -53,3 +48,7 @@ wx:
     configs:
       - appid: wx487b66c8cba4bbd1
         secret: 249260b2d65387ff386c08d3a7021624
+
+sa-token:
+  token-name: Authorization
+  is-concurrent: true

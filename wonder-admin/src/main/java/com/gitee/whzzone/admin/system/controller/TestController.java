@@ -1,5 +1,6 @@
 package com.gitee.whzzone.admin.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.gitee.whzzone.admin.common.security.LoginUser;
 import com.gitee.whzzone.admin.system.entity.Role;
 import com.gitee.whzzone.admin.system.mapper.RoleMapper;
@@ -40,16 +41,12 @@ public class TestController {
         return Result.ok(roles);
     }
 
+    @SaCheckPermission("aaaa")
+//    @SaCheckOr(role = @SaCheckRole("worker"), permission = @SaCheckPermission("aaaa"))
     @ApiOperation("获取登录用户的信息")
     @GetMapping("getLoginUser")
     public Result<LoginUser> getLoginUser(){
         return Result.ok(SecurityUtil.getLoginUser());
     }
 
-    @ApiOperation("异步更新缓存token信息")
-    @GetMapping("asyncUpdateCacheUserInfo")
-    public Result<?> asyncUpdateCacheUserInfo(){
-        userService.asyncUpdateCacheUserInfo();
-        return Result.ok();
-    }
 }

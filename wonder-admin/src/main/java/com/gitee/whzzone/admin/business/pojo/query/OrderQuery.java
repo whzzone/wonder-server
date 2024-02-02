@@ -5,6 +5,7 @@ import com.gitee.whzzone.common.enums.ExpressionEnum;
 import com.gitee.whzzone.web.pojo.query.EntityQuery;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -32,10 +33,12 @@ public class OrderQuery extends EntityQuery {
 
     @Query(column = "create_time", expression = ExpressionEnum.BETWEEN)
     @ApiModelProperty("开始日期")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date startDate;
 
     @Query(column = "create_time", expression = ExpressionEnum.BETWEEN)
     @ApiModelProperty("结束日期")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date endDate;
 
 }

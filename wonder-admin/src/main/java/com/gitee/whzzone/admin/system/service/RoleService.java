@@ -1,5 +1,6 @@
 package com.gitee.whzzone.admin.system.service;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.gitee.whzzone.admin.system.entity.Role;
 import com.gitee.whzzone.admin.system.pojo.dto.RoleDTO;
 import com.gitee.whzzone.admin.system.pojo.query.RoleQuery;
@@ -37,4 +38,6 @@ public interface RoleService extends EntityService<Role, RoleDTO, RoleQuery> {
     void bindingRule(Integer roleId, Integer ruleId);
 
     void unBindingRule(Integer roleId, Integer ruleId);
+
+    List<String> getRoleCodesByUserId(Integer userId);
 }

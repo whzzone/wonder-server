@@ -5,7 +5,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Create by whz at 2023/9/28
@@ -17,7 +16,7 @@ public class WonderProperties {
 
     private WebProperties web = new WebProperties();
 
-    private TokenProperties token = new TokenProperties();
+    private UserProperties user = new UserProperties();
 
     private UploadProperties upload = new UploadProperties();
 
@@ -28,12 +27,7 @@ public class WonderProperties {
     }
 
     @Data
-    public static class TokenProperties {
-        private String header;
-        private Long liveTime;
-        private TimeUnit liveUnit;
-        private Long refreshTime;
-        private TimeUnit refreshUnit;
+    public static class UserProperties {
         private String defaultPassword;
     }
 

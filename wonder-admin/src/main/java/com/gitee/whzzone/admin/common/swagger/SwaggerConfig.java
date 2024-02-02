@@ -1,5 +1,6 @@
 package com.gitee.whzzone.admin.common.swagger;
 
+import cn.dev33.satoken.config.SaTokenConfig;
 import com.gitee.whzzone.admin.common.properties.WonderProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +36,9 @@ public class SwaggerConfig {
 
     @Autowired
     private AntPathMatcher antPathMatcher;
+
+    @Autowired
+    private SaTokenConfig saTokenConfig;
 
     /**
      * 配置Swagger2相关的bean
@@ -83,7 +87,7 @@ public class SwaggerConfig {
 
     private List<SecurityScheme> securitySchemes() {
         List<SecurityScheme> result = new ArrayList<>();
-        result.add(new ApiKey(HttpHeaders.AUTHORIZATION, HttpHeaders.AUTHORIZATION, "header"));
+        result.add(new ApiKey(HttpHeaders.AUTHORIZATION, saTokenConfig.getTokenName(), "header"));
         result.add(new ApiKey("RoleId", "RoleId", "header"));
         result.add(new ApiKey("DeptId", "DeptId", "header"));
         return result;

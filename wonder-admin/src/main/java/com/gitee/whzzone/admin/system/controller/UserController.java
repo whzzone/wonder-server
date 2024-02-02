@@ -11,7 +11,6 @@ import com.gitee.whzzone.web.pojo.other.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +41,6 @@ public class UserController extends EntityController<User, UserService, UserDTO,
     }
 
     @ApiOperation("重置密码")
-    @PreAuthorize("hasAuthority('sys:user:resetPWD')")
     @PutMapping("resetPWD")
     public Result resetPWD(@Validated @RequestBody ResetPWDDTO dto){
         userService.resetPWD(dto);

@@ -14,6 +14,7 @@ public class Result<T> implements Serializable {
     public static final Integer SUCCESS = 200; // 请求成功
     public static final Integer ERROR = 500; // 请求异常
     public static final Integer UNAUTHORIZED = 401; // 未认证
+    public static final Integer NO_PERMISSION = 403; // 无权限
     public static final Integer NO_DADA = 405; // 无数据
 
     @ApiModelProperty("响应状态码")

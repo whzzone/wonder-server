@@ -2,7 +2,6 @@ package com.gitee.whzzone.admin.system.service;
 
 import com.gitee.whzzone.admin.common.security.LoginUser;
 import com.gitee.whzzone.admin.system.entity.Dept;
-import com.gitee.whzzone.admin.system.entity.Role;
 import com.gitee.whzzone.admin.system.entity.User;
 import com.gitee.whzzone.admin.system.pojo.dto.ResetPWDDTO;
 import com.gitee.whzzone.admin.system.pojo.dto.UserDTO;
@@ -27,8 +26,6 @@ public interface UserService extends EntityService<User, UserDTO, UserQuery> {
 
     List<Dept> getUserDeptInfo(Integer userId);
 
-    Role getUserRoleInfo(Integer userId);
-
     PageData<UserDTO> page(UserQuery query);
 
     void enabledSwitch(Integer id);
@@ -47,7 +44,4 @@ public interface UserService extends EntityService<User, UserDTO, UserQuery> {
 
     LoginUser getLoginUserInfo(Integer id);
 
-    LoginUser getLoginUserInfo(String username);
-
-    void asyncUpdateCacheUserInfo();
 }

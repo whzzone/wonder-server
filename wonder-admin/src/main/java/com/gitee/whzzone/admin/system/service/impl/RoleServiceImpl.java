@@ -77,7 +77,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDTO
     @Override
     public List<RoleDTO> list(RoleQuery query) {
         LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.ne(Role::getCode, SecurityUtil.ADMIN);
+        queryWrapper.ne(Role::getCode, SecurityUtil.ADMIN_ROLE_CODE);
 
         queryWrapper.like(StrUtil.isNotBlank(query.getName()), Role::getName, query.getName());
         return afterQueryHandler(list(queryWrapper));
@@ -240,5 +240,30 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDTO
 
         Integer markId = rule.getMarkId();
         markService.removeAllByRoleIdAndMarkId(roleId, markId);
+    }
+
+    @Override
+    public List<String> getRoleCodesByUserId(Integer userId) {
+        Assert.notNull(userId);
+        LambdaQueryWrapper<UserRole> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(UserRole::getUserId, userId);
+        queryWrapper.select(UserRole::getRoleId);
+        List<UserRole> list = userRoleService.list(queryWrapper);
+        if (CollectionUtil.isEmpty(list)) {
+            return new ArrayList<>();
+        }
+
+        List<Integer> roleIds = list.stream().map(UserRole::getRoleId).collect(Collectors.toList());
+
+        LambdaQueryWrapper<Role> roleLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        roleLambdaQueryWrapper.select(Role::getCode);
+        roleLambdaQueryWrapper.in(BaseEntity::getId, roleIds);
+        List<Role> roleList = this.list(roleLambdaQueryWrapper);
+
+        if (CollectionUtil.isEmpty(roleList)) {
+            return new ArrayList<>();
+        }
+
+        return roleList.stream().map(Role::getCode).collect(Collectors.toList());
     }
 }

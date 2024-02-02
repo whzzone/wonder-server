@@ -14,7 +14,7 @@ import java.util.Map;
 public interface AuthService {
     Map<String, String> getCode();
     
-    Result<LoginUser> loginByUsername(UsernameLoginDTO dto);
+    Result<?> loginByUsername(UsernameLoginDTO dto);
 
     void logout();
 

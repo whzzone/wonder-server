@@ -10,18 +10,11 @@ import com.gitee.whzzone.web.service.EntityService;
 import com.gitee.whzzone.web.validation.groups.InsertGroup;
 import com.gitee.whzzone.web.validation.groups.UpdateGroup;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import java.beans.PropertyEditorSupport;
-import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * 基础的控制器
@@ -74,55 +67,6 @@ public abstract class EntityController<T extends BaseEntity, S extends EntitySer
     @GetMapping("list")
     public Result<List<D>> list(Q query){
         return Result.ok("操作成功", service.list(query));
-    }
-
-    //-------------------------------------------------------------------------------//
-    private static final String[] parsePatterns = {
-            "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM",
-            "yyyy/MM/dd", "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd HH:mm", "yyyy/MM",
-            "yyyy.MM.dd", "yyyy.MM.dd HH:mm:ss", "yyyy.MM.dd HH:mm", "yyyy.MM"
-    };
-
-    /**
-     * 将前台传递过来的日期格式的字符串，自动转化为Date类型
-     */
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        // Date 类型转换
-        binder.registerCustomEditor(Date.class, new PropertyEditorSupport() {
-            @Override
-            public void setAsText(String text) {
-                // 适配：Long转Date
-                if (StringUtils.isNotEmpty(text) && isInteger(text)) {
-                    setValue(new Date(Long.parseLong(text)));
-                    return;
-                }
-                setValue(parseDate(text));
-            }
-        });
-    }
-
-    /**
-     * 正则匹配是否正整数
-     */
-    private static boolean isInteger(String str) {
-        final Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
-        return pattern.matcher(str).matches();
-    }
-
-
-    /**
-     * 日期型字符串转化为日期格式
-     */
-    private static Date parseDate(Object str) {
-        if (str == null) {
-            return null;
-        }
-        try {
-            return DateUtils.parseDate(str.toString(), parsePatterns);
-        } catch (ParseException e) {
-            return null;
-        }
     }
 
 }

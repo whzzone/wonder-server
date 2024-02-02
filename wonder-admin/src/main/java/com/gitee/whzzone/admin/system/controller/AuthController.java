@@ -2,7 +2,6 @@ package com.gitee.whzzone.admin.system.controller;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import com.gitee.whzzone.admin.common.redis.RedisCache;
-import com.gitee.whzzone.admin.common.security.LoginUser;
 import com.gitee.whzzone.admin.system.pojo.auth.UsernameLoginDTO;
 import com.gitee.whzzone.admin.system.service.AuthService;
 import com.gitee.whzzone.admin.system.service.UserService;
@@ -51,7 +50,7 @@ public class AuthController {
 
     @ApiOperation("账号密码登录")
     @PostMapping("/login/username")
-    public Result<LoginUser> loginByUsername(@Validated @RequestBody UsernameLoginDTO dto) {
+    public Result<?> loginByUsername(@Validated @RequestBody UsernameLoginDTO dto) {
         return authService.loginByUsername(dto);
     }
 

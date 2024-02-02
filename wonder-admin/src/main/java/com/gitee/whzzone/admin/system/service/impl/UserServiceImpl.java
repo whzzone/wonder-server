@@ -1,5 +1,6 @@
 package com.gitee.whzzone.admin.system.service.impl;
 
+import cn.dev33.satoken.secure.BCrypt;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
@@ -10,26 +11,24 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gitee.whzzone.admin.common.properties.WonderProperties;
 import com.gitee.whzzone.admin.common.redis.RedisCache;
 import com.gitee.whzzone.admin.common.security.LoginUser;
-import com.gitee.whzzone.admin.common.service.TokenService;
 import com.gitee.whzzone.admin.system.entity.*;
 import com.gitee.whzzone.admin.system.mapper.UserMapper;
 import com.gitee.whzzone.admin.system.pojo.dto.ResetPWDDTO;
 import com.gitee.whzzone.admin.system.pojo.dto.UserDTO;
 import com.gitee.whzzone.admin.system.pojo.query.UserQuery;
 import com.gitee.whzzone.admin.system.service.*;
-import com.gitee.whzzone.common.constant.CommonConstants;
 import com.gitee.whzzone.web.entity.BaseEntity;
 import com.gitee.whzzone.web.pojo.other.PageData;
 import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -53,9 +52,6 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDTO
     private DeptService deptService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private WonderProperties wonderProperties;
 
     @Autowired
@@ -63,9 +59,6 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDTO
 
     @Autowired
     private RedisCache redisCache;
-
-    @Autowired
-    private TokenService tokenService;
 
     @Override
     public User getByEmail(String email) {
@@ -78,7 +71,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDTO
     public void beforeLoginCheck(User user) {
         // 判断个人情况
         if (Objects.isNull(user))
-            throw new UsernameNotFoundException("该账号不存在");
+            throw new RuntimeException("该账号不存在");
         if (user.getDeleted())
             throw new RuntimeException("该账号已被删除");
         if (!user.getEnabled())
@@ -139,19 +132,6 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDTO
         List<Integer> deptIds = userDeptList.stream().map(UserDept::getDeptId).collect(Collectors.toList());
 
         return deptService.findInIds(deptIds);
-    }
-
-    @Override
-    public Role getUserRoleInfo(Integer userId) {
-        // 查询部门
-        LambdaQueryWrapper<UserRole> udQueryWrapper = new LambdaQueryWrapper<>();
-        udQueryWrapper.eq(UserRole::getUserId, userId);
-        udQueryWrapper.select(UserRole::getRoleId);
-        UserRole userRole = userRoleService.getOne(udQueryWrapper);
-        if (userRole != null) {
-            return roleService.getById(userRole.getRoleId());
-        }
-        return null;
     }
 
     @Override
@@ -224,11 +204,11 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDTO
     @Transactional
     @Override
     public User save(UserDTO dto) {
-        if (StrUtil.isBlank(dto.getPassword())){
-            dto.setPassword(passwordEncoder.encode(wonderProperties.getToken().getDefaultPassword()));
-        }else {
-            dto.setPassword(passwordEncoder.encode(dto.getPassword()));
-        }
+        String encode = BCrypt.hashpw(StrUtil.isNotBlank(dto.getPassword()) ?
+                dto.getPassword() : wonderProperties.getUser().getDefaultPassword(),
+                BCrypt.gensalt());
+
+        dto.setPassword(encode);
 
         User save = super.save(dto);
 
@@ -287,8 +267,7 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDTO
         if (!isExist(dto.getId()))
             throw new RuntimeException("用户不存在：" + dto.getId());
 
-        String encode = passwordEncoder.encode(dto.getPassword());
-
+        String encode = BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt());
         LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.set(User::getPassword, encode);
         updateWrapper.eq(User::getId, dto.getId());
@@ -319,28 +298,10 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDTO
         return userRoleList.stream().map(UserRole::getRoleId).collect(Collectors.toList());
     }
 
+    @Cacheable(cacheNames = "login_user_info", key = "#userId")
     @Override
-    public LoginUser getLoginUserInfo(Integer id) {
-        if (id == null){
-            return null;
-        }
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(BaseEntity::getId, id);
-        return getLoginUserInfo(queryWrapper);
-    }
-
-    @Override
-    public LoginUser getLoginUserInfo(String username) {
-        if (StrUtil.isBlank(username)){
-            return null;
-        }
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(User::getUsername, username);
-        return getLoginUserInfo(queryWrapper);
-    }
-
-    private LoginUser getLoginUserInfo(LambdaQueryWrapper<User> queryWrapper) {
-        User user = getOne(queryWrapper);
+    public LoginUser getLoginUserInfo(Integer userId) {
+        User user = getById(userId);
 
         if (user == null) {
             return null;
@@ -352,9 +313,6 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDTO
         List<Integer> deptIds = getDeptIds(loginUser.getId());
         List<Integer> roleIds = getRoleIds(loginUser.getId());
 
-        loginUser.setDeptIds(deptIds);
-        loginUser.setRoleIds(roleIds);
-
         loginUser.setDepts(deptService.getDTOListIn(deptIds));
         loginUser.setRoles(roleService.getDTOListIn(roleIds));
 
@@ -363,29 +321,4 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDTO
         return loginUser;
     }
 
-    @Async
-    @Override
-    public void asyncUpdateCacheUserInfo() {
-        Map<Integer, LoginUser> userMap = new HashMap<>();
-
-        Set<String> keys = redisCache.getKeysByPrefix(CommonConstants.TOKEN_CACHE_KEY.replace("{}", ""));
-        for (String key : keys) {
-            try {
-                LoginUser loginUser = (LoginUser) redisCache.get(key);
-                String token = loginUser.getToken();
-
-                Integer userId = loginUser.getId();
-
-                if (userMap.containsKey(userId)) {
-                    loginUser = userMap.get(userId);
-                }else {
-                    loginUser = getLoginUserInfo(userId);
-                    userMap.put(userId, loginUser);
-                }
-
-                loginUser.setToken(token);
-                tokenService.cacheToken(loginUser);
-            }catch (Exception ignore) {}
-        }
-    }
 }

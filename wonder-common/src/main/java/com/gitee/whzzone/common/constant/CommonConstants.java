@@ -15,4 +15,14 @@ public class CommonConstants {
      */
     public static final String USER_CACHE_KEY = "USER:{}";
 
+    /**
+     * 逗号
+     */
+    public static final String COMMA = ",";
+
+    /**
+     * 点
+     */
+    public static final String DOT = ".";
+
 }
