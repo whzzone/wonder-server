@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @author Create by whz at 2024/1/29
  */
 @Slf4j
-@ConditionalOnProperty(prefix = "security.request", name = "enable-log", havingValue = "true")
+@ConditionalOnProperty(prefix = "wonder.web", name = "enable-log", havingValue = "true")
 @Configuration
 public class HttpAccessListener implements ApplicationListener<HttpAccessEvent> {
 
