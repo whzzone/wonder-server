@@ -53,26 +53,11 @@ public class RoleAndDeptFilter extends OncePerRequestFilter {
                 }
             }
 
-            Integer roleId = StringUtils.hasText(request.getHeader("RoleId")) ? Integer.valueOf(request.getHeader("RoleId")) : null;
             Integer deptId = StringUtils.hasText(request.getHeader("DeptId")) ? Integer.valueOf(request.getHeader("DeptId")) : null;
 
             LoginUser loginUser = SecurityUtil.getLoginUser();
 
             List<Integer> deptIds = loginUser.getDepts().stream().map(EntityDTO::getId).collect(Collectors.toList());
-            List<Integer> roleIds = loginUser.getRoles().stream().map(EntityDTO::getId).collect(Collectors.toList());
-
-            // 处理角色
-            if (CollectionUtil.isNotEmpty(roleIds)) {
-                if (roleIds.size() == 1) {
-                    loginUser.setCurrentRoleId(roleIds.get(0));
-                } else {
-                    if (roleIds.contains(roleId)) {
-                        loginUser.setCurrentRoleId(roleId);
-                    } else {
-                        throw new RuntimeException("无效的roleId");
-                    }
-                }
-            }
 
             // 处理部门
             if (CollectionUtil.isNotEmpty(deptIds)) {

@@ -31,4 +31,12 @@ public class RoleMarkServiceImpl extends EntityServiceImpl<RoleMarkMapper, RoleM
         queryWrapper.eq(RoleMark::getMarkId, markId);
         return list(queryWrapper);
     }
+
+    @Override
+    public List<RoleMark> getByRoleIdsAndMarkId(List<Integer> roleIds, Integer markId) {
+        LambdaQueryWrapper<RoleMark> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(RoleMark::getRoleId, roleIds);
+        queryWrapper.eq(RoleMark::getMarkId, markId);
+        return list(queryWrapper);
+    }
 }

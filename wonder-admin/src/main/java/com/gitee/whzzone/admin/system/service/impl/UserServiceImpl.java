@@ -11,7 +11,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gitee.whzzone.admin.common.properties.WonderProperties;
 import com.gitee.whzzone.admin.common.redis.RedisCache;
 import com.gitee.whzzone.admin.common.security.LoginUser;
-import com.gitee.whzzone.admin.system.entity.*;
+import com.gitee.whzzone.admin.system.entity.Dept;
+import com.gitee.whzzone.admin.system.entity.User;
+import com.gitee.whzzone.admin.system.entity.UserDept;
+import com.gitee.whzzone.admin.system.entity.UserRole;
 import com.gitee.whzzone.admin.system.mapper.UserMapper;
 import com.gitee.whzzone.admin.system.pojo.dto.ResetPWDDTO;
 import com.gitee.whzzone.admin.system.pojo.dto.UserDTO;
@@ -26,9 +29,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -316,7 +317,11 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDTO
         loginUser.setDepts(deptService.getDTOListIn(deptIds));
         loginUser.setRoles(roleService.getDTOListIn(roleIds));
 
-        loginUser.setPermissions(menuService.findPermitByUserId(loginUser.getId()));
+        List<String> permissions = new ArrayList<>();
+        for (Integer roleId : roleIds) {
+            permissions.addAll(roleService.getPermissions(roleId));
+        }
+        loginUser.setPermissions(permissions);
 
         return loginUser;
     }

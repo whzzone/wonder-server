@@ -6,9 +6,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gitee.whzzone.admin.system.entity.Role;
-import com.gitee.whzzone.admin.system.entity.Rule;
-import com.gitee.whzzone.admin.system.entity.UserRole;
+import com.gitee.whzzone.admin.system.entity.*;
 import com.gitee.whzzone.admin.system.mapper.RoleMapper;
 import com.gitee.whzzone.admin.system.pojo.dto.RoleDTO;
 import com.gitee.whzzone.admin.system.pojo.query.RoleQuery;
@@ -19,6 +17,8 @@ import com.gitee.whzzone.web.entity.BaseEntity;
 import com.gitee.whzzone.web.pojo.other.PageData;
 import com.gitee.whzzone.web.service.impl.EntityServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,6 +83,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDTO
         return afterQueryHandler(list(queryWrapper));
     }
 
+    @CacheEvict(cacheNames = "role_permission", key = "#dto.id")
     @Transactional
     @Override
     public Role updateById(RoleDTO dto) {
@@ -179,7 +180,7 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDTO
     @Override
     public RoleDTO afterQueryHandler(Role entity) {
         RoleDTO dto = super.afterQueryHandler(entity);
-        List<Integer> menuIdList = menuService.getIdListByRoleId(dto.getId());
+        List<Integer> menuIdList = menuService.getMenuIdList(dto.getId());
         dto.setMenuIds(menuIdList);
         return dto;
     }
@@ -265,5 +266,31 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDTO
         }
 
         return roleList.stream().map(Role::getCode).collect(Collectors.toList());
+    }
+
+    @Cacheable(cacheNames = "role_permission", key = "#roleId")
+    @Override
+    public List<String> getPermissions(Integer roleId) {
+        if (roleId == null) {
+            return new ArrayList<>();
+        }
+
+        List<Integer> menuIds = menuService.getMenuIdList(roleId);
+        if (CollectionUtil.isEmpty(menuIds)) {
+            return new ArrayList<>();
+        }
+
+        LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(Menu::getId, menuIds);
+        queryWrapper.select(Menu::getPermission);
+        List<Menu> menuList = menuService.list(queryWrapper);
+
+        return CollectionUtil.isEmpty(menuList) ?
+                new ArrayList<>() :
+                menuList.stream()
+                        .map(Menu::getPermission)
+                        .filter(StrUtil::isNotBlank)
+                        .distinct()
+                        .collect(Collectors.toList());
     }
 }

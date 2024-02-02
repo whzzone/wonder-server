@@ -23,7 +23,7 @@ public interface MenuService  extends EntityService<Menu, MenuDTO, MenuQuery> {
 
     List<MenuDTO> findByUserId(Integer userId);
 
-    List<Integer> getIdListByRoleId(Integer id);
+    List<Integer> getMenuIdList(Integer roleId);
 
     boolean existSamePermission(Integer id, String Permission);
 

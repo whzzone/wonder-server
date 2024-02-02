@@ -14,6 +14,7 @@ public interface RoleMarkService extends EntityService<RoleMark, RoleMarkDTO, Ro
 
     List<RoleMark> getByRoleId(Integer roleId);
 
-    List<RoleMark> getByRoleIdAndMarkId(Integer roleId, Integer ruleId);
+    List<RoleMark> getByRoleIdAndMarkId(Integer roleId, Integer markId);
 
+    List<RoleMark> getByRoleIdsAndMarkId(List<Integer> roleIds, Integer markId);
 }

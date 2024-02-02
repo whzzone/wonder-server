@@ -105,7 +105,7 @@ public class MenuServiceImpl extends EntityServiceImpl<MenuMapper, Menu, MenuDTO
     }
 
     @Override
-    public List<Integer> getIdListByRoleId(Integer roleId) {
+    public List<Integer> getMenuIdList(Integer roleId) {
         if (roleId == null)
             return new ArrayList<>();
 

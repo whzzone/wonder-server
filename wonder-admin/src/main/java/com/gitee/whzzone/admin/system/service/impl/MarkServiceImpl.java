@@ -60,12 +60,13 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDTO
         if (mark == null)
             throw new RuntimeException("不存在：" + name);
 
-        Integer roleId = SecurityUtil.getCurrentRoleId();
-        if (!roleService.isExist(roleId))
-            throw new RuntimeException("角色不存在");
+        List<Integer> roleIds = SecurityUtil.getLoginUser().getRoleIds();
+//        Integer roleId = SecurityUtil.getCurrentRoleId();
+
+        List<RoleMark> roleMarkList = roleMarkService.getByRoleIdsAndMarkId(roleIds, mark.getId());
 
         // 角色 与 标记 的关联
-        List<RoleMark> roleMarkList = roleMarkService.getByRoleIdAndMarkId(roleId, mark.getId());
+//        List<RoleMark> roleMarkList = roleMarkService.getByRoleIdAndMarkId(roleId, mark.getId());
         if (CollectionUtil.isEmpty(roleMarkList))
             return null;
 

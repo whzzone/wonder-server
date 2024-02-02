@@ -5,14 +5,14 @@ import com.gitee.whzzone.admin.system.pojo.dto.RoleDTO;
 import com.gitee.whzzone.admin.system.pojo.query.RoleQuery;
 import com.gitee.whzzone.admin.system.service.RoleService;
 import com.gitee.whzzone.web.controller.EntityController;
-import com.gitee.whzzone.web.pojo.other.PageData;
 import com.gitee.whzzone.web.pojo.other.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author : whz
@@ -25,18 +25,6 @@ public class RoleController extends EntityController<Role, RoleService, RoleDTO,
 
     @Autowired
     private RoleService roleService;
-
-    @ApiOperation("列表")
-    @GetMapping("list")
-    public Result<List<RoleDTO>> list(RoleQuery query){
-        return Result.ok("操作成功", roleService.list(query));
-    }
-
-    @ApiOperation("分页")
-    @GetMapping("page")
-    public Result<PageData<RoleDTO>> page(RoleQuery query){
-        return Result.ok(roleService.page(query));
-    }
 
     @ApiOperation("改变启用状态")
     @PutMapping("/enabledSwitch/{id}")
