@@ -23,4 +23,6 @@ public class Order extends BaseEntity {
 
     private Integer orderStatus;
 
+    private Integer deptId;
+
 }

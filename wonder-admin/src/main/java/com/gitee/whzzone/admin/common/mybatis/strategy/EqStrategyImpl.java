@@ -17,7 +17,7 @@ public class EqStrategyImpl implements ExpressStrategy{
     public Expression apply(RuleDTO rule, Expression where) {
         Column column = getColumn(rule);
         Object value = getValue(rule);
-        StringValue valueExpression = new StringValue((String) value);
+        StringValue valueExpression = new StringValue(String.valueOf(value));
         EqualsTo equalsTo = new EqualsTo(column, valueExpression);
         return assemble(rule.getSpliceType(), where, equalsTo);
     }

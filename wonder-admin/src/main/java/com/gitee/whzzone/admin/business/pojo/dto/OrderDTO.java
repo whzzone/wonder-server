@@ -33,5 +33,8 @@ public class OrderDTO extends EntityDTO {
 
     @ApiModelProperty("订单状态：0-待付款，1-已取消，2-已付款，3-已完成")
     private Integer orderStatus;
+
+    @ApiModelProperty("部门id")
+    private Integer deptId;
     
 }

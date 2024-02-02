@@ -17,7 +17,7 @@ public class GtStrategyImpl implements ExpressStrategy{
     public Expression apply(RuleDTO rule, Expression where) {
         Column column = getColumn(rule);
         Object value = getValue(rule);
-        StringValue valueExpression = new StringValue((String) value);
+        StringValue valueExpression = new StringValue(String.valueOf(value));
         GreaterThan greaterThan = new GreaterThan();
         greaterThan.setLeftExpression(column);
         greaterThan.setRightExpression(valueExpression);

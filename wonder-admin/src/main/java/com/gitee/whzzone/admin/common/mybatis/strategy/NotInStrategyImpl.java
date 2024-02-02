@@ -38,7 +38,8 @@ public class NotInStrategyImpl implements ExpressStrategy{
             return where;
         }
 
-        ExpressionList itemsList = new ExpressionList(((List<?>) value).stream().map(v -> new StringValue(v.toString())).collect(Collectors.toList()));
+//        ExpressionList itemsList = new ExpressionList(((List<?>) value).stream().map(v -> new StringValue(v.toString())).collect(Collectors.toList()));
+        ExpressionList itemsList = new ExpressionList(((List<?>) value).stream().map(v -> new StringValue(String.valueOf(v))).collect(Collectors.toList()));
 
         InExpression inExpression = new InExpression(column, itemsList);
         NotExpression notExpression = new NotExpression(inExpression);
