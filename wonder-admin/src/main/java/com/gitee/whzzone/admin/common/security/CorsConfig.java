@@ -7,7 +7,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 /**
- * security 全局跨域配置
+ * 全局跨域配置
  */
 @Configuration
 public class CorsConfig {
@@ -15,13 +15,14 @@ public class CorsConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.addAllowedOriginPattern("*");
-        corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.addAllowedMethod("*");
+        corsConfiguration.setAllowCredentials(false); // 不携带身份信息（Cookies）
+//        corsConfiguration.addAllowedOriginPattern("*"); // 允许所有来源 （和下面二选一即可）
+        corsConfiguration.addAllowedOrigin("*"); // 允许所有来源
+        corsConfiguration.addAllowedHeader("*"); // 允许所有HTTP标头
+        corsConfiguration.addAllowedMethod("*");  // 允许所有HTTP方法
 
-        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
-        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
-        return new CorsFilter(urlBasedCorsConfigurationSource);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return new CorsFilter(source);
     }
 }
