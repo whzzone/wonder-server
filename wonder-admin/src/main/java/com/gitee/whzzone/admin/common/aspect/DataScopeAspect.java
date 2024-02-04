@@ -1,7 +1,8 @@
 package com.gitee.whzzone.admin.common.aspect;
 
+import cn.hutool.core.collection.CollectionUtil;
+import com.gitee.whzzone.admin.common.mybatis.DataScopeRule;
 import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
-import com.gitee.whzzone.admin.system.pojo.dto.RuleDTO;
 import com.gitee.whzzone.admin.system.service.MarkService;
 import com.gitee.whzzone.admin.util.SecurityUtil;
 import com.gitee.whzzone.annotation.DataScope;
@@ -70,7 +71,7 @@ public class DataScopeAspect {
                 String scopeName = dataScope.value();
                 DataScopeInfo dataScopeInfo = dataScopeService.execRuleByName(scopeName);
                 threadLocal.set(dataScopeInfo);
-                printDebug(dataScopeInfo);
+                printDebug(method ,dataScopeInfo);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,13 +79,13 @@ public class DataScopeAspect {
         }
     }
 
-    private void printDebug(DataScopeInfo dataScopeInfo) {
-        if (dataScopeInfo.getRuleList() != null && dataScopeInfo.getRuleList().size() > 0) {
-            log.debug("--------------------------------设置数据权限信息--------------------------------");
-            for (RuleDTO rule : dataScopeInfo.getRuleList()) {
+    private void printDebug(Method method, DataScopeInfo dataScopeInfo) {
+        if (CollectionUtil.isNotEmpty(dataScopeInfo.getRuleList())) {
+            log.debug("-----{}#{} 当前绑定规则开始-----", method.getDeclaringClass(), method.getName());
+            for (DataScopeRule rule : dataScopeInfo.getRuleList()) {
                 log.debug("- markId: {}, ruleId：{}, ruleName：{}, expression: {}", rule.getMarkId(), rule.getId(), rule.getRemark(), rule.getExpression());
             }
-            log.debug("------------------------------------------------------------------------------");
+            log.debug("-----{}#{} 当前绑定规则结束-----", method.getDeclaringClass(), method.getName());
         }
     }
 

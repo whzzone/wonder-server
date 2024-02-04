@@ -1,9 +1,8 @@
 package com.gitee.whzzone.admin.common.mybatis.strategy;
 
-import com.gitee.whzzone.admin.system.pojo.dto.RuleDTO;
+import com.gitee.whzzone.admin.common.mybatis.DataScopeRule;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.operators.relational.IsNullExpression;
-import net.sf.jsqlparser.schema.Column;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,11 +12,10 @@ import org.springframework.stereotype.Service;
 public class NotNullStrategyImpl implements ExpressStrategy {
 
     @Override
-    public Expression apply(RuleDTO rule, Expression where) {
-        Column column = getColumn(rule);
+    public Expression apply(DataScopeRule rule, Expression where) {
         IsNullExpression isNullExpression = new IsNullExpression();
         isNullExpression.setNot(true);
-        isNullExpression.setLeftExpression(column);
+        isNullExpression.setLeftExpression(getColumn(rule));
         return assemble(rule.getSpliceType(), where, isNullExpression);
     }
 }

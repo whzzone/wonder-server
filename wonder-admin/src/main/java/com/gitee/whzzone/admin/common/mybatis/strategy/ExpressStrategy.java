@@ -1,6 +1,6 @@
 package com.gitee.whzzone.admin.common.mybatis.strategy;
 
-import com.gitee.whzzone.admin.system.pojo.dto.RuleDTO;
+import com.gitee.whzzone.admin.common.mybatis.DataScopeRule;
 import com.gitee.whzzone.common.enums.ProvideTypeEnum;
 import com.gitee.whzzone.common.enums.SpliceTypeEnum;
 import net.sf.jsqlparser.expression.Expression;
@@ -13,14 +13,14 @@ import net.sf.jsqlparser.schema.Column;
  */
 public interface ExpressStrategy {
 
-    Expression apply(RuleDTO rule, Expression where);
+    Expression apply(DataScopeRule rule, Expression where);
 
     /**
      * 获取条件的值
      * @param rule 某个规则
      * @return 条件的值
      */
-    default Object getValue(RuleDTO rule) {
+    default Object getValue(DataScopeRule rule) {
         if (rule.getProvideType().equals(ProvideTypeEnum.METHOD.getCode())) {
             return rule.getResult();
         } else if (rule.getProvideType().equals(ProvideTypeEnum.VALUE.getCode())) {
@@ -35,7 +35,7 @@ public interface ExpressStrategy {
      * @param rule 某个规则
      * @return 字段
      */
-    default Column getColumn(RuleDTO rule) {
+    default Column getColumn(DataScopeRule rule) {
         String sql = "".equals(rule.getTableAlias()) || rule.getTableAlias() == null ? rule.getColumnName() : rule.getTableAlias() + "." + rule.getColumnName();
         return new Column(sql);
     }

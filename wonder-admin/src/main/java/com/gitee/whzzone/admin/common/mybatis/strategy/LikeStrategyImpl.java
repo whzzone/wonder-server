@@ -1,10 +1,9 @@
 package com.gitee.whzzone.admin.common.mybatis.strategy;
 
-import com.gitee.whzzone.admin.system.pojo.dto.RuleDTO;
+import com.gitee.whzzone.admin.common.mybatis.DataScopeRule;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.StringValue;
 import net.sf.jsqlparser.expression.operators.relational.LikeExpression;
-import net.sf.jsqlparser.schema.Column;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,12 +13,10 @@ import org.springframework.stereotype.Service;
 public class LikeStrategyImpl implements ExpressStrategy{
 
     @Override
-    public Expression apply(RuleDTO rule, Expression where) {
-        Column column = getColumn(rule);
-        Object value = getValue(rule);
-        StringValue valueExpression = new StringValue("%" + value + "%");
+    public Expression apply(DataScopeRule rule, Expression where) {
+        StringValue valueExpression = new StringValue("%" + getValue(rule) + "%");
         LikeExpression likeExpression = new LikeExpression();
-        likeExpression.setLeftExpression(column);
+        likeExpression.setLeftExpression(getColumn(rule));
         likeExpression.setRightExpression(valueExpression);
         return assemble(rule.getSpliceType(), where, likeExpression);
     }

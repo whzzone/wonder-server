@@ -1,5 +1,6 @@
 package com.gitee.whzzone.admin.system.pojo.dto;
 
+import com.gitee.whzzone.admin.common.mybatis.DataScopeRule;
 import lombok.Data;
 
 import java.util.List;
@@ -10,6 +11,6 @@ import java.util.List;
 @Data
 public class DataScopeInfo {
 
-    private List<RuleDTO> ruleList;
+    private List<DataScopeRule> ruleList;
 
 }

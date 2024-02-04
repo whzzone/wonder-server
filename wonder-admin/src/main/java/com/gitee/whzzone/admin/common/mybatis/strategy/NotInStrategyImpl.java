@@ -1,14 +1,13 @@
 package com.gitee.whzzone.admin.common.mybatis.strategy;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.gitee.whzzone.admin.system.pojo.dto.RuleDTO;
+import com.gitee.whzzone.admin.common.mybatis.DataScopeRule;
 import com.gitee.whzzone.common.enums.ProvideTypeEnum;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.NotExpression;
 import net.sf.jsqlparser.expression.StringValue;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.expression.operators.relational.InExpression;
-import net.sf.jsqlparser.schema.Column;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -22,8 +21,7 @@ import java.util.stream.Collectors;
 public class NotInStrategyImpl implements ExpressStrategy{
 
     @Override
-    public Expression apply(RuleDTO rule, Expression where) {
-        Column column = getColumn(rule);
+    public Expression apply(DataScopeRule rule, Expression where) {
         Object value = getValue(rule);
         if (rule.getProvideType().equals(ProvideTypeEnum.VALUE.getCode())){
             String[] split = ((String) value).split(",");
@@ -41,7 +39,7 @@ public class NotInStrategyImpl implements ExpressStrategy{
 //        ExpressionList itemsList = new ExpressionList(((List<?>) value).stream().map(v -> new StringValue(v.toString())).collect(Collectors.toList()));
         ExpressionList itemsList = new ExpressionList(((List<?>) value).stream().map(v -> new StringValue(String.valueOf(v))).collect(Collectors.toList()));
 
-        InExpression inExpression = new InExpression(column, itemsList);
+        InExpression inExpression = new InExpression(getColumn(rule), itemsList);
         NotExpression notExpression = new NotExpression(inExpression);
         return assemble(rule.getSpliceType(), where, notExpression);
     }

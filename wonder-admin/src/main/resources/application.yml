@@ -52,6 +52,13 @@ wx:
 sa-token:
   token-name: Authorization
   is-concurrent: true
+  isLog: false
+  isColorLog: true
+  is-read-cookie: false
+  is-read-body: false
+  is-read-header: true
+  autoRenew: false
+  isPrint: false
 
 knife4j:
   enable: true

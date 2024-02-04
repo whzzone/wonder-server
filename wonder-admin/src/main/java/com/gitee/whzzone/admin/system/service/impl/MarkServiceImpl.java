@@ -6,13 +6,13 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gitee.whzzone.admin.common.mybatis.DataScopeRule;
 import com.gitee.whzzone.admin.system.entity.Mark;
 import com.gitee.whzzone.admin.system.entity.RoleMark;
 import com.gitee.whzzone.admin.system.entity.Rule;
 import com.gitee.whzzone.admin.system.mapper.MarkMapper;
 import com.gitee.whzzone.admin.system.pojo.dto.DataScopeInfo;
 import com.gitee.whzzone.admin.system.pojo.dto.MarkDTO;
-import com.gitee.whzzone.admin.system.pojo.dto.RuleDTO;
 import com.gitee.whzzone.admin.system.pojo.query.MarkQuery;
 import com.gitee.whzzone.admin.system.service.MarkService;
 import com.gitee.whzzone.admin.system.service.RoleMarkService;
@@ -77,14 +77,14 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDTO
         if (CollectionUtil.isEmpty(rules))
             return null;
 
-        List<RuleDTO> ruleList = new ArrayList<>();
+        List<DataScopeRule> ruleList = new ArrayList<>();
 
         for (Rule rule : rules) {
-            RuleDTO dto = new RuleDTO();
-            BeanUtil.copyProperties(rule, dto);
+            DataScopeRule dataScopeRule = new DataScopeRule();
+            BeanUtil.copyProperties(rule, dataScopeRule);
 
             if (rule.getProvideType().equals(ProvideTypeEnum.VALUE.getCode())) {
-                ruleList.add(dto);
+                ruleList.add(dataScopeRule);
 
             } else if (rule.getProvideType().equals(ProvideTypeEnum.METHOD.getCode())) {
                 try {
@@ -144,8 +144,8 @@ public class MarkServiceImpl extends EntityServiceImpl<MarkMapper, Mark, MarkDTO
                         }
                     }
 
-                    dto.setResult(result);
-                    ruleList.add(dto);
+                    dataScopeRule.setResult(result);
+                    ruleList.add(dataScopeRule);
 
                 } catch (NoSuchMethodException e) {
                     throw new RuntimeException("配置了不存在的方法");
