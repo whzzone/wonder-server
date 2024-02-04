@@ -80,7 +80,7 @@ public class DataScopeAspect {
     }
 
     private void printDebug(Method method, DataScopeInfo dataScopeInfo) {
-        if (CollectionUtil.isNotEmpty(dataScopeInfo.getRuleList())) {
+        if (dataScopeInfo != null && CollectionUtil.isNotEmpty(dataScopeInfo.getRuleList())) {
             log.debug("-----{}#{} 当前绑定规则开始-----", method.getDeclaringClass(), method.getName());
             for (DataScopeRule rule : dataScopeInfo.getRuleList()) {
                 log.debug("- markId: {}, ruleId：{}, ruleName：{}, expression: {}", rule.getMarkId(), rule.getId(), rule.getRemark(), rule.getExpression());
