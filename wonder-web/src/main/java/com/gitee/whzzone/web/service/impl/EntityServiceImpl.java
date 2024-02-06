@@ -53,13 +53,13 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     private final Class<Q> currentQueryClass =
         (Class<Q>)ReflectionKit.getSuperClassGenericType(this.getClass(), EntityServiceImpl.class, 3);
 
-    private final String[] insertIgnoreField = initInsertIgnoreField();
-
-    private final String[] updateIgnoreField = initUpdateIgnoreField();
-
     private final Field[] currentEntityFields = CommonUtil.getAllFieldsIncludingParents(currentEntityClass);
 
     private final Field[] currentDtoFields = CommonUtil.getAllFieldsIncludingParents(currentDtoClass);
+
+    private final String[] insertIgnoreField = initInsertIgnoreField();
+
+    private final String[] updateIgnoreField = initUpdateIgnoreField();
 
     private final List<Field> currentQueryFields =
         Arrays.stream(CommonUtil.getAllFieldsIncludingParents(currentQueryClass))
@@ -510,12 +510,10 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     private String[] initInsertIgnoreField() {
         List<String> list = new ArrayList<>();
 
-        if (currentDtoFields != null) {
-            for (Field field : currentDtoFields) {
-                EntityField webFieldAnnotation = field.getAnnotation(EntityField.class);
-                if (webFieldAnnotation == null || !webFieldAnnotation.insert()) {
-                    list.add(field.getName());
-                }
+        for (Field field : currentDtoFields) {
+            EntityField webFieldAnnotation = field.getAnnotation(EntityField.class);
+            if (webFieldAnnotation == null || !webFieldAnnotation.insert()) {
+                list.add(field.getName());
             }
         }
         return list.toArray(new String[0]);
@@ -524,12 +522,10 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
     private String[] initUpdateIgnoreField() {
         List<String> list = new ArrayList<>();
 
-        if (currentDtoFields != null) {
-            for (Field field : currentDtoFields) {
-                EntityField webFieldAnnotation = field.getAnnotation(EntityField.class);
-                if (webFieldAnnotation == null || !webFieldAnnotation.update()) {
-                    list.add(field.getName());
-                }
+        for (Field field : currentDtoFields) {
+            EntityField webFieldAnnotation = field.getAnnotation(EntityField.class);
+            if (webFieldAnnotation == null || !webFieldAnnotation.update()) {
+                list.add(field.getName());
             }
         }
         return list.toArray(new String[0]);
