@@ -1,16 +1,8 @@
 package com.gitee.whzzone.web.service.impl;
 
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.transaction.annotation.Transactional;
-
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -30,10 +22,18 @@ import com.gitee.whzzone.web.pojo.sort.Sort;
 import com.gitee.whzzone.web.queryhandler.BaseQueryHandler;
 import com.gitee.whzzone.web.service.EntityService;
 import com.gitee.whzzone.web.utils.ThenerUtil;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.transaction.annotation.Transactional;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.StrUtil;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Create by whz at 2023/7/16
@@ -479,7 +479,11 @@ public abstract class EntityServiceImpl<M extends BaseMapper<T>, T extends BaseE
             Field field1 = itemFieldList[0];
             Field field2 = itemFieldList[1];
 
-            if (field1.get(query) instanceof Date) {
+            if (Objects.isNull(field1) || Objects.isNull(field2)) {
+                continue;
+            }
+
+            if (field1.get(query) instanceof Date || field1.get(query) instanceof LocalDateTime || field1.get(query) instanceof LocalDate) {
                 if (ThenerUtil.compareFields(field1, field2, query)) {
                     queryWrapper.apply("date_format(" + columnName + ",'%y%m%d') >= date_format({0},'%y%m%d')",
                         field1.get(query));
