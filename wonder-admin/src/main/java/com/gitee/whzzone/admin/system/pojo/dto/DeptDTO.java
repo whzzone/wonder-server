@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -46,6 +46,6 @@ public class DeptDTO extends EntityDTO {
     private List<DeptDTO> children;
 
     @ApiModelProperty("更新时间")
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
 }

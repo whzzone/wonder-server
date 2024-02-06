@@ -2,7 +2,7 @@ package com.gitee.whzzone.web.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author : whz
@@ -14,13 +14,13 @@ public class BaseEntity {
     private Integer id;
 
     @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @TableField(fill = FieldFill.INSERT)
     private Integer createBy;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Integer updateBy;
@@ -37,11 +37,11 @@ public class BaseEntity {
         this.id = id;
     }
 
-    public Date getCreateTime() {
+    public LocalDateTime getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 
@@ -53,11 +53,11 @@ public class BaseEntity {
         this.createBy = createBy;
     }
 
-    public Date getUpdateTime() {
+    public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
     }
 

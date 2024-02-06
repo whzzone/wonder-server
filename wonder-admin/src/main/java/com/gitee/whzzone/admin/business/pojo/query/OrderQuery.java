@@ -1,5 +1,6 @@
 package com.gitee.whzzone.admin.business.pojo.query;
 
+import com.gitee.whzzone.admin.common.constants.DateTimeConstants;
 import com.gitee.whzzone.annotation.Query;
 import com.gitee.whzzone.common.enums.ExpressionEnum;
 import com.gitee.whzzone.web.pojo.query.EntityQuery;
@@ -7,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * @author Create by whz at 2023/8/4
@@ -33,12 +34,12 @@ public class OrderQuery extends EntityQuery {
 
     @Query(column = "create_time", expression = ExpressionEnum.BETWEEN)
     @ApiModelProperty("开始日期")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Date startDate;
+    @DateTimeFormat(pattern = DateTimeConstants.FORMAT_DATE)
+    private LocalDate startDate;
 
     @Query(column = "create_time", expression = ExpressionEnum.BETWEEN)
     @ApiModelProperty("结束日期")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Date endDate;
+    @DateTimeFormat(pattern = DateTimeConstants.FORMAT_DATE)
+    private LocalDate endDate;
 
 }

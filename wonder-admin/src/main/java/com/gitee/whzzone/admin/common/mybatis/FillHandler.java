@@ -5,7 +5,7 @@ import com.gitee.whzzone.admin.util.SecurityUtil;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author :whz
@@ -15,15 +15,15 @@ import java.util.Date;
 public class FillHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
-        Date now = new Date();
+        LocalDateTime now = LocalDateTime.now();
         Integer userId = null;
         try {
             userId = SecurityUtil.getLoginUser().getId();
         }catch (Exception ignored){}
 
-        strictInsertFill(metaObject,"updateTime", Date.class, now);
+        strictInsertFill(metaObject,"updateTime", LocalDateTime.class, now);
         strictInsertFill(metaObject,"updateBy", Integer.class, userId);
-        strictInsertFill(metaObject,"createTime", Date.class, now);
+        strictInsertFill(metaObject,"createTime", LocalDateTime.class, now);
         strictInsertFill(metaObject,"createBy", Integer.class, userId);
         strictInsertFill(metaObject,"deleted", Boolean.class, false);
     }
@@ -35,7 +35,7 @@ public class FillHandler implements MetaObjectHandler {
             userId = SecurityUtil.getLoginUser().getId();
         }catch (Exception ignored){}
 
-        strictUpdateFill(metaObject,"updateTime", Date.class, new Date());
+        strictUpdateFill(metaObject,"updateTime", LocalDateTime.class, LocalDateTime.now());
         strictUpdateFill(metaObject,"updateBy", Integer.class, userId);
     }
 }

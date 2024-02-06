@@ -18,6 +18,9 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +63,12 @@ public class SwaggerConfig {
                 .securitySchemes(securitySchemes()) // 全局: 侧边栏显示
                 .groupName("1、系统分组")
                 .extensions(openApiExtensionResolver.buildSettingExtensions())
+                .directModelSubstitute(LocalDateTime.class, String.class)
+                .directModelSubstitute(LocalDate.class, String.class)
+                .directModelSubstitute(LocalTime.class, String.class)
+                .directModelSubstitute(LocalDateTime[].class, String.class)
+                .directModelSubstitute(LocalDate[].class, String.class)
+                .directModelSubstitute(LocalTime[].class, String.class)
                 ;
     }
 
@@ -76,6 +85,12 @@ public class SwaggerConfig {
                 .securitySchemes(securitySchemes())
                 .groupName("2、业务分组")
                 .extensions(openApiExtensionResolver.buildSettingExtensions())
+                .directModelSubstitute(LocalDateTime.class, String.class)
+                .directModelSubstitute(LocalDate.class, String.class)
+                .directModelSubstitute(LocalTime.class, String.class)
+                .directModelSubstitute(LocalDateTime[].class, String.class)
+                .directModelSubstitute(LocalDate[].class, String.class)
+                .directModelSubstitute(LocalTime[].class, String.class)
                 ;
     }
 
