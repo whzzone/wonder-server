@@ -6,7 +6,10 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gitee.whzzone.admin.system.entity.*;
+import com.gitee.whzzone.admin.system.entity.Menu;
+import com.gitee.whzzone.admin.system.entity.Role;
+import com.gitee.whzzone.admin.system.entity.Rule;
+import com.gitee.whzzone.admin.system.entity.UserRole;
 import com.gitee.whzzone.admin.system.mapper.RoleMapper;
 import com.gitee.whzzone.admin.system.pojo.dto.RoleDTO;
 import com.gitee.whzzone.admin.system.pojo.query.RoleQuery;
@@ -22,8 +25,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -285,12 +287,17 @@ public class RoleServiceImpl extends EntityServiceImpl<RoleMapper, Role, RoleDTO
         queryWrapper.select(Menu::getPermission);
         List<Menu> menuList = menuService.list(queryWrapper);
 
-        return CollectionUtil.isEmpty(menuList) ?
-                new ArrayList<>() :
-                menuList.stream()
-                        .map(Menu::getPermission)
-                        .filter(StrUtil::isNotBlank)
-                        .distinct()
-                        .collect(Collectors.toList());
+        if (CollectionUtil.isEmpty(menuList)) {
+            return new ArrayList<>();
+        }
+
+        Set<String> permissions = new HashSet<>();
+        for (Menu menu : menuList) {
+            if (!Objects.isNull(menu) && StrUtil.isNotBlank(menu.getPermission())) {
+                permissions.add(menu.getPermission());
+            }
+        }
+
+        return new ArrayList<>(permissions);
     }
 }
