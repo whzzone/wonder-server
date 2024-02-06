@@ -59,6 +59,8 @@ sa-token:
   is-read-header: true
   autoRenew: false
   isPrint: false
+  is-share: false
+  timeout: 86400
 
 knife4j:
   enable: true

@@ -3,8 +3,6 @@ package com.gitee.whzzone.admin.system.service.impl;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.api.WxMaUserService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
-import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
-import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import cn.dev33.satoken.secure.BCrypt;
 import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.StpUtil;
@@ -28,7 +26,6 @@ import org.springframework.stereotype.Service;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -75,21 +72,19 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Result<?> loginByUsername(UsernameLoginDTO dto) {
+    public Result<LoginUser> loginByUsername(UsernameLoginDTO dto) {
 
         User user = userService.getByUsername(dto.getUsername());
-        if (Objects.isNull(user)) {
-            throw new RuntimeException("用户不存在");
-        }
+
+        userService.loginCheck(user);
 
         if (!BCrypt.checkpw(dto.getPassword(), user.getPassword())) {
             throw new RuntimeException("密码错误");
         }
-//        dto.getRememberMe()
+
         StpUtil.login(user.getId(), new SaLoginModel()
-                .setDevice(LoginDeviceTypeEnum.PC.name())                // 此次登录的客户端设备类型, 用于[同端互斥登录]时指定此次登录的设备类型
+                .setDevice(LoginDeviceTypeEnum.PC.name()) // 此次登录的客户端设备类型, 用于[同端互斥登录]时指定此次登录的设备类型
                 .setIsLastingCookie(false)        // 是否为持久Cookie（临时Cookie在浏览器关闭时会自动删除，持久Cookie在重新打开后依然存在）
-                .setTimeout(60 * 30)    // 指定此次登录token的有效期, 单位:秒 （如未指定，自动取全局配置的 timeout 值）
                 .setIsWriteHeader(false)         // 是否在登录后将 Token 写入到响应头
         );
 
@@ -107,38 +102,33 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Result loginByWeixin(WxLoginDTO dto) {
+    public Result<LoginUser> loginByWeixin(WxLoginDTO dto) {
         try {
-            log.warn("code =========" + dto.getCode());
-            WxMaJscode2SessionResult session = wxMaService.getUserService().getSessionInfo(dto.getCode());
-            log.info(session.getSessionKey());
-            log.info(session.getOpenid());
+            WxMaUserService wxMaServiceUserService = wxMaService.getUserService();
+            WxMaJscode2SessionResult session = wxMaServiceUserService.getSessionInfo(dto.getCode());
 
-            WxMaUserService userService = wxMaService.getUserService();
+            User user = userService.getByOpenid(session.getOpenid());
+            userService.loginCheck(user);
 
-            WxMaPhoneNumberInfo phoneNoInfo = userService.getPhoneNoInfo(dto.getCode());
-            System.out.println("phoneNoInfo = " + phoneNoInfo);
+            StpUtil.login(user.getId(), new SaLoginModel()
+                    .setDevice(LoginDeviceTypeEnum.APP.name()) // 此次登录的客户端设备类型, 用于[同端互斥登录]时指定此次登录的设备类型
+                    .setIsLastingCookie(false)        // 是否为持久Cookie（临时Cookie在浏览器关闭时会自动删除，持久Cookie在重新打开后依然存在）
+                    .setIsWriteHeader(false)         // 是否在登录后将 Token 写入到响应头
+            );
 
-            if (userService.checkUserInfo(session.getSessionKey(), dto.getRawData(), dto.getSignature())) {
-                log.info("验证通过");
-            } else {
-                log.error("数据被改过");
-            }
+            LoginUser loginUserInfo = userService.getLoginUserInfo(user.getId());
 
-            WxMaUserInfo userInfo = userService.getUserInfo(session.getSessionKey(), dto.getEncryptedData(), dto.getIv());
-            System.out.println("userInfo = " + userInfo);
+            loginUserInfo.setTokenInfo(StpUtil.getTokenInfo());
 
-            Map<String, Object> res = new HashMap<>();
-            res.put("openid", session.getOpenid());
-
-            //TODO 可以增加自己的逻辑，关联业务相关数据
-            return Result.ok(res);
+            return Result.ok("登录成功", loginUserInfo);
         } catch (WxErrorException e) {
             log.error(e.getMessage(), e);
+            return Result.error(Result.UNAUTHORIZED, e.getMessage());
+        }catch (Exception e) {
             return Result.error(e.getMessage());
         }
-        //        finally {
-        //            WxMaConfigHolder.remove();//清理ThreadLocal
-        //        }
+//        finally {
+//            WxMaConfigHolder.remove();//清理ThreadLocal
+//        }
     }
 }

@@ -14,9 +14,9 @@ import java.util.Map;
 public interface AuthService {
     Map<String, String> getCode();
     
-    Result<?> loginByUsername(UsernameLoginDTO dto);
+    Result<LoginUser> loginByUsername(UsernameLoginDTO dto);
 
     void logout();
 
-    Result loginByWeixin(WxLoginDTO dto);
+    Result<LoginUser> loginByWeixin(WxLoginDTO dto);
 }

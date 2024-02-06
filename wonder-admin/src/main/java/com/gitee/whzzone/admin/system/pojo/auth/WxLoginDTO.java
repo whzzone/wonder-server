@@ -2,6 +2,8 @@ package com.gitee.whzzone.admin.system.pojo.auth;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * @author : whz
  * @date : 2023/5/19 16:34
@@ -9,22 +11,7 @@ import lombok.Data;
 @Data
 public class WxLoginDTO {
 
-    private String scene;
+    @NotBlank(message = "login code 不能为空")
     private String code;
-    private String encryptedData;
-    private String errMsg;
-    private String iv;
-    private String rawData;
-    private String signature;
-    private UserInfo userInfo;
 
-}
-
-@Data
-class UserInfo{
-    private String avatarUrl;
-    private String city;
-    private String country;
-    private String gender;
-    private String nickName;
 }

@@ -69,12 +69,10 @@ public class UserServiceImpl extends EntityServiceImpl<UserMapper, User, UserDTO
     }
 
     @Override
-    public void beforeLoginCheck(User user) {
+    public void loginCheck(User user) {
         // 判断个人情况
         if (Objects.isNull(user))
             throw new RuntimeException("该账号不存在");
-        if (user.getDeleted())
-            throw new RuntimeException("该账号已被删除");
         if (!user.getEnabled())
             throw new RuntimeException("该账号已被禁止登录");
 

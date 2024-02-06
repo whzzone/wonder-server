@@ -1,5 +1,6 @@
 package com.gitee.whzzone.admin.common.satoken;
 
+import cn.dev33.satoken.config.SaTokenConfig;
 import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.filter.SaServletFilter;
 import cn.dev33.satoken.router.SaRouter;
@@ -29,6 +30,9 @@ public class SaTokenConfigure {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private SaTokenConfig saTokenConfig;
+
     /**
      * 注册 [Sa-Token全局过滤器]
      */
@@ -53,6 +57,9 @@ public class SaTokenConfigure {
                     log.debug("--------------------------token校验成功");
                     LoginUser loginUserInfo = userService.getLoginUserInfo(Integer.valueOf((String) StpUtil.getLoginId()));
                     SecurityUtil.setLoginUser(loginUserInfo);
+
+                    // 有操作时续签token,避免token突然失效
+                    StpUtil.renewTimeout(saTokenConfig.getTimeout());
                 })
 
                 // 异常处理函数：每次认证函数发生异常时执行此函数

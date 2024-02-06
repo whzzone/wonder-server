@@ -18,7 +18,7 @@ import java.util.List;
 public interface UserService extends EntityService<User, UserDTO, UserQuery> {
     User getByEmail(String email);
 
-    void beforeLoginCheck(User sysUser);
+    void loginCheck(User sysUser);
 
     User getByUsername(String username);
 

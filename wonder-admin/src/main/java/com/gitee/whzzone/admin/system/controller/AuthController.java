@@ -2,7 +2,9 @@ package com.gitee.whzzone.admin.system.controller;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import com.gitee.whzzone.admin.common.redis.RedisCache;
+import com.gitee.whzzone.admin.common.security.LoginUser;
 import com.gitee.whzzone.admin.system.pojo.auth.UsernameLoginDTO;
+import com.gitee.whzzone.admin.system.pojo.auth.WxLoginDTO;
 import com.gitee.whzzone.admin.system.service.AuthService;
 import com.gitee.whzzone.admin.system.service.UserService;
 import com.gitee.whzzone.web.pojo.other.Result;
@@ -50,7 +52,7 @@ public class AuthController {
 
     @ApiOperation("账号密码登录")
     @PostMapping("/login/username")
-    public Result<?> loginByUsername(@Validated @RequestBody UsernameLoginDTO dto) {
+    public Result<LoginUser> loginByUsername(@Validated @RequestBody UsernameLoginDTO dto) {
         return authService.loginByUsername(dto);
     }
 
@@ -61,6 +63,11 @@ public class AuthController {
         return Result.ok();
     }
 
+    @ApiOperation("微信-登录（内部用户）")
+    @PostMapping("/login/weixin")
+    public Result<LoginUser> loginByWeixin(@Validated WxLoginDTO dto) {
+        return authService.loginByWeixin(dto);
+    }
 
 /*    @ApiOperation("微信登录")
     @PostMapping("/login/weixin")
