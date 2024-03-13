@@ -241,3 +241,7 @@ maven引入
 
 1. 执行`removeById(id)`
 2. 执行`afterDeleteHandler(entity)` 可在此处做删除的后置操作
+
+#### 注意
+1. `@DataScope注解`不兼容`PageHelper`，issues：https://gitee.com/whzzone/wonder-server/issues/I97V66
+    > 由于PageHelper只对紧跟的查询语句进行分页，PageHelper分页实现机制跟@DataScope注解实现机制冲突了：@DataScope在切面中处理数据权限规则时会查询到数据库，分页逻辑被提前消费了，导致真正的分页查询没被添加分页条件，暂时没有解决方案
