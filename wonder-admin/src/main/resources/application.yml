@@ -1,0 +1,60 @@
+wonder:
+  web:
+    # 是否开启请求日志 true-开，false-关
+    enable-log: true
+    # 无需认证的访问的接口
+    ignore-path:
+      - /swagger/**
+      - /webjars/**
+      - /v2/**
+      - /swagger-resources/**
+      - /doc.html
+      - /favicon.ico
+      - /auth/login/**
+      - /druid/**
+
+  user:
+    default-password: 123456
+
+server:
+  servlet:
+    context-path: /wonder-server
+  port: 8088
+
+spring:
+  profiles:
+    active: online
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: true
+  servlet:
+    multipart:
+      max-file-size: 10MB #单个文件的最大大小限制为10MB
+      max-request-size: 20MB #整个请求体的最大大小限制为20MB，包括所有文件和其他表单字段
+
+wx:
+  miniapp:
+    configs:
+      - appid: wx487b66c8cba46666
+        secret: 249260b2d65387ff386c08d3a7026666
+
+sa-token:
+  token-name: Authorization
+  is-concurrent: true
+  isLog: false
+  isColorLog: true
+  is-read-cookie: false
+  is-read-body: false
+  is-read-header: true
+  autoRenew: false
+  isPrint: false
+  is-share: false
+  timeout: 86400
+
+knife4j:
+  enable: true
+  setting:
+    enable-home-custom: true
+    home-custom-location: https://gitee.com/whzzone/wonder-server/raw/master/README.md
