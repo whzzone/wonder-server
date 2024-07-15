@@ -38,17 +38,17 @@ wonder-server 一个web快速开发、灵活的数据权限脚手架
 
 例子 我们想在订单不分页接口限制某个角色只能查看`收获地址中存在钦北区`或者`订单金额小于等于100`的订单。
 
-那么我们可以添加一个`mark`（我这里暂时把他叫做标记），标记这个接口为`order-list`。![image-20231205112116030](images/image-20231205112116030.png)
+那么我们可以添加一个`mark`（我这里暂时把他叫做标记），标记这个接口为`order-list`。![image-20231205112116030](https://gitee.com/whzzone/wonder-server/raw/master/images/image-20231205112116030.png)
 
-在这个标记下添加我们需要的两条规则![image-20231205112231485](images/image-20231205112231485.png)
+在这个标记下添加我们需要的两条规则![image-20231205112231485](https://gitee.com/whzzone/wonder-server/raw/master/images/image-20231205112231485.png)
 
-![image-20231205112244807](images/image-20231205112244807.png)
+![image-20231205112244807](https://gitee.com/whzzone/wonder-server/raw/master/images/image-20231205112244807.png)
 
-![image-20231205112253529](images/image-20231205112253529.png)
+![image-20231205112253529](https://gitee.com/whzzone/wonder-server/raw/master/images/image-20231205112253529.png)
 
 再给`普通角色`配置一下他在这个接口适用的规则，就是刚刚添加的规则
 
-![image-20231205112841923](images/image-20231205112841923.png)
+![image-20231205112841923](https://gitee.com/whzzone/wonder-server/raw/master/images/image-20231205112841923.png)
 
 然后使用注解`@DataScope("order-list")`在mapper层的方法上，这里我们用重写MyBatis的list()接口来测试，如下：
 
@@ -140,8 +140,8 @@ maven引入
    ```
 
 3. 启动`main`方法即可，会生成如下8个文件，然后启动项目进入项目swagger文档，即可拥有增删改查接口
-   ![image-20231205145954783](images/image-20231205145954783.png)
-   ![image-20231205150228822](images/image-20231205150228822.png)
+   ![image-20231205145954783](https://gitee.com/whzzone/wonder-server/raw/master/images/image-20231205145954783.png)
+   ![image-20231205150228822](https://gitee.com/whzzone/wonder-server/raw/master/images/image-20231205150228822.png)
 
 
 #### 生成的代码解释
